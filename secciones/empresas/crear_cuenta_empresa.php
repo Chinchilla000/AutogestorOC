@@ -2,20 +2,30 @@
 include("../../bd.php");
 
 if ($_POST) {
-    // Aquí puedes realizar la lógica para insertar los datos en la base de datos
-    print_r($_POST);
-    // Por ejemplo, si los datos de la empresa están en la tabla 'empresas'
     $nombre_usuario = $_POST['nombre_usuario'];
-    $password = $_POST['password'];
-    $nombre_empresa = $_POST['nombre_empresa'];
-    $rut_empresa = $_POST['rut_empresa'];
-    $giro_comercial = $_POST['giro_comercial'];
     $correo_empresa = $_POST['correo_empresa'];
-    $numero_contacto = $_POST['numero_contacto'];
 
-    // Ejemplo de inserción en la tabla 'empresas'
-    $stmt = $conexion->prepare("INSERT INTO empresas (nombre_usuario, password, nombre_empresa, rut_empresa, giro_comercial, correo_empresa, numero_contacto) VALUES (?, ?, ?, ?, ?, ?, ?)");
-    $stmt->execute([$nombre_usuario, $password, $nombre_empresa, $rut_empresa, $giro_comercial, $correo_empresa, $numero_contacto]);
+    // Verificar existencia de nombre de usuario y correo
+    $stmtExistencia = $conexion->prepare("SELECT * FROM empresas WHERE nombre_usuario = ? OR correo_empresa = ?");
+    $stmtExistencia->execute([$nombre_usuario, $correo_empresa]);
+
+    if ($stmtExistencia->rowCount() > 0) {
+        echo "<script>alert('El nombre de usuario o correo electrónico ya existe.');</script>";
+    } else {
+        $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+        $nombre_empresa = $_POST['nombre_empresa'];
+        $rut_empresa = $_POST['rut_empresa'];
+        $giro_comercial = $_POST['giro_comercial'];
+        $numero_contacto = $_POST['numero_contacto'];
+
+        $stmt = $conexion->prepare("INSERT INTO empresas (nombre_usuario, password, nombre_empresa, rut_empresa, giro_comercial, correo_empresa, numero_contacto) VALUES (?, ?, ?, ?, ?, ?, ?)");
+
+        if ($stmt->execute([$nombre_usuario, $password, $nombre_empresa, $rut_empresa, $giro_comercial, $correo_empresa, $numero_contacto])) {
+            echo "<script>alert('Registro exitoso.');</script>";
+        } else {
+            echo "<script>alert('Error en el registro.');</script>";
+        }
+    }
 }
 ?>
 
