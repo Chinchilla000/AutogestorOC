@@ -1,0 +1,77 @@
+/* Agrega estilos personalizados aquí */
+#logotipo img {
+    width: 30%; /* Ajusta el ancho de la imagen al 100% del contenedor */
+    margin-left: 15%;
+    
+}
+
+.navbar-nav {
+    margin-left: auto; /* Mueve los elementos de la barra de navegación al centro */
+}
+
+.navbar-nav a {
+    color: #007BFF; /* Color celeste */
+    transition: color 0.3s ease; /* Efecto de transición en el color */
+}
+
+.navbar-nav a:hover {
+    color: #0056b3; /* Color celeste más oscuro al pasar el ratón */
+}
+
+.btn-outline-primary,
+.btn-primary {
+    margin-left: 10px; /* Añade margen izquierdo a los botones de inicio de sesión y registro */
+}
+
+.text-end {
+    display: flex;
+    align-items: center; /* Alinea verticalmente el contenedor de los botones */
+}
+
+@media (max-width: 768px) {
+    .text-end {
+        margin-top: 10px; /* Agrega un margen superior en pantallas más pequeñas */
+        margin-left: 0; /* Reinicia el margen izquierdo para pantallas más pequeñas */
+    }
+}
+.square-btn {
+    width: 500px; /* Ajusta el ancho según tus necesidades */
+    height: 20%; /* Ajusta la altura según tus necesidades */
+    border-radius: 50px; /* Agrega bordes redondeados si lo deseas */
+}
+
+html,
+body {
+  height: 100%;
+}
+
+.form-signin {
+  max-width: 330px;
+  padding: 1rem;
+}
+
+.form-signin .form-floating:focus-within {
+  z-index: 2;
+}
+
+.form-signin input[type="email"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.form-signin input[type="password"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.modal-sheet .modal-dialog {
+    width: 380px;
+    transition: bottom .75s ease-in-out;
+  }
+  .modal-sheet .modal-footer {
+    padding-bottom: 2rem;
+  }
+  
+  
