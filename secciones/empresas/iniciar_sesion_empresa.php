@@ -15,16 +15,23 @@
     
     <br><br>
     <main class="form-signin w-100 m-auto container flex-grow-1">
-        <form>
+        <form action="procesar_inicio_sesion_empresa.php" method="post">
             <img class="mb-4" src="../../img/logo.png" alt="Logo" width="72" height="57">
             <h1 class="h3 mb-3 fw-normal">Iniciar Sesión: Cuenta Empresa</h1>
 
+            <?php
+                // Mostrar mensaje de error si es necesario
+                if (isset($_GET['error']) && $_GET['error'] == 1) {
+                    echo '<div class="alert alert-danger" role="alert">Credenciales incorrectas. Inténtalo de nuevo.</div>';
+                }
+            ?>
+
             <div class="form-floating">
-                <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+                <input type="email" class="form-control" id="floatingInput" name="correo" placeholder="name@example.com" required>
                 <label for="floatingInput">Correo Electrónico</label>
             </div>
             <div class="form-floating">
-                <input type="password" class="form-control" id="floatingPassword" placeholder="Contraseña">
+                <input type="password" class="form-control" id="floatingPassword" name="contrasena" placeholder="Contraseña" required>
                 <label for="floatingPassword">Contraseña</label>
             </div>
 
@@ -48,4 +55,3 @@
         integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
 </body>
 </html>
-
