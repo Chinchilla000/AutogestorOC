@@ -17,6 +17,7 @@ include("../../bd.php"); ?>
     
     <br><br>
     <main class="form-signin w-100 m-auto container flex-grow-1">
+<<<<<<< HEAD
     <form method="post" action="procesar_inicio_sesion_empresa.php">
     <img class="mb-4" src="../../img/logo.png" alt="Logo" width="72" height="57">
     <h1 class="h3 mb-3 fw-normal">Iniciar Sesión: Cuenta Empresa</h1>
@@ -29,6 +30,27 @@ include("../../bd.php"); ?>
         <input type="password" class="form-control" name="contrasena" id="floatingPassword" placeholder="Contraseña" required>
         <label for="floatingPassword">Contraseña</label>
     </div>
+=======
+        <form action="procesar_inicio_sesion_empresa.php" method="post">
+            <img class="mb-4" src="../../img/logo.png" alt="Logo" width="72" height="57">
+            <h1 class="h3 mb-3 fw-normal">Iniciar Sesión: Cuenta Empresa</h1>
+
+            <?php
+                // Mostrar mensaje de error si es necesario
+                if (isset($_GET['error']) && $_GET['error'] == 1) {
+                    echo '<div class="alert alert-danger" role="alert">Credenciales incorrectas. Inténtalo de nuevo.</div>';
+                }
+            ?>
+
+            <div class="form-floating">
+                <input type="email" class="form-control" id="floatingInput" name="correo" placeholder="name@example.com" required>
+                <label for="floatingInput">Correo Electrónico</label>
+            </div>
+            <div class="form-floating">
+                <input type="password" class="form-control" id="floatingPassword" name="contrasena" placeholder="Contraseña" required>
+                <label for="floatingPassword">Contraseña</label>
+            </div>
+>>>>>>> 6ba36094bc06ef57e33b23492dc62120f75ca3d8
 
     <div class="form-check text-start my-3">
         <input class="form-check-input" type="checkbox" value="remember-me" id="flexCheckDefault">
@@ -50,4 +72,3 @@ include("../../bd.php"); ?>
         integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
 </body>
 </html>
-
