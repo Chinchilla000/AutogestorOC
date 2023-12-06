@@ -1,24 +1,31 @@
+
 <?php
 error_reporting(E_ALL);
 include("../../../bd.php");
+include("../templates/header_empresa.php");
+
+// Obtener el ID de la empresa actual desde la sesión
+
+$id_empresa_actual = $_SESSION['id_empresa'];
 
 // Verificar si se ha enviado el ID a eliminar
 if (isset($_GET['id'])) {
-    $id_gerente = (isset($_GET['id'])) ? $_GET['id'] : "";
+    $id_gerente = $_GET['id'];
 
-    $sentencia = $conexion->prepare("DELETE FROM gerentes_generales WHERE id=:id");
+    $sentencia = $conexion->prepare("DELETE FROM gerentes_generales WHERE id = :id AND id_empresa = :id_empresa");
     $sentencia->bindParam(":id", $id_gerente);
+    $sentencia->bindParam(":id_empresa", $id_empresa_actual);
     $sentencia->execute();
     header("Location: usuarios_gerentes.php");
     exit();
 }
 
-$sentencia = $conexion->prepare("SELECT * FROM gerentes_generales");
+$sentencia = $conexion->prepare("SELECT * FROM gerentes_generales WHERE id_empresa = :id_empresa");
+$sentencia->bindParam(":id_empresa", $id_empresa_actual);
 $sentencia->execute();
 $gerentesGenerales = $sentencia->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
-<?php include("../templates/header_empresa.php"); ?>
 
 <div class="container mt-5">
     <h2>Lista de Gerentes Generales</h2>
@@ -34,7 +41,6 @@ $gerentesGenerales = $sentencia->fetchAll(PDO::FETCH_ASSOC);
                         <th scope="col">Rut</th>
                         <th scope="col">Cargo</th>
                         <th scope="col">Correo Electrónico</th>
-                        <th scope="col">Contraseña</th>
                         <th scope="col">Acciones</th>
                     </tr>
                 </thead>
@@ -46,7 +52,6 @@ $gerentesGenerales = $sentencia->fetchAll(PDO::FETCH_ASSOC);
                             <td><?php echo $gerenteGeneral['rut']; ?></td>
                             <td><?php echo $gerenteGeneral['cargo']; ?></td>
                             <td><?php echo $gerenteGeneral['correo']; ?></td>
-                            <td><?php echo $gerenteGeneral['contrasena']; ?></td>
                             <td>
                                 <button class='btn btn-warning btn-sm'>Editar</button>
                                 <a href='usuarios_gerentes.php?id=<?php echo $gerenteGeneral['id']; ?>' class='btn btn-danger btn-sm'>Eliminar</a>

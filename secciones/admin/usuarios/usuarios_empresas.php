@@ -2,10 +2,14 @@
 error_reporting(E_ALL);
 include("../../../bd.php");
 
-// Verificar si se ha enviado el ID a eliminar
-if (isset($_GET['id'])) {
-    $id_empresa = (isset($_GET['id'])) ? $_GET['id'] : "";
+// Verificar si se ha enviado el ID a eliminar y la solicitud es GET
+if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['id'])) {
+    $id_empresa = $_GET['id'];
 
+    // Consulta la base de datos para obtener información antes de la eliminación
+    // ...
+
+    // Luego, realiza la eliminación
     $sentencia = $conexion->prepare("DELETE FROM empresas WHERE id=:id");
     $sentencia->bindParam(":id", $id_empresa);
     $sentencia->execute();
@@ -53,7 +57,7 @@ $lista_empresas = $sentencia->fetchAll(PDO::FETCH_ASSOC);
                             <td>
                                 <!-- Botones de acciones con espacio en blanco -->
                                 <a href="usuarios_empresas.php?id=<?php echo $empresa['id']; ?>" class="btn btn-warning btn-sm">Editar</a>&nbsp;
-                                <a href="usuarios_empresas.php?id=<?php echo $empresa['id']; ?>" class="btn btn-danger btn-sm">Eliminar</a>
+                                <button class="btn btn-danger btn-sm" onclick="confirmarEliminacion(<?php echo $empresa['id']; ?>)">Eliminar</button>
                             </td>
                             <!-- Agrega más columnas según tu tabla -->
                         </tr>
@@ -67,3 +71,14 @@ $lista_empresas = $sentencia->fetchAll(PDO::FETCH_ASSOC);
 </div>
 
 <?php include("../templates/footer_adm.php"); ?>
+
+<!-- Agrega este script JavaScript al final del archivo -->
+<script>
+function confirmarEliminacion(id) {
+    var confirmacion = confirm("¡Advertencia!\nEsta acción eliminará permanentemente la empresa y todos los usuarios asociados. ¿Estás seguro de continuar?");
+
+    if (confirmacion) {
+        window.location.href = "usuarios_empresas.php?id=" + id;
+    }
+}
+</script>

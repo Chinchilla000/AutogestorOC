@@ -1,3 +1,5 @@
+<?php
+include("../../bd.php"); ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,28 +17,28 @@
     
     <br><br>
     <main class="form-signin w-100 m-auto container flex-grow-1">
-        <form>
-            <img class="mb-4" src="../../img/logo.png" alt="Logo" width="72" height="57">
-            <h1 class="h3 mb-3 fw-normal">Iniciar Sesión: Cuenta Empresa</h1>
+    <form method="post" action="procesar_inicio_sesion_empresa.php">
+    <img class="mb-4" src="../../img/logo.png" alt="Logo" width="72" height="57">
+    <h1 class="h3 mb-3 fw-normal">Iniciar Sesión: Cuenta Empresa</h1>
 
-            <div class="form-floating">
-                <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-                <label for="floatingInput">Correo Electrónico</label>
-            </div>
-            <div class="form-floating">
-                <input type="password" class="form-control" id="floatingPassword" placeholder="Contraseña">
-                <label for="floatingPassword">Contraseña</label>
-            </div>
+    <div class="form-floating">
+        <input type="email" class="form-control" name="correo" id="floatingInput" placeholder="name@example.com" required>
+        <label for="floatingInput">Correo Electrónico</label>
+    </div>
+    <div class="form-floating">
+        <input type="password" class="form-control" name="contrasena" id="floatingPassword" placeholder="Contraseña" required>
+        <label for="floatingPassword">Contraseña</label>
+    </div>
 
-            <div class="form-check text-start my-3">
-                <input class="form-check-input" type="checkbox" value="remember-me" id="flexCheckDefault">
-                <label class="form-check-label" for="flexCheckDefault">
-                    Recordar usuario
-                </label>
-            </div>
-            <button class="btn btn-primary w-100 py-2" type="submit">Iniciar Sesión</button>
-            <p class="mt-3 text-muted"> Para regresar click <a href="../../iniciar_sesion.php">aqui.</a></p>
-        </form>
+    <div class="form-check text-start my-3">
+        <input class="form-check-input" type="checkbox" value="remember-me" id="flexCheckDefault">
+        <label class="form-check-label" for="flexCheckDefault">
+            Recordar usuario
+        </label>
+    </div>
+    <button class="btn btn-primary w-100 py-2" type="submit">Iniciar Sesión</button>
+    <p class="mt-3 text-muted"> Para regresar click <a href="../../iniciar_sesion.php">aqui.</a></p>
+</form>
     </main>
 
 

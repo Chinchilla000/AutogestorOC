@@ -1,6 +1,7 @@
-
-
-<?php include("templates/header_empresa.php"); ?>
+<?php
+error_reporting(E_ALL);
+include("../../bd.php");
+include("templates/header_empresa.php"); ?>
 
 <div class="container mt-5">
     <h2>Bienvenido a la Plataforma de Gestión de la Empresa</h2>

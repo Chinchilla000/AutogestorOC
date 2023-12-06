@@ -1,3 +1,5 @@
+<?php include("../../templates/header.php"); ?>
+
 <?php
 include("../../bd.php");
 
@@ -21,7 +23,14 @@ if ($_POST) {
         $stmt = $conexion->prepare("INSERT INTO empresas (nombre_usuario, password, nombre_empresa, rut_empresa, giro_comercial, correo_empresa, numero_contacto) VALUES (?, ?, ?, ?, ?, ?, ?)");
 
         if ($stmt->execute([$nombre_usuario, $password, $nombre_empresa, $rut_empresa, $giro_comercial, $correo_empresa, $numero_contacto])) {
-            echo "<script>alert('Registro exitoso.');</script>";
+            echo "<script>
+                if (confirm('Registro exitoso. ¿Deseas iniciar sesión ahora?')) {
+                    window.location.href = '../../iniciar_sesion.php';
+                } else {
+                    window.location.href = '../../index.php'; // Redirección en caso de cancelar
+                }
+            </script>";
+            exit();
         } else {
             echo "<script>alert('Error en el registro.');</script>";
         }
@@ -29,7 +38,7 @@ if ($_POST) {
 }
 ?>
 
-<?php include("../../templates/header.php"); ?>
+
 
 <div class="card shadow">
     <div class="card-header bg-primary text-white">
