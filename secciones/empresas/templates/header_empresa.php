@@ -1,5 +1,4 @@
 <?php
-<<<<<<< HEAD
 
 $url_base = "http://localhost/ProyectoOC/";
 $url_base2 = "http://localhost/ProyectoOC/secciones/empresas/";
@@ -9,13 +8,6 @@ session_start();
 $id_empresa_actual = $_SESSION['id_empresa'];
 
 // Verificar si la sesión de la empresa no está activa
-=======
-$url_base = "http://localhost/ProyectoOC/";
-$url_base2 = "http://localhost/ProyectoOC/secciones/empresas/";
-session_start();
-
-// Verificar si la sesión de la empresa está activa
->>>>>>> 6ba36094bc06ef57e33b23492dc62120f75ca3d8
 if (!isset($_SESSION['id_empresa'])) {
     // La sesión no está activa, redirigir al formulario de inicio de sesión
     header("Location: iniciar_sesion_empresa.php");
