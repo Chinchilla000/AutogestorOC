@@ -1,3 +1,41 @@
+<?php
+include("../../../bd.php");
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $nombre = $_POST["nombre"];
+    $apellido = $_POST["apellido"];
+    $rut = $_POST["rut"];
+    $cargo = $_POST["cargo"];
+    $correo = $_POST["correo"];
+    $contrasena = password_hash($_POST["contrasena"], PASSWORD_DEFAULT);
+
+    session_start();
+    $id_empresa = $_SESSION['id_empresa'];
+
+    $stmt = $conexion->prepare("INSERT INTO residentes_obra (id_empresa, nombre, apellido, rut, cargo, correo, contrasena) VALUES (?, ?, ?, ?, ?, ?, ?)");
+    $stmt->execute([$id_empresa, $nombre, $apellido, $rut, $cargo, $correo, $contrasena]);
+
+    if ($stmt->rowCount() > 0) {
+        // Insertar usuario asociado al residente de obras
+        $usuario_residente = $correo;
+        $stmt_usuario = $conexion->prepare("INSERT INTO usuarios (id_empresa, tipo_usuario, usuario, contrasena) VALUES (?, 'residente_obra', ?, ?)");
+        $stmt_usuario->execute([$id_empresa, $usuario_residente, $contrasena]);
+        if ($stmt_usuario->rowCount() > 0) {
+            echo "<script>
+                alert('Gerente general agregado correctamente.');
+                window.location.href = 'http://localhost/ProyectoOC/secciones/empresas/residente/index_residente.php';
+            </script>";
+            exit();
+        } else {
+            $error_usuario = $stmt_usuario->errorInfo();
+            echo "<script>alert('Error al crear usuario asociado al residente de obras: " . $error_usuario[2] . "');</script>";
+        }
+    } else {
+        $error_residente = $stmt->errorInfo();
+        echo "<script>alert('Error al agregar residente de obras: " . $error_residente[2] . "');</script>";
+    }
+}
+?>
 <?php include("../templates/header_empresa.php"); ?>
 
 <div class="card">
@@ -9,7 +47,7 @@
                 Completa el siguiente formulario para agregar un nuevo Residente de Obras:
             </p>
 
-            <form action="procesar_agregar_residente_obras.php" method="post">
+            <form action="crear_residente.php" method="post">
             <div class="mb-3">
                     <label for="nombre" class="form-label">Nombre:</label>
                     <input type="text" class="form-control" id="nombre" name="nombre" required>

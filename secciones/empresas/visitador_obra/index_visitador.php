@@ -4,18 +4,27 @@ include("../../../bd.php");
 include("../templates/header_empresa.php");
 
 // Obtener el ID de la empresa actual desde la sesión
-
 $id_empresa_actual = $_SESSION['id_empresa'];
 
-// Verificar si se ha enviado el ID a eliminar
-if (isset($_GET['id'])) {
+// Función para mostrar mensajes y recargar la página
+function mostrarMensaje($mensaje, $esError = false) {
+    echo "<script>alert('$mensaje'); window.location.href = 'index_visitador.php';</script>";
+    exit();
+}
+
+// Verificar si se ha enviado el ID a eliminar y la solicitud es GET
+if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['id'])) {
     $id_visitador = $_GET['id'];
 
-    $sentencia = $conexion->prepare("DELETE FROM visitadores_obra WHERE id = :id AND id_empresa = :id_empresa");
+    // Consulta la base de datos para obtener información antes de la eliminación
+    // ...
+
+    // Luego, realiza la eliminación
+    $sentencia = $conexion->prepare("DELETE FROM visitadores_obra WHERE id=:id AND id_empresa=:id_empresa");
     $sentencia->bindParam(":id", $id_visitador);
     $sentencia->bindParam(":id_empresa", $id_empresa_actual);
     $sentencia->execute();
-    header("Location: usuarios_visitadores.php");
+    header("Location: index_visitador.php");
     exit();
 }
 
@@ -51,8 +60,8 @@ $visitadoresObras = $sentencia->fetchAll(PDO::FETCH_ASSOC);
                             <td><?php echo $visitador['cargo']; ?></td>
                             <td><?php echo $visitador['correo']; ?></td>
                             <td>
-                                <button class='btn btn-warning btn-sm'>Editar</button>
-                                <a href='usuarios_visitadores.php?id=<?php echo $visitador['id']; ?>' class='btn btn-danger btn-sm'>Eliminar</a>
+                            <a href='./editar_visitador.php?id=<?php echo $visitador['id']; ?>' class='btn btn-info btn-sm'>Editar</a>
+                                <button class='btn btn-danger btn-sm' onclick='confirmarEliminacion(<?php echo $visitador['id']; ?>)'>Eliminar</button>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -69,3 +78,14 @@ $visitadoresObras = $sentencia->fetchAll(PDO::FETCH_ASSOC);
 </div>
 
 <?php include("../templates/footer_empresa.php"); ?>
+
+<!-- Agrega este script JavaScript al final del archivo -->
+<script>
+function confirmarEliminacion(id) {
+    var confirmacion = confirm("¡Advertencia!\nEsta acción eliminará permanentemente al visitador y todos los datos asociados. ¿Estás seguro de continuar?");
+
+    if (confirmacion) {
+        window.location.href = "index_visitador.php?id=" + id;
+    }
+}
+</script>

@@ -1,31 +1,40 @@
-
 <?php
 error_reporting(E_ALL);
 include("../../../bd.php");
 include("../templates/header_empresa.php");
 
 // Obtener el ID de la empresa actual desde la sesión
-
 $id_empresa_actual = $_SESSION['id_empresa'];
 
-// Verificar si se ha enviado el ID a eliminar
-if (isset($_GET['id'])) {
+// Función para mostrar mensajes y recargar la página
+function mostrarMensaje($mensaje, $esError = false) {
+    echo "<script>alert('$mensaje'); window.location.href = 'index_gerente.php';</script>";
+    exit();
+}
+
+// Verificar si se ha enviado el ID a eliminar y la solicitud es GET
+if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['id'])) {
     $id_gerente = $_GET['id'];
 
-    $sentencia = $conexion->prepare("DELETE FROM gerentes_generales WHERE id = :id AND id_empresa = :id_empresa");
+    // Consulta la base de datos para obtener información antes de la eliminación
+    // ...
+
+    // Luego, realiza la eliminación
+    $sentencia = $conexion->prepare("DELETE FROM gerentes_generales WHERE id=:id AND id_empresa=:id_empresa");
     $sentencia->bindParam(":id", $id_gerente);
     $sentencia->bindParam(":id_empresa", $id_empresa_actual);
     $sentencia->execute();
-    header("Location: usuarios_gerentes.php");
+    header("Location: index_gerente.php");
     exit();
 }
+
+// Resto de tu código para procesar el formulario y mostrar la lista de gerentes
 
 $sentencia = $conexion->prepare("SELECT * FROM gerentes_generales WHERE id_empresa = :id_empresa");
 $sentencia->bindParam(":id_empresa", $id_empresa_actual);
 $sentencia->execute();
 $gerentesGenerales = $sentencia->fetchAll(PDO::FETCH_ASSOC);
 ?>
-
 
 <div class="container mt-5">
     <h2>Lista de Gerentes Generales</h2>
@@ -53,8 +62,9 @@ $gerentesGenerales = $sentencia->fetchAll(PDO::FETCH_ASSOC);
                             <td><?php echo $gerenteGeneral['cargo']; ?></td>
                             <td><?php echo $gerenteGeneral['correo']; ?></td>
                             <td>
-                                <button class='btn btn-warning btn-sm'>Editar</button>
-                                <a href='usuarios_gerentes.php?id=<?php echo $gerenteGeneral['id']; ?>' class='btn btn-danger btn-sm'>Eliminar</a>
+                                <!-- Botones de acciones con espacio en blanco -->
+                                <a href='./editar_gerente.php?id=<?php echo $gerenteGeneral['id']; ?>' class='btn btn-info btn-sm'>Editar</a>
+                                <button class='btn btn-danger btn-sm' onclick='confirmarEliminacion(<?php echo $gerenteGeneral['id']; ?>)'>Eliminar</button>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -70,3 +80,15 @@ $gerentesGenerales = $sentencia->fetchAll(PDO::FETCH_ASSOC);
     </div>
 
     <?php include("../templates/footer_empresa.php"); ?>
+</div>
+
+<!-- Agrega este script JavaScript al final del archivo -->
+<script>
+function confirmarEliminacion(id) {
+    var confirmacion = confirm("¡Advertencia!\nEsta acción eliminará permanentemente al gerente y todos los datos asociados. ¿Estás seguro de continuar?");
+
+    if (confirmacion) {
+        window.location.href = "index_gerente.php?id=" + id;
+    }
+}
+</script>

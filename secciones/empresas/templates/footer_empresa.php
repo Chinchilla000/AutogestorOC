@@ -3,7 +3,7 @@
 
 <footer class="bg-light text-center ">
         
-            <p class="text-muted">© <?php echo date("Y"); ?> Gestión de Órdenes de Compra. Todos los derechos reservados.</p>
+            <p class="text-muted">© <?php echo date("Y"); ?> Autogestor. Todos los derechos reservados.</p>
     
     </footer>
 

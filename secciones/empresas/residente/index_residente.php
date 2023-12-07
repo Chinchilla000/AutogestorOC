@@ -1,24 +1,38 @@
 <?php
 error_reporting(E_ALL);
 include("../../../bd.php");
+include("../templates/header_empresa.php");
 
-// Verificar si se ha enviado el ID a eliminar
-if (isset($_GET['id'])) {
-    $id_residente = (isset($_GET['id'])) ? $_GET['id'] : "";
+// Obtener el ID de la empresa actual desde la sesión
+$id_empresa_actual = $_SESSION['id_empresa'];
 
-    $sentencia = $conexion->prepare("DELETE FROM residentes_obra WHERE id=:id");
-    $sentencia->bindParam(":id", $id_residente);
-    $sentencia->execute();
-    header("Location: usuarios_residentes.php");
+// Función para mostrar mensajes y recargar la página
+function mostrarMensaje($mensaje, $esError = false) {
+    echo "<script>alert('$mensaje'); window.location.href = 'index_residente.php';</script>";
     exit();
 }
 
-$sentencia = $conexion->prepare("SELECT * FROM residentes_obra");
+// Verificar si se ha enviado el ID a eliminar y la solicitud es GET
+if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['id'])) {
+    $id_residente = $_GET['id'];
+
+    // Consulta la base de datos para obtener información antes de la eliminación
+    // ...
+
+    // Luego, realiza la eliminación
+    $sentencia = $conexion->prepare("DELETE FROM residentes_obra WHERE id=:id AND id_empresa=:id_empresa");
+    $sentencia->bindParam(":id", $id_residente);
+    $sentencia->bindParam(":id_empresa", $id_empresa_actual);
+    $sentencia->execute();
+    header("Location: index_residente.php");
+    exit();
+}
+
+$sentencia = $conexion->prepare("SELECT * FROM residentes_obra WHERE id_empresa = :id_empresa");
+$sentencia->bindParam(":id_empresa", $id_empresa_actual);
 $sentencia->execute();
 $residentesObras = $sentencia->fetchAll(PDO::FETCH_ASSOC);
 ?>
-
-<?php include("../templates/header_empresa.php"); ?>
 
 <div class="container mt-5">
     <h2>Lista de Residentes de Obras</h2>
@@ -34,7 +48,6 @@ $residentesObras = $sentencia->fetchAll(PDO::FETCH_ASSOC);
                         <th scope="col">Rut</th>
                         <th scope="col">Cargo</th>
                         <th scope="col">Correo Electrónico</th>
-                        <th scope="col">Contraseña</th>
                         <th scope="col">Acciones</th>
                     </tr>
                 </thead>
@@ -46,10 +59,10 @@ $residentesObras = $sentencia->fetchAll(PDO::FETCH_ASSOC);
                             <td><?php echo $residente['rut']; ?></td>
                             <td><?php echo $residente['cargo']; ?></td>
                             <td><?php echo $residente['correo']; ?></td>
-                            <td><?php echo $residente['contrasena']; ?></td>
                             <td>
-                                <button class='btn btn-warning btn-sm'>Editar</button>
-                                <a href='usuarios_residentes.php?id=<?php echo $residente['id']; ?>' class='btn btn-danger btn-sm'>Eliminar</a>
+                                <!-- Botones de acciones con espacio en blanco -->
+                                <a href='./editar_residente.php?id=<?php echo $residente['id']; ?>' class='btn btn-info btn-sm'>Editar</a>
+                                <button class='btn btn-danger btn-sm' onclick='confirmarEliminacion(<?php echo $residente['id']; ?>)'>Eliminar</button>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -66,3 +79,14 @@ $residentesObras = $sentencia->fetchAll(PDO::FETCH_ASSOC);
 </div>
 
 <?php include("../templates/footer_empresa.php"); ?>
+
+<!-- Agrega este script JavaScript al final del archivo -->
+<script>
+function confirmarEliminacion(id) {
+    var confirmacion = confirm("¡Advertencia!\nEsta acción eliminará permanentemente al residente y todos los datos asociados. ¿Estás seguro de continuar?");
+
+    if (confirmacion) {
+        window.location.href = "index_residente.php?id=" + id;
+    }
+}
+</script>
