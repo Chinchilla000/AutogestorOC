@@ -27,10 +27,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $rut = $_POST["rut"];
     $cargo = $_POST["cargo"];
     $correo = $_POST["correo"];
+    $nueva_contrasena = isset($_POST["nueva_contrasena"]) ? password_hash($_POST["nueva_contrasena"], PASSWORD_DEFAULT) : null;
 
     // Actualizar los datos en la base de datos
-    $stmt_actualizar = $conexion->prepare("UPDATE gerentes_generales SET nombre = ?, apellido = ?, rut = ?, cargo = ?, correo = ? WHERE id = ? AND id_empresa = ?");
-    $stmt_actualizar->execute([$nombre, $apellido, $rut, $cargo, $correo, $id_gerente, $id_empresa_actual]);
+    $stmt_actualizar_datos = $conexion->prepare("UPDATE gerentes_generales SET nombre = ?, apellido = ?, rut = ?, cargo = ?, correo = ? WHERE id = ? AND id_empresa = ?");
+    $params_datos = [$nombre, $apellido, $rut, $cargo, $correo, $id_gerente, $id_empresa_actual];
+    
+    $stmt_actualizar_datos->execute($params_datos);
+
+    // Incluir la nueva contraseña en la actualización si se proporciona
+    if ($nueva_contrasena !== null) {
+        $stmt_actualizar_contrasena = $conexion->prepare("UPDATE gerentes_generales SET contrasena = ? WHERE id = ? AND id_empresa = ?");
+        $params_contrasena = [$nueva_contrasena, $id_gerente, $id_empresa_actual];
+        $stmt_actualizar_contrasena->execute($params_contrasena);
+    }
 
     // Redireccionar a la página de lista después de la actualización
     header("Location: index_gerente.php");
