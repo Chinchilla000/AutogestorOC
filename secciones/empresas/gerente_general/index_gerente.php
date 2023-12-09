@@ -1,40 +1,40 @@
 <?php
 error_reporting(E_ALL);
 include("../../../bd.php");
-include("../templates/header_empresa.php");
 
-// Obtener el ID de la empresa actual desde la sesión
-$id_empresa_actual = $_SESSION['id_empresa'];
-
-// Función para mostrar mensajes y recargar la página
-function mostrarMensaje($mensaje, $esError = false) {
-    echo "<script>alert('$mensaje'); window.location.href = 'index_gerente.php';</script>";
-    exit();
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
 }
+
+$id_empresa_actual = $_SESSION['id_empresa'];
 
 // Verificar si se ha enviado el ID a eliminar y la solicitud es GET
 if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['id'])) {
     $id_gerente = $_GET['id'];
 
-    // Consulta la base de datos para obtener información antes de la eliminación
-    // ...
-
-    // Luego, realiza la eliminación
+    // Realiza la eliminación
     $sentencia = $conexion->prepare("DELETE FROM gerentes_generales WHERE id=:id AND id_empresa=:id_empresa");
     $sentencia->bindParam(":id", $id_gerente);
     $sentencia->bindParam(":id_empresa", $id_empresa_actual);
-    $sentencia->execute();
-    header("Location: index_gerente.php");
-    exit();
+    if ($sentencia->execute()) {
+        // Redirección si la eliminación fue exitosa
+        header("Location: index_gerente.php");
+        exit();
+    } else {
+        // Manejar error si la eliminación falló
+        $error = "Error al eliminar el gerente.";
+    }
 }
 
-// Resto de tu código para procesar el formulario y mostrar la lista de gerentes
+include("../templates/header_empresa.php");
 
+// Resto de tu código para mostrar la lista de gerentes
 $sentencia = $conexion->prepare("SELECT * FROM gerentes_generales WHERE id_empresa = :id_empresa");
 $sentencia->bindParam(":id_empresa", $id_empresa_actual);
 $sentencia->execute();
 $gerentesGenerales = $sentencia->fetchAll(PDO::FETCH_ASSOC);
 ?>
+
 
 <div class="container mt-5">
     <h2>Lista de Gerentes Generales</h2>
@@ -81,6 +81,7 @@ $gerentesGenerales = $sentencia->fetchAll(PDO::FETCH_ASSOC);
 
     <?php include("../templates/footer_empresa.php"); ?>
 </div>
+
 
 <!-- Agrega este script JavaScript al final del archivo -->
 <script>

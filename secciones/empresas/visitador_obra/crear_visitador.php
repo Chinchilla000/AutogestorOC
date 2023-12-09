@@ -12,28 +12,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     session_start();
     $id_empresa = $_SESSION['id_empresa'];
 
-    $stmt = $conexion->prepare("INSERT INTO visitadores_obra (id_empresa, nombre, apellido, rut, cargo, correo, contrasena) VALUES (?, ?, ?, ?, ?, ?, ?)");
-    $stmt->execute([$id_empresa, $nombre, $apellido, $rut, $cargo, $correo, $contrasena]);
+    // Verificar si ya existe un visitador con el mismo correo electrónico
+    $stmt_verificar = $conexion->prepare("SELECT * FROM visitadores_obra WHERE correo = :correo");
+    $stmt_verificar->bindParam(':correo', $correo);
+    $stmt_verificar->execute();
 
-    if ($stmt->rowCount() > 0) {
-        // Insertar usuario asociado al visitador de obras
-        $usuario_visitador = $correo;
-        $stmt_usuario = $conexion->prepare("INSERT INTO usuarios (id_empresa, tipo_usuario, usuario, contrasena) VALUES (?, 'visitador_obras', ?, ?)");
-        $stmt_usuario->execute([$id_empresa, $usuario_visitador, $contrasena]);
+    if ($stmt_verificar->rowCount() > 0) {
+        echo "<script>alert('Ya existe un visitador de obras con el mismo correo electrónico.');</script>";
+    } else {
+        $stmt = $conexion->prepare("INSERT INTO visitadores_obra (id_empresa, nombre, apellido, rut, cargo, correo, contrasena) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$id_empresa, $nombre, $apellido, $rut, $cargo, $correo, $contrasena]);
 
-        if ($stmt_usuario->rowCount() > 0) {
+        if ($stmt->rowCount() > 0) {
             echo "<script>
                 alert('Visitador de obras agregado correctamente.');
-                window.location.href = 'http://localhost/ProyectoOC/secciones/empresas/visitador_obra/index_visitador.php';
+                window.location.href = 'index_visitador.php';
             </script>";
             exit();
         } else {
-            $error_usuario = $stmt_usuario->errorInfo();
-            echo "<script>alert('Error al crear usuario asociado al visitador de obras: " . $error_usuario[2] . "');</script>";
+            $error_visitador = $stmt->errorInfo();
+            echo "<script>alert('Error al agregar visitador de obras: " . $error_visitador[2] . "');</script>";
         }
-    } else {
-        $error_visitador = $stmt->errorInfo();
-        echo "<script>alert('Error al agregar visitador de obras: " . $error_visitador[2] . "');</script>";
     }
 }
 ?>

@@ -9,17 +9,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $contrasena = $_POST['contrasena'];
 
     // Consultar la base de datos para verificar las credenciales
-    $sentencia = $conexion->prepare("SELECT * FROM gerentes_generales WHERE correo = :correo");
+    // La consulta ahora incluye un JOIN para obtener también la información de la empresa
+    $sentencia = $conexion->prepare("SELECT gg.*, e.nombre_empresa FROM gerentes_generales gg
+                                     JOIN empresas e ON gg.id_empresa = e.id
+                                     WHERE gg.correo = :correo");
     $sentencia->bindParam(':correo', $correo);
     $sentencia->execute();
     $gerente = $sentencia->fetch(PDO::FETCH_ASSOC);
 
     if ($gerente && password_verify($contrasena, $gerente['contrasena'])) {
-        // Inicio de sesión exitoso, redirigir al área de empresas
+        // Inicio de sesión exitoso, iniciar la sesión y redirigir al área de gerentes generales
         session_start();
-        $_SESSION['id_empresa'] = $gerente['id_empresa'];
+        $_SESSION['id_gerente'] = $gerente['id'];
+        $_SESSION['nombre_gerente'] = $gerente['nombre'];
 
-        header("Location: index_usuario_gerente.php");
+
+        header("Location: interfaz_usuario_gerente/index_usuario_gerente.php");
         exit();
     } else {
         // Credenciales incorrectas, redirigir al formulario de inicio de sesión con un mensaje de error
@@ -63,7 +68,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <input type="password" class="form-control" id="floatingPassword" name="contrasena" placeholder="Contraseña">
                 <label for="floatingPassword">Contraseña</label>
             </div>
-            
+            <?php if (isset($_GET['error'])): ?>
+                <div class="alert alert-danger" role="alert">
+                    Correo electrónico o contraseña incorrecta.
+                </div>
+            <?php endif; ?>
+
             <div class="form-check text-start mb-3">
                 <input class="form-check-input" type="checkbox" value="remember-me" id="flexCheckDefault">
                 <label class="form-check-label" for="flexCheckDefault">
@@ -75,6 +85,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             <p class="mt-3 text-muted"> Para regresar haz clic <a href="../../../iniciar_sesion.php">aquí.</a></p>
         </form>
+
     </main>
 
     <!-- Bootstrap JavaScript Libraries -->

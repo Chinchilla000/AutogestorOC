@@ -1,3 +1,5 @@
+
+<?php include("../templates/header_empresa.php"); ?>
 <?php
 include("../../../bd.php");
 
@@ -9,36 +11,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $correo = $_POST["correo"];
     $contrasena = password_hash($_POST["contrasena"], PASSWORD_DEFAULT);
 
-    session_start();
     $id_empresa = $_SESSION['id_empresa'];
 
-    $stmt = $conexion->prepare("INSERT INTO gerentes_generales (id_empresa, nombre, apellido, rut, cargo, correo, contrasena) VALUES (?, ?, ?, ?, ?, ?, ?)");
-    $stmt->execute([$id_empresa, $nombre, $apellido, $rut, $cargo, $correo, $contrasena]);
+    // Verificar si ya existe un gerente con el mismo correo electrónico
+    $stmt_verificar = $conexion->prepare("SELECT * FROM gerentes_generales WHERE correo = :correo");
+    $stmt_verificar->bindParam(':correo', $correo);
+    $stmt_verificar->execute();
 
-    if ($stmt->rowCount() > 0) {
-        // Insertar usuario asociado al gerente general
-        $usuario_gerente = $correo;
-        $stmt_usuario = $conexion->prepare("INSERT INTO usuarios (id_empresa, tipo_usuario, usuario, contrasena) VALUES (?, 'gerente_general', ?, ?)");
-        $stmt_usuario->execute([$id_empresa, $usuario_gerente, $contrasena]);
+    if ($stmt_verificar->rowCount() > 0) {
+        echo "<script>alert('Ya existe un gerente con el mismo correo electrónico.');</script>";
+    } else {
+        $stmt = $conexion->prepare("INSERT INTO gerentes_generales (id_empresa, nombre, apellido, rut, cargo, correo, contrasena) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$id_empresa, $nombre, $apellido, $rut, $cargo, $correo, $contrasena]);
 
-        if ($stmt_usuario->rowCount() > 0) {
+        if ($stmt->rowCount() > 0) {
             echo "<script>
-                alert('Gerente general agregado correctamente.');
-                window.location.href = 'http://localhost/ProyectoOC/secciones/empresas/gerente_general/index_gerente.php';
-            </script>";
+                    alert('Gerente general agregado correctamente.');
+                    window.location.href = 'index_gerente.php';
+                </script>";
             exit();
         } else {
-            $error_usuario = $stmt_usuario->errorInfo();
-            echo "<script>alert('Error al crear usuario asociado al gerente general: " . $error_usuario[2] . "');</script>";
+            $error_gerente = $stmt->errorInfo();
+            echo "<script>alert('Error al agregar gerente general: " . $error_gerente[2] . "');</script>";
         }
-    } else {
-        $error_gerente = $stmt->errorInfo();
-        echo "<script>alert('Error al agregar gerente general: " . $error_gerente[2] . "');</script>";
     }
 }
 ?>
 
-<?php include("../templates/header_empresa.php"); ?>
 
 <div class="card shadow">
     <div class="card-header bg-primary text-white">
@@ -83,7 +82,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             <div class="text-center">
                 <button type="submit" class="btn btn-primary me-2">Crear Gerente General</button>
-                <button type="reset" class="btn btn-danger">Cancelar</button>
+                <button type="button" class="btn btn-danger" onclick="window.location.href='./index_gerente.php'">Cancelar</button>
+
             </div>
         </form>
     </div>

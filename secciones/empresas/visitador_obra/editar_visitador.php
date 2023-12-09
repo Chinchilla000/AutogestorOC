@@ -1,21 +1,27 @@
 <?php
 error_reporting(E_ALL);
 include("../../../bd.php");
-include("../templates/header_empresa.php");
+
+session_start();
+$id_empresa_actual = $_SESSION['id_empresa'];
 
 // Obtener el ID de visitador de la URL
+if (!isset($_GET['id']) || empty($_GET['id'])) {
+    echo "ID del visitador no proporcionado.";
+    exit();
+}
+
 $id_visitador = $_GET['id'];
 
-// Obtener datos del visitador para prellenar el formulario
+// Si no se ha enviado el formulario, obtén los datos del visitador para mostrarlos en el formulario
 $stmt = $conexion->prepare("SELECT * FROM visitadores_obra WHERE id = :id AND id_empresa = :id_empresa");
-$stmt->bindParam(":id", $id_visitador);
-$stmt->bindParam(":id_empresa", $id_empresa_actual);
+$stmt->bindParam(":id", $id_visitador, PDO::PARAM_INT);
+$stmt->bindParam(":id_empresa", $id_empresa_actual, PDO::PARAM_INT);
 $stmt->execute();
 $visitador = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$visitador) {
-    // Manejar el caso en que el visitador no existe o no pertenece a la empresa actual
-    echo "Visitador no encontrado.";
+    echo "Visitador no encontrado. Verifique que el ID es correcto y pertenece a su empresa.";
     exit();
 }
 
@@ -30,32 +36,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nueva_contrasena = isset($_POST["nueva_contrasena"]) ? password_hash($_POST["nueva_contrasena"], PASSWORD_DEFAULT) : null;
 
     // Actualizar los datos en la base de datos
-    $query = "UPDATE visitadores_obra SET nombre = ?, apellido = ?, rut = ?, cargo = ?, correo = ?";
-    $params = [$nombre, $apellido, $rut, $cargo, $correo];
+    $stmt_actualizar_datos = $conexion->prepare("UPDATE visitadores_obra SET nombre = ?, apellido = ?, rut = ?, cargo = ?, correo = ? WHERE id = ? AND id_empresa = ?");
+    $params_datos = [$nombre, $apellido, $rut, $cargo, $correo, $id_visitador, $id_empresa_actual];
 
     // Incluir la nueva contraseña en la actualización si se proporciona
     if ($nueva_contrasena !== null) {
-        $query .= ", contrasena = ?";
-        $params[] = $nueva_contrasena;
+        $stmt_actualizar_contrasena = $conexion->prepare("UPDATE visitadores_obra SET contrasena = ? WHERE id = ? AND id_empresa = ?");
+        $params_contrasena = [$nueva_contrasena, $id_visitador, $id_empresa_actual];
+        $stmt_actualizar_contrasena->execute($params_contrasena);
     }
 
-    $query .= " WHERE id = ? AND id_empresa = ?";
-    $params[] = $id_visitador;
-    $params[] = $id_empresa_actual;
-
-    $stmt_actualizar = $conexion->prepare($query);
-    $stmt_actualizar->execute($params);
+    $stmt_actualizar_datos->execute($params_datos);
 
     // Redireccionar a la página de lista después de la actualización
     header("Location: index_visitador.php");
     exit();
 }
 
-// Obtener la lista actualizada de visitadores después de la posible actualización
-$sentencia = $conexion->prepare("SELECT * FROM visitadores_obra WHERE id_empresa = :id_empresa");
-$sentencia->bindParam(":id_empresa", $id_empresa_actual);
-$sentencia->execute();
-$visitadores = $sentencia->fetchAll(PDO::FETCH_ASSOC);
+include("../templates/header_empresa.php");
 ?>
 <div class="card shadow">
     <div class="card-header bg-primary text-white">

@@ -22,13 +22,6 @@ include("../../bd.php"); ?>
             <img class="mb-4" src="../../img/logo.png" alt="Logo" width="72" height="57">
             <h1 class="h3 mb-3 fw-normal">Iniciar Sesión: Cuenta Empresa</h1>
 
-            <?php
-                // Mostrar mensaje de error si es necesario
-                if (isset($_GET['error']) && $_GET['error'] == 1) {
-                    echo '<div class="alert alert-danger" role="alert">Credenciales incorrectas. Inténtalo de nuevo.</div>';
-                }
-            ?>
-
             <div class="form-floating">
                 <input type="email" class="form-control" id="floatingInput" name="correo" placeholder="name@example.com" required>
                 <label for="floatingInput">Correo Electrónico</label>
@@ -38,6 +31,11 @@ include("../../bd.php"); ?>
                 <label for="floatingPassword">Contraseña</label>
             </div>
 
+            <?php if (isset($_GET['error'])): ?>
+                <div class="alert alert-danger" role="alert">
+                    Correo electrónico o contraseña incorrecta.
+                </div>
+            <?php endif; ?>
 
     <div class="form-check text-start my-3">
         <input class="form-check-input" type="checkbox" value="remember-me" id="flexCheckDefault">
