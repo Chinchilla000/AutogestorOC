@@ -1,42 +1,65 @@
 <?php
 error_reporting(E_ALL);
 include("../../../bd.php");
-include("../templates/header_empresa.php");
+
+session_start();
+$id_empresa_actual = $_SESSION['id_empresa'];
 
 // Obtener el ID de residente de la URL
-$id_residente = $_GET['id'];
+$id_residente = $_GET['id'] ?? null;
+if (!$id_residente) {
+    echo "ID del residente no proporcionado.";
+    exit();
+}
 
-// Obtener datos del residente para prellenar el formulario
 $stmt = $conexion->prepare("SELECT * FROM residentes_obra WHERE id = :id AND id_empresa = :id_empresa");
-$stmt->bindParam(":id", $id_residente);
-$stmt->bindParam(":id_empresa", $id_empresa_actual);
+$stmt->bindParam(":id", $id_residente, PDO::PARAM_INT);
+$stmt->bindParam(":id_empresa", $id_empresa_actual, PDO::PARAM_INT);
 $stmt->execute();
 $residente = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$residente) {
-    // Manejar el caso en que el residente no existe o no pertenece a la empresa actual
-    echo "Residente no encontrado.";
+    echo "Residente no encontrado. Verifique que el ID es correcto y pertenece a su empresa.";
     exit();
 }
 
-// Manejar el formulario enviado para realizar la actualización
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Recoger los datos del formulario
     $nombre = $_POST["nombre"];
     $apellido = $_POST["apellido"];
     $rut = $_POST["rut"];
     $cargo = $_POST["cargo"];
     $correo = $_POST["correo"];
-    $nueva_contrasena = isset($_POST["nueva_contrasena"]) ? password_hash($_POST["nueva_contrasena"], PASSWORD_DEFAULT) : null;
+    $nueva_contrasena = $_POST["nueva_contrasena"] ?? '';
 
-    // Actualizar los datos en la base de datos
+    // Verificar si el correo electrónico proporcionado es diferente del actual
+    if ($correo != $residente['correo']) {
+        // Verificar si el nuevo correo ya existe en la base de datos
+        $stmt_verificar = $conexion->prepare("SELECT * FROM residentes_obra WHERE correo = :correo AND id_empresa = :id_empresa AND id != :id_residente");
+        $stmt_verificar->bindParam(':correo', $correo);
+        $stmt_verificar->bindParam(':id_empresa', $id_empresa_actual);
+        $stmt_verificar->bindParam(':id_residente', $id_residente);
+        $stmt_verificar->execute();
+
+        if ($stmt_verificar->rowCount() > 0) {
+            echo "<script>alert('Ya existe un residente con el mismo correo electrónico.');</script>";
+        } else {
+            actualizarDatos();
+        }
+    } else {
+        actualizarDatos();
+    }
+}
+
+function actualizarDatos() {
+    global $conexion, $id_residente, $id_empresa_actual, $nombre, $apellido, $rut, $cargo, $correo, $nueva_contrasena;
+
     $query = "UPDATE residentes_obra SET nombre = ?, apellido = ?, rut = ?, cargo = ?, correo = ?";
     $params = [$nombre, $apellido, $rut, $cargo, $correo];
 
-    // Incluir la nueva contraseña en la actualización si se proporciona
-    if ($nueva_contrasena !== null) {
+    if ($nueva_contrasena) {
+        $nueva_contrasena_hash = password_hash($nueva_contrasena, PASSWORD_DEFAULT);
         $query .= ", contrasena = ?";
-        $params[] = $nueva_contrasena;
+        $params[] = $nueva_contrasena_hash;
     }
 
     $query .= " WHERE id = ? AND id_empresa = ?";
@@ -46,16 +69,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt_actualizar = $conexion->prepare($query);
     $stmt_actualizar->execute($params);
 
-    // Redireccionar a la página de lista después de la actualización
     header("Location: index_residente.php");
     exit();
 }
 
-// Obtener la lista actualizada de residentes de obras después de la posible actualización
-$sentencia = $conexion->prepare("SELECT * FROM residentes_obra WHERE id_empresa = :id_empresa");
-$sentencia->bindParam(":id_empresa", $id_empresa_actual);
-$sentencia->execute();
-$residentesObras = $sentencia->fetchAll(PDO::FETCH_ASSOC);
+include("../templates/header_empresa.php");
 ?>
 <div class="card shadow">
     <div class="card-header bg-primary text-white">

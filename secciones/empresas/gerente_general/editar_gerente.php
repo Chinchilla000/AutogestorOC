@@ -5,42 +5,12 @@ include("../../../bd.php");
 session_start();
 $id_empresa_actual = $_SESSION['id_empresa'];
 
-// Obtener el ID de gerente de la URL
-if (!isset($_GET['id']) || empty($_GET['id'])) {
+$id_gerente = $_GET['id'] ?? null;
+if (!$id_gerente) {
     echo "ID del gerente no proporcionado.";
     exit();
 }
 
-$id_gerente = $_GET['id'];
-
-// Manejar el formulario enviado para realizar la actualización
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Recoger los datos del formulario
-    $nombre = $_POST["nombre"];
-    $apellido = $_POST["apellido"];
-    $rut = $_POST["rut"];
-    $cargo = $_POST["cargo"];
-    $correo = $_POST["correo"];
-    $nueva_contrasena = isset($_POST["nueva_contrasena"]) ? password_hash($_POST["nueva_contrasena"], PASSWORD_DEFAULT) : null;
-
-    // Actualizar los datos en la base de datos
-    $stmt_actualizar_datos = $conexion->prepare("UPDATE gerentes_generales SET nombre = ?, apellido = ?, rut = ?, cargo = ?, correo = ? WHERE id = ? AND id_empresa = ?");
-    $params_datos = [$nombre, $apellido, $rut, $cargo, $correo, $id_gerente, $id_empresa_actual];
-    $stmt_actualizar_datos->execute($params_datos);
-
-    // Incluir la nueva contraseña en la actualización si se proporciona
-    if ($nueva_contrasena !== null) {
-        $stmt_actualizar_contrasena = $conexion->prepare("UPDATE gerentes_generales SET contrasena = ? WHERE id = ? AND id_empresa = ?");
-        $params_contrasena = [$nueva_contrasena, $id_gerente, $id_empresa_actual];
-        $stmt_actualizar_contrasena->execute($params_contrasena);
-    }
-
-    // Redireccionar a la página de lista después de la actualización
-    header("Location: index_gerente.php");
-    exit();
-}
-
-// Si no se ha enviado el formulario, obtén los datos del gerente para mostrarlos en el formulario
 $stmt = $conexion->prepare("SELECT * FROM gerentes_generales WHERE id = :id AND id_empresa = :id_empresa");
 $stmt->bindParam(":id", $id_gerente, PDO::PARAM_INT);
 $stmt->bindParam(":id_empresa", $id_empresa_actual, PDO::PARAM_INT);
@@ -49,6 +19,54 @@ $gerente = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$gerente) {
     echo "Gerente no encontrado. Verifique que el ID es correcto y pertenece a su empresa.";
+    exit();
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $nombre = $_POST["nombre"];
+    $apellido = $_POST["apellido"];
+    $rut = $_POST["rut"];
+    $cargo = $_POST["cargo"];
+    $correo = $_POST["correo"];
+    $nueva_contrasena = $_POST["nueva_contrasena"] ?? '';
+
+    if ($correo != $gerente['correo']) {
+        $stmt_verificar = $conexion->prepare("SELECT * FROM gerentes_generales WHERE correo = :correo AND id_empresa = :id_empresa AND id != :id_gerente");
+        $stmt_verificar->bindParam(':correo', $correo);
+        $stmt_verificar->bindParam(':id_empresa', $id_empresa_actual);
+        $stmt_verificar->bindParam(':id_gerente', $id_gerente);
+        $stmt_verificar->execute();
+
+        if ($stmt_verificar->rowCount() > 0) {
+            echo "<script>alert('Ya existe un gerente con el mismo correo electrónico.');</script>";
+        } else {
+            actualizarDatos();
+        }
+    } else {
+        actualizarDatos();
+    }
+}
+
+function actualizarDatos() {
+    global $conexion, $id_gerente, $id_empresa_actual, $nombre, $apellido, $rut, $cargo, $correo, $nueva_contrasena;
+
+    $query = "UPDATE gerentes_generales SET nombre = ?, apellido = ?, rut = ?, cargo = ?, correo = ?";
+    $params = [$nombre, $apellido, $rut, $cargo, $correo];
+
+    if ($nueva_contrasena) {
+        $nueva_contrasena_hash = password_hash($nueva_contrasena, PASSWORD_DEFAULT);
+        $query .= ", contrasena = ?";
+        $params[] = $nueva_contrasena_hash;
+    }
+
+    $query .= " WHERE id = ? AND id_empresa = ?";
+    $params[] = $id_gerente;
+    $params[] = $id_empresa_actual;
+
+    $stmt_actualizar = $conexion->prepare($query);
+    $stmt_actualizar->execute($params);
+
+    header("Location: index_gerente.php");
     exit();
 }
 
