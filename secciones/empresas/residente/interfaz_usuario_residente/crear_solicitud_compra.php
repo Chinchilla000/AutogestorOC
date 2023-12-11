@@ -73,8 +73,7 @@ if (isset($_FILES['cotizacion']) && $_FILES['cotizacion']['error'] === UPLOAD_ER
     echo "No se subió ningún archivo o se produjo un error.";
 }
      // Insertar solicitud en la tabla de solicitudes
-     $stmt = $conexion->prepare("INSERT INTO solicitudes_orden_compra (id_residente, id_empresa, obra, domicilio, solicitado_por, total_neto, iva, total, metodo_pago, nombre_pago, rut_pago, correo_pago, banco, numero_cuenta, archivo_cotizacion) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-     $stmt->bindParam(1, $id_residente);
+     $stmt = $conexion->prepare("INSERT INTO solicitudes_orden_compra (id_residente, id_empresa, obra, domicilio, solicitado_por, total_neto, iva, total, metodo_pago, nombre_pago, rut_pago, correo_pago, banco, numero_cuenta, archivo_cotizacion, estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'En espera')");     $stmt->bindParam(1, $id_residente);
      $stmt->bindParam(2, $id_empresa);
     $stmt->bindParam(3, $obra);
     $stmt->bindParam(4, $domicilio);

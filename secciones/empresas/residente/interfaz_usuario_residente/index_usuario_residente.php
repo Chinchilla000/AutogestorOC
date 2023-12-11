@@ -13,23 +13,19 @@ include("./templates_residente/header_residente.php");
 </div>
 
 <?php 
-// Asegúrate de que $id_residente está definido
 $id_residente = $_SESSION['id_residente'] ?? null;
 
 if ($id_residente) {
-    // Preparar la consulta para obtener las solicitudes
     $stmt = $conexion->prepare("SELECT * FROM solicitudes_orden_compra WHERE id_residente = :id_residente ORDER BY fecha_creacion DESC");
     $stmt->bindParam(':id_residente', $id_residente, PDO::PARAM_INT);
     $stmt->execute();
     $solicitudes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Verificar si se encontraron solicitudes
     if (count($solicitudes) > 0) {
-        // Mostrar las solicitudes
         echo "<div class='container mt-5'>";
         echo "<h3>Sus Solicitudes Enviadas</h3>";
         echo "<table class='table'>";
-        echo "<thead><tr><th>ID Solicitud</th><th>Obra</th><th>Domicilio</th><th>Total</th><th>Fecha de Creación</th><th>Archivo Cotización</th></tr></thead>";
+        echo "<thead><tr><th>ID Solicitud</th><th>Obra</th><th>Domicilio</th><th>Total</th><th>Fecha de Creación</th><th>Estado</th><th>Archivo Cotización</th></tr></thead>";
         echo "<tbody>";
 
         foreach ($solicitudes as $solicitud) {
@@ -39,8 +35,8 @@ if ($id_residente) {
             echo "<td>" . htmlspecialchars($solicitud['domicilio']) . "</td>";
             echo "<td>" . htmlspecialchars($solicitud['total']) . "</td>";
             echo "<td>" . htmlspecialchars($solicitud['fecha_creacion']) . "</td>";
+            echo "<td>" . htmlspecialchars($solicitud['estado']) . "</td>";
 
-            // Verificar si existe un archivo de cotización y mostrar el enlace
             if (!empty($solicitud['archivo_cotizacion'])) {
                 echo "<td><a href='" . htmlspecialchars($solicitud['archivo_cotizacion']) . "' target='_blank'>Ver Cotización</a></td>";
             } else {
