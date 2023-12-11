@@ -56,7 +56,7 @@ $lista_empresas = $sentencia->fetchAll(PDO::FETCH_ASSOC);
                             <td><?php echo $empresa['fecha_registro']; ?></td>
                             <td>
                                 <!-- Botones de acciones con espacio en blanco -->
-                                <a href="usuarios_empresas.php?id=<?php echo $empresa['id']; ?>" class="btn btn-warning btn-sm">Editar</a>&nbsp;
+                                <a href="editar_usuarios_empresa.php?id=<?php echo $empresa['id']; ?>" class="btn btn-warning btn-sm">Editar</a>&nbsp;
                                 <button class="btn btn-danger btn-sm" onclick="confirmarEliminacion(<?php echo $empresa['id']; ?>)">Eliminar</button>
                             </td>
                             <!-- Agrega más columnas según tu tabla -->

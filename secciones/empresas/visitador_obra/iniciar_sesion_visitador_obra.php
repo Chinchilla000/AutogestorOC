@@ -1,3 +1,38 @@
+<?php
+// Incluir archivo de conexión a la base de datos
+include("../../../bd.php");
+
+// Verificar si se han enviado datos de inicio de sesión
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Obtener datos del formulario
+    $correo = $_POST['correo'];
+    $contrasena = $_POST['contrasena'];
+
+    // Consultar la base de datos para verificar las credenciales
+    $sentencia = $conexion->prepare("SELECT vo.*, e.nombre_empresa FROM visitadores_obra vo
+                                     JOIN empresas e ON vo.id_empresa = e.id
+                                     WHERE vo.correo = :correo");
+    $sentencia->bindParam(':correo', $correo);
+    $sentencia->execute();
+    $visitador = $sentencia->fetch(PDO::FETCH_ASSOC);
+
+    if ($visitador && password_verify($contrasena, $visitador['contrasena'])) {
+        // Inicio de sesión exitoso, iniciar la sesión y redirigir al área de visitadores de obra
+        session_start();
+        $_SESSION['id_visitador'] = $visitador['id'];
+        $_SESSION['nombre_visitador'] = $visitador['nombre'];
+        $_SESSION['empresa_visitador'] = $visitador['nombre_empresa'];
+
+        header("Location: interfaz_usuario_visitador/index_usuario_visitador.php");
+        exit();
+    } else {
+        // Credenciales incorrectas, redirigir al formulario de inicio de sesión con un mensaje de error
+        header("Location: iniciar_sesion_visitador_obra.php?error=1");
+        exit();
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -19,42 +54,29 @@
 <body class="bg-light d-flex flex-column min-vh-100">
     <br>
     <main class="form-signin w-100 m-auto container flex-grow-1">
-        <form>
+        <form action="iniciar_sesion_visitador_obra.php" method="post">
             <img class="mb-4" src="../../../img/logo.png" alt="Logo" width="72" height="57">
             <h1 class="h3 mb-3 fw-normal">Iniciar Sesión: Visitador de Obra</h1>
 
-            <div class="mb-3">
-                <label for="companySelect" class="input-group-text text-center">Escoge tu Empresa</label>
-                <br>
-                <select class="form-select" id="companySelect">
-                    <!-- Inserta dinámicamente las opciones desde tu código PHP -->
-                    <option value="empresa1">Empresa 1</option>
-                    <option value="empresa2">Empresa 2</option>
-                    <option value="empresa3">Empresa 3</option>
-                    <!-- Agrega más opciones según sea necesario -->
-                </select>
-            </div>
-
             <div class="form-floating mb-3">
-                <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+                <input type="email" class="form-control" id="floatingInput" name="correo" placeholder="name@example.com">
                 <label for="floatingInput">Correo Electrónico</label>
             </div>
 
             <div class="form-floating mb-3">
-                <input type="password" class="form-control" id="floatingPassword" placeholder="Contraseña">
+                <input type="password" class="form-control" id="floatingPassword" name="contrasena" placeholder="Contraseña">
                 <label for="floatingPassword">Contraseña</label>
             </div>
 
-            <div class="form-check text-start mb-3">
-                <input class="form-check-input" type="checkbox" value="remember-me" id="flexCheckDefault">
-                <label class="form-check-label" for="flexCheckDefault">
-                    Recordar usuario
-                </label>
-            </div>
+            <?php if (isset($_GET['error'])): ?>
+                <div class="alert alert-danger" role="alert">
+                    Correo electrónico o contraseña incorrecta.
+                </div>
+            <?php endif; ?>
 
             <button class="btn btn-primary w-100 py-2" type="submit">Iniciar Sesión</button>
 
-            <p class="mt-3 text-muted"> Para regresar click <a href="../../../iniciar_sesion.php">aqui.</a></p>
+            <p class="mt-3 text-muted">Para regresar haz clic <a href="../../../iniciar_sesion.php">aquí.</a></p>
         </form>
     </main>
 
