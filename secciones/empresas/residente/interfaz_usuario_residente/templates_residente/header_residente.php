@@ -30,22 +30,14 @@ if ($resultado) {
 
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Panel del Residente de Obras</title>
-
     <link rel="icon" href="<?php echo $url_base; ?>img/logo2.png" type="image/x-icon">
-    <!-- Bootstrap CSS v5.3.2 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-
-    <!-- Tu hoja de estilo personalizada -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="<?php echo $url_base; ?>CSS/styles.css">
-
 </head>
-
 <body class="d-flex flex-column min-vh-100">
     <header>
         <nav class="navbar navbar-expand navbar-light bg-light">
@@ -60,20 +52,29 @@ if ($resultado) {
                     <li class="nav-item">
                         <a class="nav-link" href="index_usuario_residente.php"><strong>Inicio</strong></a>
                     </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Solicitudes
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="crear_solicitud_compra.php">Crear Solicitud de Compra</a></li>
+                            <li><a class="dropdown-item" href="estado_solicitudes.php">Estado de Solicitudes</a></li>
+                        </ul>
+                    </li>
                     <?php if (isset($_SESSION['nombre_residente'])) : ?>
                     <li class="nav-item">
-                        <a class="nav-link" id="info-usuario" ><strong>Residente: <?php echo $_SESSION['nombre_residente']; ?></strong></a>
+                        <a class="nav-link" id="info-usuario"><strong><?php echo $_SESSION['nombre_residente']; ?></strong></a>
                     </li>
                     <?php endif; ?>
                     <?php if (isset($_SESSION['id_residente'])) : ?>
                     <li class="nav-item">
-                        <a class="nav-link" id="info-empresa" ><strong>Empresa: <?php echo $nombre_empresa; ?></strong></a>
+                        <a class="nav-link" id="info-empresa"><strong><?php echo $nombre_empresa; ?></strong></a>
                     </li>
                     <?php endif; ?>
                 </ul>
             </div>
             <div class="col-md-3 text-end">
-                <a href="<?php echo $url_base2; ?>cerrar_sesion.php" class="btn btn-danger"><strong>Cerrar Sesión</strong></a>
+                <a href="cerrar_sesion.php" class="btn btn-danger"><strong>Cerrar Sesión</strong></a>
             </div>
         </nav>
     </header>

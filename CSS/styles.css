@@ -1,43 +1,44 @@
 /* Agrega estilos personalizados aquí */
 #logotipo img {
-    width: 30%; /* Ajusta el ancho de la imagen al 100% del contenedor */
-    margin-left: 15%;
-    
+  width: 30%;
+  margin-left: 15%;
 }
 
 .navbar-nav {
-    margin-left: auto; /* Mueve los elementos de la barra de navegación al centro */
+  margin-left: auto;
 }
 
 .navbar-nav a {
-    color: #007BFF; /* Color celeste */
-    transition: color 0.3s ease; /* Efecto de transición en el color */
+  color: #007BFF;
+  transition: color 0.3s ease;
+  font-weight: bold;
 }
 
 .navbar-nav a:hover {
-    color: #0056b3; /* Color celeste más oscuro al pasar el ratón */
+  color: #0056b3;
 }
 
 .btn-outline-primary,
 .btn-primary {
-    margin-left: 10px; /* Añade margen izquierdo a los botones de inicio de sesión y registro */
+  margin-left: 10px;
 }
 
 .text-end {
-    display: flex;
-    align-items: center; /* Alinea verticalmente el contenedor de los botones */
+  display: flex;
+  align-items: center;
 }
 
 @media (max-width: 768px) {
-    .text-end {
-        margin-top: 10px; /* Agrega un margen superior en pantallas más pequeñas */
-        margin-left: 0; /* Reinicia el margen izquierdo para pantallas más pequeñas */
-    }
+  .text-end {
+      margin-top: 10px;
+      margin-left: 0;
+  }
 }
+
 .square-btn {
-    width: 500px; /* Ajusta el ancho según tus necesidades */
-    height: 20%; /* Ajusta la altura según tus necesidades */
-    border-radius: 50px; /* Agrega bordes redondeados si lo deseas */
+  width: 500px;
+  height: 20%;
+  border-radius: 50px;
 }
 
 html,
@@ -67,11 +68,93 @@ body {
 }
 
 .modal-sheet .modal-dialog {
-    width: 380px;
-    transition: bottom .75s ease-in-out;
-  }
-  .modal-sheet .modal-footer {
-    padding-bottom: 2rem;
-  }
-  
-  
+  width: 380px;
+  transition: bottom .75s ease-in-out;
+}
+
+.modal-sheet .modal-footer {
+  padding-bottom: 2rem;
+}
+
+/* Estilos para el Formulario de Solicitud de Orden de Compra */
+.form-solicitud {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.form-solicitud .form-group {
+    margin-bottom: 15px;
+}
+
+.form-solicitud label {
+    font-weight: bold;
+    color: #007BFF;
+}
+
+.form-solicitud input[type="text"],
+.form-solicitud input[type="number"],
+.form-solicitud input[type="file"],
+.form-solicitud select {
+    width: 100%;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    transition: border-color 0.3s ease;
+}
+
+.form-solicitud input[type="text"]:focus,
+.form-solicitud input[type="number"]:focus,
+.form-solicitud input[type="file"]:focus,
+.form-solicitud select:focus {
+    border-color: #007BFF;
+    outline: none;
+}
+
+.form-solicitud .btn-submit {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.form-solicitud .btn-submit:hover {
+    background-color: #0056b3;
+}
+
+.form-solicitud .item {
+    border: 1px solid #eee;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+}
+
+.form-solicitud .add-item-btn {
+    background: none;
+    color: #007BFF;
+    border: 2px solid #007BFF;
+    padding: 5px 10px;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.form-solicitud .add-item-btn:hover {
+    background-color: #007BFF;
+    color: white;
+}
+
+/* Ajustes Responsive */
+@media (max-width: 768px) {
+    .form-solicitud {
+        width: 90%;
+        margin: 10px auto;
+    }
+}
