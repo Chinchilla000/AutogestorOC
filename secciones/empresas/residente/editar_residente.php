@@ -5,7 +5,6 @@ include("../../../bd.php");
 session_start();
 $id_empresa_actual = $_SESSION['id_empresa'];
 
-// Obtener el ID de residente de la URL
 $id_residente = $_GET['id'] ?? null;
 if (!$id_residente) {
     echo "ID del residente no proporcionado.";
@@ -23,6 +22,9 @@ if (!$residente) {
     exit();
 }
 
+$actualizacionExitosa = false;
+$mensajeError = '';
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nombre = $_POST["nombre"];
     $apellido = $_POST["apellido"];
@@ -31,32 +33,43 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $correo = $_POST["correo"];
     $nueva_contrasena = $_POST["nueva_contrasena"] ?? '';
 
-    // Verificar si el correo electrónico proporcionado es diferente del actual
-    if ($correo != $residente['correo']) {
-        // Verificar si el nuevo correo ya existe en la base de datos
-        $stmt_verificar = $conexion->prepare("SELECT * FROM residentes_obra WHERE correo = :correo AND id_empresa = :id_empresa AND id != :id_residente");
-        $stmt_verificar->bindParam(':correo', $correo);
-        $stmt_verificar->bindParam(':id_empresa', $id_empresa_actual);
-        $stmt_verificar->bindParam(':id_residente', $id_residente);
-        $stmt_verificar->execute();
+    // Verificar si el RUT proporcionado es diferente del actual y si ya existe
+    if ($rut != $residente['rut']) {
+        $stmt_verificar_rut = $conexion->prepare("SELECT * FROM residentes_obra WHERE rut = :rut AND id != :id_residente");
+        $stmt_verificar_rut->bindParam(':rut', $rut);
+        $stmt_verificar_rut->bindParam(':id_residente', $id_residente);
+        $stmt_verificar_rut->execute();
 
-        if ($stmt_verificar->rowCount() > 0) {
-            echo "<script>alert('Ya existe un residente con el mismo correo electrónico.');</script>";
-        } else {
-            actualizarDatos();
+        if ($stmt_verificar_rut->rowCount() > 0) {
+            $mensajeError = 'Ya existe un residente con el mismo RUT. Por favor, ingrese un RUT diferente.';
         }
-    } else {
-        actualizarDatos();
+    }
+
+    // Verificar si el correo electrónico proporcionado es diferente del actual y si ya existe
+    if (empty($mensajeError) && $correo != $residente['correo']) {
+        $stmt_verificar_correo = $conexion->prepare("SELECT * FROM residentes_obra WHERE correo = :correo AND id_empresa = :id_empresa AND id != :id_residente");
+        $stmt_verificar_correo->bindParam(':correo', $correo);
+        $stmt_verificar_correo->bindParam(':id_empresa', $id_empresa_actual);
+        $stmt_verificar_correo->bindParam(':id_residente', $id_residente);
+        $stmt_verificar_correo->execute();
+
+        if ($stmt_verificar_correo->rowCount() > 0) {
+            $mensajeError = 'Ya existe un residente con el mismo correo electrónico. Por favor, ingrese un correo diferente.';
+        }
+    }
+
+    // Actualizar datos si no hay errores
+    if (empty($mensajeError)) {
+        actualizarDatos($conexion, $id_residente, $id_empresa_actual, $nombre, $apellido, $rut, $cargo, $correo, $nueva_contrasena);
+        $actualizacionExitosa = true;
     }
 }
 
-function actualizarDatos() {
-    global $conexion, $id_residente, $id_empresa_actual, $nombre, $apellido, $rut, $cargo, $correo, $nueva_contrasena;
-
+function actualizarDatos($conexion, $id_residente, $id_empresa, $nombre, $apellido, $rut, $cargo, $correo, $nueva_contrasena) {
     $query = "UPDATE residentes_obra SET nombre = ?, apellido = ?, rut = ?, cargo = ?, correo = ?";
     $params = [$nombre, $apellido, $rut, $cargo, $correo];
 
-    if ($nueva_contrasena) {
+    if (!empty($nueva_contrasena)) {
         $nueva_contrasena_hash = password_hash($nueva_contrasena, PASSWORD_DEFAULT);
         $query .= ", contrasena = ?";
         $params[] = $nueva_contrasena_hash;
@@ -64,12 +77,20 @@ function actualizarDatos() {
 
     $query .= " WHERE id = ? AND id_empresa = ?";
     $params[] = $id_residente;
-    $params[] = $id_empresa_actual;
+    $params[] = $id_empresa;
 
     $stmt_actualizar = $conexion->prepare($query);
     $stmt_actualizar->execute($params);
+}
 
-    header("Location: index_residente.php");
+// Mostrar mensaje de error si es necesario
+if (!$actualizacionExitosa && !empty($mensajeError)) {
+    echo "<script>alert('$mensajeError');</script>";
+}
+
+// Redireccionar solo si la actualización fue exitosa
+if ($actualizacionExitosa) {
+    echo "<script>alert('Datos del residente actualizados correctamente.'); window.location.href = 'index_residente.php';</script>";
     exit();
 }
 

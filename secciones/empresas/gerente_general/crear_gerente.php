@@ -1,4 +1,3 @@
-
 <?php include("../templates/header_empresa.php"); ?>
 <?php
 include("../../../bd.php");
@@ -14,12 +13,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $id_empresa = $_SESSION['id_empresa'];
 
     // Verificar si ya existe un gerente con el mismo correo electrónico
-    $stmt_verificar = $conexion->prepare("SELECT * FROM gerentes_generales WHERE correo = :correo");
-    $stmt_verificar->bindParam(':correo', $correo);
-    $stmt_verificar->execute();
+    $stmt_verificar_correo = $conexion->prepare("SELECT * FROM gerentes_generales WHERE correo = :correo");
+    $stmt_verificar_correo->bindParam(':correo', $correo);
+    $stmt_verificar_correo->execute();
 
-    if ($stmt_verificar->rowCount() > 0) {
+    // Verificar si ya existe un gerente con el mismo RUT
+    $stmt_verificar_rut = $conexion->prepare("SELECT * FROM gerentes_generales WHERE rut = :rut");
+    $stmt_verificar_rut->bindParam(':rut', $rut);
+    $stmt_verificar_rut->execute();
+
+    if ($stmt_verificar_correo->rowCount() > 0) {
         echo "<script>alert('Ya existe un gerente con el mismo correo electrónico.');</script>";
+    } else if ($stmt_verificar_rut->rowCount() > 0) {
+        echo "<script>alert('Ya existe un gerente con el mismo RUT.');</script>";
     } else {
         $stmt = $conexion->prepare("INSERT INTO gerentes_generales (id_empresa, nombre, apellido, rut, cargo, correo, contrasena) VALUES (?, ?, ?, ?, ?, ?, ?)");
         $stmt->execute([$id_empresa, $nombre, $apellido, $rut, $cargo, $correo, $contrasena]);

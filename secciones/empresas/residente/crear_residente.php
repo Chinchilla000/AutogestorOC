@@ -1,3 +1,4 @@
+<?php include("../templates/header_empresa.php"); ?>
 <?php
 include("../../../bd.php");
 
@@ -9,17 +10,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $correo = $_POST["correo"];
     $contrasena = password_hash($_POST["contrasena"], PASSWORD_DEFAULT);
 
-    session_start();
+    
     $id_empresa = $_SESSION['id_empresa'];
 
     // Verificar si ya existe un residente con el mismo correo electrónico
-    $stmt_verificar = $conexion->prepare("SELECT * FROM residentes_obra WHERE correo = :correo AND id_empresa = :id_empresa");
-    $stmt_verificar->bindParam(':correo', $correo);
-    $stmt_verificar->bindParam(':id_empresa', $id_empresa);
-    $stmt_verificar->execute();
+    $stmt_verificar_correo = $conexion->prepare("SELECT * FROM residentes_obra WHERE correo = :correo AND id_empresa = :id_empresa");
+    $stmt_verificar_correo->bindParam(':correo', $correo);
+    $stmt_verificar_correo->bindParam(':id_empresa', $id_empresa);
+    $stmt_verificar_correo->execute();
 
-    if ($stmt_verificar->rowCount() > 0) {
+    // Verificar si ya existe un residente con el mismo RUT
+    $stmt_verificar_rut = $conexion->prepare("SELECT * FROM residentes_obra WHERE rut = :rut AND id_empresa = :id_empresa");
+    $stmt_verificar_rut->bindParam(':rut', $rut);
+    $stmt_verificar_rut->bindParam(':id_empresa', $id_empresa);
+    $stmt_verificar_rut->execute();
+
+    if ($stmt_verificar_correo->rowCount() > 0) {
         echo "<script>alert('Ya existe un residente con el mismo correo electrónico.');</script>";
+    } elseif ($stmt_verificar_rut->rowCount() > 0) {
+        echo "<script>alert('Ya existe un residente con el mismo RUT.');</script>";
     } else {
         $stmt = $conexion->prepare("INSERT INTO residentes_obra (id_empresa, nombre, apellido, rut, cargo, correo, contrasena) VALUES (?, ?, ?, ?, ?, ?, ?)");
         $stmt->execute([$id_empresa, $nombre, $apellido, $rut, $cargo, $correo, $contrasena]);
@@ -37,8 +46,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 ?>
-
-<?php include("../templates/header_empresa.php"); ?>
 
 <div class="card">
         <div class="card-header bg-primary text-white">

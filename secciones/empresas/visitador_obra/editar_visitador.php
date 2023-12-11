@@ -22,6 +22,9 @@ if (!$visitador) {
     exit();
 }
 
+$actualizacionExitosa = false;
+$mensajeError = '';
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nombre = $_POST["nombre"];
     $apellido = $_POST["apellido"];
@@ -30,30 +33,43 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $correo = $_POST["correo"];
     $nueva_contrasena = $_POST["nueva_contrasena"] ?? '';
 
-    if ($correo != $visitador['correo']) {
-        $stmt_verificar = $conexion->prepare("SELECT * FROM visitadores_obra WHERE correo = :correo AND id_empresa = :id_empresa AND id != :id_visitador");
-        $stmt_verificar->bindParam(':correo', $correo);
-        $stmt_verificar->bindParam(':id_empresa', $id_empresa_actual);
-        $stmt_verificar->bindParam(':id_visitador', $id_visitador);
-        $stmt_verificar->execute();
+    // Verificar si el RUT proporcionado es diferente del actual
+    if ($rut != $visitador['rut']) {
+        $stmt_verificar_rut = $conexion->prepare("SELECT * FROM visitadores_obra WHERE rut = :rut AND id != :id_visitador");
+        $stmt_verificar_rut->bindParam(':rut', $rut);
+        $stmt_verificar_rut->bindParam(':id_visitador', $id_visitador);
+        $stmt_verificar_rut->execute();
 
-        if ($stmt_verificar->rowCount() > 0) {
-            echo "<script>alert('Ya existe un visitador con el mismo correo electrónico.');</script>";
-        } else {
-            actualizarDatos();
+        if ($stmt_verificar_rut->rowCount() > 0) {
+            $mensajeError = 'Ya existe un visitador con el mismo RUT, ingrese otro.';
         }
-    } else {
-        actualizarDatos();
+    }
+
+    // Verificar si el correo electrónico proporcionado es diferente del actual
+    if (empty($mensajeError) && $correo != $visitador['correo']) {
+        $stmt_verificar_correo = $conexion->prepare("SELECT * FROM visitadores_obra WHERE correo = :correo AND id_empresa = :id_empresa AND id != :id_visitador");
+        $stmt_verificar_correo->bindParam(':correo', $correo);
+        $stmt_verificar_correo->bindParam(':id_empresa', $id_empresa_actual);
+        $stmt_verificar_correo->bindParam(':id_visitador', $id_visitador);
+        $stmt_verificar_correo->execute();
+
+        if ($stmt_verificar_correo->rowCount() > 0) {
+            $mensajeError = 'Ya existe un visitador con el mismo correo electrónico, ingrese otro.';
+        }
+    }
+
+    // Actualizar datos si no hay errores
+    if (empty($mensajeError)) {
+        actualizarDatos($conexion, $id_visitador, $id_empresa_actual, $nombre, $apellido, $rut, $cargo, $correo, $nueva_contrasena);
+        $actualizacionExitosa = true;
     }
 }
 
-function actualizarDatos() {
-    global $conexion, $id_visitador, $id_empresa_actual, $nombre, $apellido, $rut, $cargo, $correo, $nueva_contrasena;
-
+function actualizarDatos($conexion, $id_visitador, $id_empresa, $nombre, $apellido, $rut, $cargo, $correo, $nueva_contrasena) {
     $query = "UPDATE visitadores_obra SET nombre = ?, apellido = ?, rut = ?, cargo = ?, correo = ?";
     $params = [$nombre, $apellido, $rut, $cargo, $correo];
 
-    if ($nueva_contrasena) {
+    if (!empty($nueva_contrasena)) {
         $nueva_contrasena_hash = password_hash($nueva_contrasena, PASSWORD_DEFAULT);
         $query .= ", contrasena = ?";
         $params[] = $nueva_contrasena_hash;
@@ -61,14 +77,23 @@ function actualizarDatos() {
 
     $query .= " WHERE id = ? AND id_empresa = ?";
     $params[] = $id_visitador;
-    $params[] = $id_empresa_actual;
+    $params[] = $id_empresa;
 
     $stmt_actualizar = $conexion->prepare($query);
     $stmt_actualizar->execute($params);
+}
 
-    header("Location: index_visitador.php");
+// Mostrar mensaje de error si es necesario
+if (!$actualizacionExitosa && !empty($mensajeError)) {
+    echo "<script>alert('$mensajeError');</script>";
+}
+
+// Redireccionar solo si la actualización fue exitosa
+if ($actualizacionExitosa) {
+    echo "<script>alert('Datos del visitador actualizados correctamente.'); window.location.href = 'index_visitador.php';</script>";
     exit();
 }
+
 include("../templates/header_empresa.php");
 ?>
 <div class="card shadow">

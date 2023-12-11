@@ -22,6 +22,9 @@ if (!$gerente) {
     exit();
 }
 
+$actualizacionExitosa = false;
+$mensajeError = '';
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nombre = $_POST["nombre"];
     $apellido = $_POST["apellido"];
@@ -29,6 +32,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $cargo = $_POST["cargo"];
     $correo = $_POST["correo"];
     $nueva_contrasena = $_POST["nueva_contrasena"] ?? '';
+
+    // Verificar si el RUT proporcionado es diferente del actual
+    if ($rut != $gerente['rut']) {
+        // Verificar si el nuevo RUT ya existe en la base de datos
+        $stmt_verificar_rut = $conexion->prepare("SELECT * FROM gerentes_generales WHERE rut = :rut AND id != :id_gerente");
+        $stmt_verificar_rut->bindParam(':rut', $rut);
+        $stmt_verificar_rut->bindParam(':id_gerente', $id_gerente, PDO::PARAM_INT);
+        $stmt_verificar_rut->execute();
+
+        if ($stmt_verificar_rut->rowCount() > 0) {
+            $mensajeError = 'Ya existe un gerente con el mismo RUT, ingrese otro.';
+        }
+    }
 
     if ($correo != $gerente['correo']) {
         $stmt_verificar = $conexion->prepare("SELECT * FROM gerentes_generales WHERE correo = :correo AND id_empresa = :id_empresa AND id != :id_gerente");
@@ -38,18 +54,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt_verificar->execute();
 
         if ($stmt_verificar->rowCount() > 0) {
-            echo "<script>alert('Ya existe un gerente con el mismo correo electrónico.');</script>";
-        } else {
-            actualizarDatos();
+            $mensajeError = 'Ya existe un gerente con el mismo correo electrónico, ingrese otro.';
         }
-    } else {
-        actualizarDatos();
+    }
+
+    if (empty($mensajeError)) {
+        actualizarDatos($conexion, $id_gerente, $id_empresa_actual, $nombre, $apellido, $rut, $cargo, $correo, $nueva_contrasena);
+        $actualizacionExitosa = true;
     }
 }
 
-function actualizarDatos() {
-    global $conexion, $id_gerente, $id_empresa_actual, $nombre, $apellido, $rut, $cargo, $correo, $nueva_contrasena;
-
+function actualizarDatos($conexion, $id_gerente, $id_empresa, $nombre, $apellido, $rut, $cargo, $correo, $nueva_contrasena) {
     $query = "UPDATE gerentes_generales SET nombre = ?, apellido = ?, rut = ?, cargo = ?, correo = ?";
     $params = [$nombre, $apellido, $rut, $cargo, $correo];
 
@@ -61,11 +76,19 @@ function actualizarDatos() {
 
     $query .= " WHERE id = ? AND id_empresa = ?";
     $params[] = $id_gerente;
-    $params[] = $id_empresa_actual;
+    $params[] = $id_empresa;
 
     $stmt_actualizar = $conexion->prepare($query);
     $stmt_actualizar->execute($params);
+}
 
+// Mostrar mensaje de error si es necesario
+if (!$actualizacionExitosa && !empty($mensajeError)) {
+    echo "<script>alert('$mensajeError');</script>";
+}
+
+// Redireccionar solo si la actualización fue exitosa
+if ($actualizacionExitosa) {
     header("Location: index_gerente.php");
     exit();
 }
