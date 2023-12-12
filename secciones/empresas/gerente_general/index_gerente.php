@@ -79,7 +79,7 @@ $gerentesGenerales = $sentencia->fetchAll(PDO::FETCH_ASSOC);
         <a href="<?php echo $url_base2; ?>gerente_general/crear_gerente.php" class="btn btn-primary">Agregar Gerente General</a>
     </div>
 
-    <?php include("../templates/footer_empresa.php"); ?>
+    
 </div>
 
 
@@ -93,3 +93,4 @@ function confirmarEliminacion(id) {
     }
 }
 </script>
+<?php include("../templates/footer_empresa.php"); ?>

@@ -1,6 +1,7 @@
-<footer class="footer mt-auto py-3 bg-light">
+<br>
+<footer class="footer mt-auto  bg-light">
     <div class="container text-center">
-        <span class="text-muted">&copy; <?php echo date("Y"); ?> Nombre de la Empresa</span>
+        <p class="text-muted">© <?php echo date("Y"); ?> Autogestor. Todos los derechos reservados.</p>
     </div>
 </footer>
 

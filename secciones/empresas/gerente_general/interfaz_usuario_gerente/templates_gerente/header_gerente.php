@@ -47,15 +47,19 @@ if ($resultado) {
 </head>
 
 <body class="d-flex flex-column min-vh-100">
-    <header>
-        <nav class="navbar navbar-expand navbar-light bg-light">
-            <div class="container">
-                <div id="logotipo">
-                    <a href="<?php echo $url_base2; ?>index_empresa.php">
-                        <img src="<?php echo $url_base; ?>img/logo.png" alt="Logotipo de la Web">
-                    </a>
-                </div>
+<header>
+    <nav class="navbar navbar-expand-md navbar-light bg-light">
+        <div class="container">
+            <!-- Navbar Brand para el logotipo -->
+            <a class="navbar-brand mx-auto mx-md-0" href="<?php echo $url_base2; ?>index_empresa.php">
+        <img src="<?php echo $url_base; ?>img/logo.png" alt="Logotipo de la Web" id="logotipo" style="max-width: 100px; height: auto;">
+        </a>
 
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
                 <ul class="nav navbar-nav">
                     <li class="nav-item">
                         <a class="nav-link" href="<?php echo $url_base2; ?>index_usuario_gerente.php"><strong>Inicio</strong></a>
@@ -72,11 +76,9 @@ if ($resultado) {
                     <?php endif; ?>
                     
                 </ul>
+                <div class="text-end">
+                <a href="<?php echo $url_base2; ?>cerrar_sesion.php" class="btn btn-danger"><strong>Cerrar Sesión</strong></a>
             </div>
-            <div class="col-md-3 text-end">
-
-                <a href="<?php echo $url_base2; ?>cerrar_sesion.php" class="btn btn-danger"><strong>Cerrar
-                        Sesión</strong></a>
-            </div>
-        </nav>
+        </div>
+    </nav>
     </header>

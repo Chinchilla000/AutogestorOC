@@ -1,9 +1,16 @@
 /* Agrega estilos personalizados aquí */
-#logotipo img {
-  width: 30%;
-  margin-left: 15%;
+
+.navbar-brand img {
+  max-width: 180px; /* Ajusta este valor según sea necesario */
+  height: auto; /* Esto mantendrá la proporción del logotipo */
 }
 
+/* Ajustes para el logotipo en pantallas pequeñas */
+@media (max-width: 768px) {
+  .navbar-brand img {
+      max-width: 100px; /* Tamaño más pequeño para pantallas móviles */
+  }
+}
 .navbar-nav {
   margin-left: auto;
 }
@@ -43,8 +50,15 @@
 
 html,
 body {
-  height: 100%;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
+main {
+  flex-grow: 1;
+  min-height: calc(100vh - 60px - 40px); /* Ejemplo: Header = 60px, Footer = 40px */
+}
+
 
 .form-signin {
   max-width: 330px;

@@ -19,10 +19,15 @@
     .modal-content-center {
         text-align: center;
     }
+    @media (max-width: 768px) {
+        .modal-content {
+            width: 90%; /* Aumenta el ancho en pantallas pequeñas */
+        }
+    }
 </style>
 
 <div class="container-md custom-modal-container">
-    <div class="modal-content rounded-4 shadow p-4 modal-content-center  w-50">
+    <div class="modal-content rounded-4 shadow p-4 modal-content-center col-12 col-sm-10 col-md-8 col-lg-6">
         <div class="modal-header border-bottom-0 justify-content-center">
             <h1 class="modal-title fs-5">Iniciar Sesión Como:</h1>
         </div>

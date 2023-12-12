@@ -31,57 +31,34 @@ if (!isset($_SESSION['id_empresa'])) {
     <link rel="stylesheet" type="text/css" href="<?php echo $url_base; ?>CSS/styles.css">
 
     <style>
-         #logotipo {
-        display: inline-block; /* Hace que el contenedor se ajuste al tamaño de su contenido */
-    }
-
-    #logotipo img {
-        height: auto; /* Mantiene la proporción de la imagen */
-        max-width: 100px; /* Ajusta el tamaño máximo de la imagen */
-    }
-
-
-        .navbar {
-            padding: 0.5rem 1rem; /* Ajuste del padding del navbar */
+      body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        }
+        main {
+        flex-grow: 1;
+        min-height: calc(100vh - 60px - 40px); /* Ejemplo: Header = 60px, Footer = 40px */
         }
 
-        .navbar-nav {
-            flex-grow: 1; /* Permitir que los enlaces de navegación crezcan */
-            justify-content: space-around; /* Distribuir uniformemente */
-        }
-
-        .nombre-usuario {
-            font-weight: bold;
-            color: #28a745; /* Color del texto del usuario */
-            margin-left: auto; /* Alinear a la derecha */
-        }
-
-        .nav-item a, .nombre-usuario {
-            font-size: 1em; /* Ajustar el tamaño del texto */
-        }
-
-        #info-usuario {
-            display: flex;
-            align-items: center;
-        }
     </style>
+
 </head>
 
 <body class="d-flex flex-column min-vh-100">
 <header>
-    <nav class="navbar navbar-expand navbar-light bg-light">
-            <div class="container">
-                <div id="logotipo">
-                <a href="<?php echo $url_base2; ?>index_empresa.php">
-                    <img src="<?php echo $url_base; ?>img/logo.png" alt="Logotipo de la Web">
-                </a>
-            </div>
+<nav class="navbar navbar-expand-md navbar-light bg-light">
+        <div class="container">
+            <!-- Navbar Brand para el logotipo -->
+            <a class="navbar-brand mx-auto mx-md-0" href="<?php echo $url_base2; ?>index_empresa.php">
+        <img src="<?php echo $url_base; ?>img/logo.png" alt="Logotipo de la Web" id="logotipo" style="max-width: 100px; height: auto;">
+        </a>
 
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item">
                         <a class="nav-link" href="<?php echo $url_base2; ?>index_empresa.php"><strong>Inicio</strong></a>
@@ -101,14 +78,10 @@ if (!isset($_SESSION['id_empresa'])) {
                     </li>
                     <?php endif; ?>
                 </ul>
-
-                <div class="d-flex" >
-
-                    <a href="<?php echo $url_base2; ?>cerrar_sesion.php" class="btn btn-danger ml-2"><strong>Cerrar Sesión</strong></a>
-                </div>
+                <div class="d-flex">
+                <a href="<?php echo $url_base2; ?>cerrar_sesion.php" class="btn btn-danger"><strong>Cerrar Sesión</strong></a>
             </div>
         </div>
     </nav>
-</header>
 <main class="container flex-grow-1">
     <br>

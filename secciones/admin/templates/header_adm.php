@@ -27,6 +27,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="<?php echo $url_base3;?>usuarios/usuarios_empresas.php">Usuarios</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?php echo $url_base3;?>cerrar_sesion_adm.php">Cerrar Sesion</a>
+                    </li>
                     <!-- Agrega más enlaces de navegación según necesites -->
                 </ul>
             </div>

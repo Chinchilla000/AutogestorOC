@@ -1,11 +1,11 @@
 <br>
 </main>
 
-<footer class="bg-light text-center ">
-        
-            <p class="text-muted">© <?php echo date("Y"); ?> Autogestor. Todos los derechos reservados.</p>
-    
-    </footer>
+<footer class="footer mt-auto  bg-light">
+    <div class="container text-center">
+        <p class="text-muted">© <?php echo date("Y"); ?> Autogestor. Todos los derechos reservados.</p>
+    </div>
+</footer>
 
     <!-- Bootstrap JavaScript Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
