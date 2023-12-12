@@ -7,7 +7,7 @@
       Esta plataforma te permite gestionar eficientemente las Órdenes de Compra (OC) de tu empresa de construcción.
       Con un proceso simplificado, podrás controlar todas las etapas desde la creación hasta la aprobación final.
     </p>
-    <a class="btn btn-primary btn-lg" href="ordenes_compra.php" role="button">Explora Órdenes de Compra</a>
+    
   </div>
 </div>
 

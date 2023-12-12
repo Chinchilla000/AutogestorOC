@@ -6,6 +6,7 @@ include("./templates_residente/header_residente.php");
 $id_residente = $_SESSION['id_residente'];
 $id_empresa = null;
 
+
 // Obtener el id_empresa
 $sentencia = $conexion->prepare("SELECT id_empresa FROM residentes_obra WHERE id = :id_residente");
 $sentencia->bindParam(':id_residente', $id_residente, PDO::PARAM_INT);
@@ -30,24 +31,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $banco = null;
     $numero_cuenta = null;
 
-    // Asignar valores basados en el método de pago
-    if ($metodo_pago == 'efectivo') {
-        $nombre_pago = $_POST['nombre_efectivo'] ?? '';
-        $rut_pago = $_POST['rut_efectivo'] ?? '';
-        $correo_pago = $_POST['correo_efectivo'] ?? '';
-    } elseif ($metodo_pago == 'transferencia') {
-        $nombre_pago = $_POST['nombre_transferencia'] ?? '';
-        $rut_pago = $_POST['rut_transferencia'] ?? '';
-        $correo_pago = $_POST['correo_transferencia'] ?? '';
-        $banco = $_POST['banco'] ?? '';
-        $numero_cuenta = $_POST['numero_cuenta'] ?? '';
-    }
+     // Asignar valores basados en el método de pago
+     $nombre_pago = $_POST['nombre_pago'] ?? '';
+     $rut_pago = $_POST['rut_pago'] ?? '';
+     $correo_pago = $_POST['correo_pago'] ?? '';
+     $banco = $_POST['banco'] ?? ''; 
+     $numero_cuenta = $_POST['numero_cuenta'] ?? '';
+     $fecha_pago = $_POST['fecha_pago'] ?? '';
+
+    
 
     $total_neto = $_POST['total_neto'];
     $iva = $_POST['iva'];
     $total = $_POST['total'];
     
-     // Subida de archivo de cotización
+    // Lógica para manejar la fecha de pago
+    if ($metodo_pago == 'efectivo') {
+        $fecha_pago = NULL; // Fecha de pago en NULL si es efectivo
+    } else {
+        $fecha_pago = $_POST['fecha_pago'] ?? NULL;
+    }
+
 // Subida de archivo de cotización
 if (isset($_FILES['cotizacion']) && $_FILES['cotizacion']['error'] === UPLOAD_ERR_OK) {
     $archivoCotizacion = $_FILES['cotizacion']['name'];
@@ -73,8 +77,13 @@ if (isset($_FILES['cotizacion']) && $_FILES['cotizacion']['error'] === UPLOAD_ER
     echo "No se subió ningún archivo o se produjo un error.";
 }
      // Insertar solicitud en la tabla de solicitudes
-     $stmt = $conexion->prepare("INSERT INTO solicitudes_orden_compra (id_residente, id_empresa, obra, domicilio, solicitado_por, total_neto, iva, total, metodo_pago, nombre_pago, rut_pago, correo_pago, banco, numero_cuenta, archivo_cotizacion, estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'En espera')");     $stmt->bindParam(1, $id_residente);
-     $stmt->bindParam(2, $id_empresa);
+     $stmt = $conexion->prepare("INSERT INTO solicitudes_orden_compra 
+     (id_residente, id_empresa, obra, domicilio, solicitado_por, total_neto, iva, total, metodo_pago, nombre_pago, rut_pago, correo_pago, banco, numero_cuenta, archivo_cotizacion, estado, fecha_pago) 
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'En espera', ?)");
+
+    // Vinculación de los parámetros a la consulta
+    $stmt->bindParam(1, $id_residente);
+    $stmt->bindParam(2, $id_empresa);
     $stmt->bindParam(3, $obra);
     $stmt->bindParam(4, $domicilio);
     $stmt->bindParam(5, $solicitado_por);
@@ -88,6 +97,7 @@ if (isset($_FILES['cotizacion']) && $_FILES['cotizacion']['error'] === UPLOAD_ER
     $stmt->bindParam(13, $banco);
     $stmt->bindParam(14, $numero_cuenta);
     $stmt->bindParam(15, $rutaCotizacion);
+    $stmt->bindParam(16, $fecha_pago); // Vincula la fecha de pago
     $stmt->execute();
     $id_solicitud = $conexion->lastInsertId();
 
@@ -113,12 +123,13 @@ if (isset($_FILES['cotizacion']) && $_FILES['cotizacion']['error'] === UPLOAD_ER
         $stmt->execute();
     }
 
-    echo "<script>
-            alert('Solicitud enviada con éxito.');
-            window.location.href = './index_usuario_residente.php';
-          </script>";
-    exit; // Asegúrate de llamar a exit para detener la ejecución del script.
-}
+    // Redirección tras la inserción exitosa
+        echo "<script>
+        alert('Solicitud enviada con éxito.');
+        window.location.href = './index_usuario_residente.php';
+        </script>";
+        exit;
+        }
 ?>
 
     <div class="container mt-5">
@@ -148,7 +159,13 @@ if (isset($_FILES['cotizacion']) && $_FILES['cotizacion']['error'] === UPLOAD_ER
             <div class="input-group mb-3">
                 <input type="text" name="item[]" class="form-control" placeholder="Ítem" required>
                 <input type="text" name="descripcion[]" class="form-control" placeholder="Descripción" required>
-                <input type="text" name="unidad[]" class="form-control" placeholder="Unidad" required>
+                <select name="unidad[]" class="form-control" required>
+                <option value="" disabled selected>Seleccionar Unidad</option>
+                <option value="m2">m2</option>
+                <option value="m3">m3</option>
+                <option value="c/u">c/u</option>
+                <option value="GL">GL</option>
+            </select>
                 <input type="number" name="cantidad[]" class="form-control" placeholder="Cantidad" required step="1" oninput="calcularTotalItem(this)">
                 <input type="number" name="precio_unitario[]" class="form-control" placeholder="Precio Unitario" required step="1" oninput="calcularTotalItem(this)">
                 <input type="text" name="total_item[]" class="form-control" placeholder="Total Ítem" readonly>
@@ -178,53 +195,52 @@ if (isset($_FILES['cotizacion']) && $_FILES['cotizacion']['error'] === UPLOAD_ER
         <!-- Subir Cotización -->
         <div class="mb-3">
             <label for="cotizacion" class="form-label">Cotización:</label>
-            <input type="file" id="cotizacion" name="cotizacion" class="form-control" accept=".pdf, .jpg, .jpeg, .png">
+            <input type="file" id="cotizacion" name="cotizacion" class="form-control" accept=".pdf, .jpg, .jpeg, .png" required>
         </div>
 
         <!-- Método de Pago -->
         <div class="mb-3">
             <label for="metodo_pago" class="form-label">Método de Pago:</label>
-            <select id="metodo_pago" name="metodo_pago" class="form-select">
+            <select id="metodo_pago" name="metodo_pago" class="form-select" onchange="mostrarCamposPago()">
                 <option value="efectivo">Efectivo</option>
-                <option value="transferencia">Transferencia</option>
+                <option value="credito">Crédito</option>
             </select>
         </div>
 
+        <!-- Campos para Crédito y Efectivo -->
+        <div id="datos_pago_credito_efectivo" class="mb-3" style="display:none;">
+            <!-- Campos comunes -->
+            <label>Nombre:</label>
+            <input type="text" name="nombre_pago" class="form-control" required>
+            <label>RUT:</label>
+            <input type="text" name="rut_pago" class="form-control" required>
+            <label>Correo:</label>
+            <input type="email" name="correo_pago" class="form-control" required>
+            <label>Banco:</label>
+            <input type="text" name="banco" class="form-control" required>
+            <label>Número de Cuenta:</label>
+            <input type="text" name="numero_cuenta" class="form-control" required>
 
-        <!-- Método de Pago -->
-        <div id="datos_pago_transferencia" class="mb-3" style="display:none;">
-    <!-- Campos para Transferencia -->
-    <label>Nombre:</label>
-    <input type="text" name="nombre_transferencia" class="form-control">
-    <label>RUT:</label>
-    <input type="text" name="rut_transferencia" class="form-control">
-    <label>Banco:</label>
-    <input type="text" name="banco" class="form-control">
-    <label>Número de Cuenta:</label>
-    <input type="text" name="numero_cuenta" class="form-control">
-    <label>Correo:</label>
-    <input type="email" name="correo_transferencia" class="form-control">
-</div>
+            <!-- Campo adicional para Crédito -->
+            <div id="fecha_pago_credito" style="display:none;">
+            <label>Fecha de Pago:</label>
+            <select name="fecha_pago" class="form-select">
+                <option value="">Selecciona</option>
+                <option value="15">15 días</option>
+                <option value="30">30 días</option>
+                <option value="45">45 días</option>
+                <option value="60">60 días</option>
+            </select>
+        </div>
+        </div>
 
-
-<!-- Datos adicionales de pago -->
-<div id="datos_pago_efectivo" class="mb-3" style="display:none;">
-    <!-- Campos para Efectivo -->
-    <label>Nombre:</label>
-    <input type="text" name="nombre_efectivo" class="form-control">
-    <label>RUT:</label>
-    <input type="text" name="rut_efectivo" class="form-control">
-    <label>Correo:</label>
-    <input type="email" name="correo_efectivo" class="form-control">
-</div>
-
-<!-- Botón de Envío -->
-<input type="submit" value="Enviar Solicitud" class="btn btn-success">
-
+        <!-- Botón de Envío -->
+        <input type="submit" value="Enviar Solicitud" class="btn btn-success">
 
 
-    </form>
-    </div>
+
+            </form>
+            </div>
         </div>
     </div>
 
@@ -326,28 +342,40 @@ function calcularTotalItem(input) {
     }
 }
 // Función para manejar el cambio en el método de pago
-function cambiarMetodoPago() {
-        var metodo = document.getElementById('metodo_pago').value;
-        var datosTransferencia = document.getElementById('datos_pago_transferencia');
-        var datosEfectivo = document.getElementById('datos_pago_efectivo');
+function mostrarCamposPago() {
+    var metodo = document.getElementById('metodo_pago').value;
+    var fechaPagoCredito = document.getElementById('fecha_pago_credito');
+    var selectFechaPago = document.querySelector('select[name="fecha_pago"]');
 
-        // Mostrar/Ocultar campos basados en la selección
-        if (metodo === 'transferencia') {
-            datosTransferencia.style.display = 'block';
-            datosEfectivo.style.display = 'none';
-        } else if (metodo === 'efectivo') {
-            datosTransferencia.style.display = 'none';
-            datosEfectivo.style.display = 'block';
-        }
+    // Mostrar siempre los campos comunes
+    var datosCreditoEfectivo = document.getElementById('datos_pago_credito_efectivo');
+    datosCreditoEfectivo.style.display = 'block';
+
+    // Controlar la visibilidad y requerimiento del campo Fecha de Pago
+    if (metodo === 'credito') {
+        fechaPagoCredito.style.display = 'block';
+        selectFechaPago.required = true;
+    } else {
+        fechaPagoCredito.style.display = 'none';
+        selectFechaPago.required = false;
     }
+}
 
-    // Agregar listener al selector de método de pago
-    document.getElementById('metodo_pago').addEventListener('change', cambiarMetodoPago);
+// Asegúrate de llamar a mostrarCamposPago al cargar la página para configurar el estado inicial
+window.onload = mostrarCamposPago;
 
-    // Ejecutar al cargar para establecer el estado inicial
-    window.onload = function() {
-        cambiarMetodoPago(); // Ajustar la visibilidad inicial de los campos
-    };
+    
+    document.addEventListener("DOMContentLoaded", function() {
+    var formulario = document.querySelector('form.needs-validation');
+
+    formulario.addEventListener('submit', function(event) {
+        if (!formulario.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        formulario.classList.add('was-validated');
+    }, false);
+});
 </script>
 
 
