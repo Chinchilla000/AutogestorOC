@@ -44,30 +44,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 ?>
 
-<div class="container">
-    <h2>Solicitudes de Compra</h2>
-    <?php foreach ($solicitudes as $solicitud) : ?>
-        <div class="solicitud">
-            <h3>Solicitud #<?php echo $solicitud['id_solicitud']; ?></h3>
-            <p><strong>Obra:</strong> <?php echo $solicitud['obra']; ?></p>
-            <p><strong>Dirección:</strong> <?php echo isset($solicitud['direccion']) ? $solicitud['direccion'] : 'No especificado'; ?></p>
-            <p><strong>Solicitado por:</strong> <?php echo $solicitud['solicitado_por']; ?></p>
-
-            <h4>Ítems:</h4>
-            <?php $detalles = mostrarDetalles($solicitud['id_solicitud'], $conexion); ?>
-            <ul>
-                <?php foreach ($detalles as $detalle) : ?>
-                    <li><?php echo $detalle['descripcion'] . " - Cantidad: " . $detalle['cantidad'] . " - Precio unitario: " . $detalle['precio_unitario']; ?></li>
-                <?php endforeach; ?>
-            </ul>
-
-            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-                <input type="hidden" name="id_solicitud" value="<?php echo $solicitud['id_solicitud']; ?>">
-                <input type="submit" name="accion" value="aprobar" class="btn btn-success">
-                <input type="submit" name="accion" value="rechazar" class="btn btn-danger">
-            </form>
-        </div>
-    <?php endforeach; ?>
+<div class="container mt-4">
+    <h2 class="mb-4">Solicitudes de Ordenes de Compra</h2>
+    <div class="list-group">
+        <?php foreach ($solicitudes as $solicitud) : ?>
+            <a href="detalle_solicitud.php?id=<?php echo $solicitud['id_solicitud']; ?>" class="list-group-item list-group-item-action flex-column align-items-start">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">Solicitud #<?php echo $solicitud['id_solicitud']; ?></h5>
+                    <small>Estado: <?php echo $solicitud['estado']; ?></small>
+                </div>
+                <p class="mb-1"><strong>Obra:</strong> <?php echo $solicitud['obra']; ?></p>
+                <p class="mb-1"><strong>Dirección:</strong> <?php echo isset($solicitud['direccion']) ? $solicitud['direccion'] : 'No especificado'; ?></p>
+                <p class="mb-1"><strong>Solicitado por:</strong> <?php echo $solicitud['solicitado_por']; ?></p>
+            </a>
+        <?php endforeach; ?>
+    </div>
 </div>
 
 <?php include("./templates_visitador/footer_visitador.php"); ?>

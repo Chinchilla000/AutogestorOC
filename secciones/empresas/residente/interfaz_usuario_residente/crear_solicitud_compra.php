@@ -52,6 +52,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $fecha_pago = $_POST['fecha_pago'] ?? NULL;
     }
 
+    $total_neto = str_replace('.', '', $total_neto);
+$total_neto = str_replace(',', '.', $total_neto);
+$total_neto = floatval($total_neto);
+
+$iva = str_replace('.', '', $iva);
+$iva = str_replace(',', '.', $iva);
+$iva = floatval($iva);
+
+$total = str_replace('.', '', $total);
+$total = str_replace(',', '.', $total);
+$total = floatval($total);
+
 // Subida de archivo de cotización
 if (isset($_FILES['cotizacion']) && $_FILES['cotizacion']['error'] === UPLOAD_ERR_OK) {
     $archivoCotizacion = $_FILES['cotizacion']['name'];
@@ -332,22 +344,6 @@ function calcularTotalItem(input) {
 }
 //totales
 
-function calcularTotales() {
-    var totalNeto = 0;
-    var totalItems = document.getElementsByName('total_item[]');
-    
-    for (var i = 0; i < totalItems.length; i++) {
-        totalNeto += parseFloat(totalItems[i].value) || 0;
-    }
-
-    var iva = Math.round(totalNeto * 0.19); // Redondea el 19% de IVA
-    var total = Math.round(totalNeto + iva); // Redondea el total
-
-    // Formatea los números antes de asignarlos a los campos HTML
-    document.getElementById('total_neto').value = formatearNumero(Math.round(totalNeto));
-    document.getElementById('iva').value = formatearNumero(iva);
-    document.getElementById('total').value = formatearNumero(total);
-}
 function calcularTotalItem(input) {
     var itemDiv = input.closest('.input-group');
     var cantidad = itemDiv.querySelector('[name="cantidad[]"]').value;
@@ -356,9 +352,25 @@ function calcularTotalItem(input) {
     var total = parseFloat(cantidad) * parseFloat(precioUnitario);
 
     if (!isNaN(total)) {
-        totalItem.value = Math.round(total);
+        totalItem.value = formatearNumero(total);
         calcularTotales(); // Actualizar totales cada vez que se cambia un ítem
     }
+}
+
+function calcularTotales() {
+    var totalNeto = 0;
+    var totalItems = document.getElementsByName('total_item[]');
+    
+    for (var i = 0; i < totalItems.length; i++) {
+        totalNeto += parseFloat(totalItems[i].value.replace(/\./g, '').replace(',', '.')) || 0;
+    }
+
+    var iva = totalNeto * 0.19;
+    var total = totalNeto + iva;
+
+    document.getElementById('total_neto').value = formatearNumero(totalNeto);
+    document.getElementById('iva').value = formatearNumero(iva);
+    document.getElementById('total').value = formatearNumero(total);
 }
 // Función para manejar el cambio en el método de pago
 function mostrarCamposPago() {
@@ -400,4 +412,3 @@ window.onload = mostrarCamposPago;
 
 
 <?php include("./templates_residente/footer_residente.php"); ?>
-

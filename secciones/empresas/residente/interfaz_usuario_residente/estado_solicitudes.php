@@ -40,9 +40,13 @@ if ($id_residente) {
     $stmt->execute();
     $solicitudes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+    if ($id_residente) {
     echo "<div class='container mt-5'>";
     echo "<h3>Sus Solicitudes Enviadas</h3>";
-    echo "<table class='table'>";
+
+    // Envolver la tabla en un div con la clase .table-responsive
+    echo "<div class='table-responsive'>";
+    echo "<table class='table table-hover'>";
     echo "<thead><tr><th>N° Solicitud</th><th>Obra</th><th>Dirección</th><th>Total</th><th>Fecha de Creación</th><th>Estado</th><th>Archivo Cotización</th><th>Acciones</th></tr></thead>";
     echo "<tbody>";
 
@@ -60,6 +64,7 @@ if ($id_residente) {
         } else {
             echo "<td>No disponible</td>";
         }
+    
 
         // Acciones disponibles solo si el estado es "espera"
         if ($solicitud['estado'] == 'En espera') {
@@ -72,9 +77,13 @@ if ($id_residente) {
     }
 
     echo "</tbody></table></div>";
+    echo "</table>";
+    echo "</div>"; // Cierre del div .table-responsive
+
+    echo "</div>"; // Cierre del contenedor
 } else {
     echo "<div class='container mt-5'><p>Error: No se pudo identificar al residente.</p></div>";
 }
-
+}
 include("./templates_residente/footer_residente.php"); 
 ?>
