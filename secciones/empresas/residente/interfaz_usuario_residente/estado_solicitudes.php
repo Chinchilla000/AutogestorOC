@@ -43,14 +43,14 @@ if ($id_residente) {
     echo "<div class='container mt-5'>";
     echo "<h3>Sus Solicitudes Enviadas</h3>";
     echo "<table class='table'>";
-    echo "<thead><tr><th>N° Solicitud</th><th>Obra</th><th>Domicilio</th><th>Total</th><th>Fecha de Creación</th><th>Estado</th><th>Archivo Cotización</th><th>Acciones</th></tr></thead>";
+    echo "<thead><tr><th>N° Solicitud</th><th>Obra</th><th>Dirección</th><th>Total</th><th>Fecha de Creación</th><th>Estado</th><th>Archivo Cotización</th><th>Acciones</th></tr></thead>";
     echo "<tbody>";
 
     foreach ($solicitudes as $solicitud) {
         echo "<tr>";
         echo "<td>" . htmlspecialchars($solicitud['id_solicitud']) . "</td>";
         echo "<td>" . htmlspecialchars($solicitud['obra']) . "</td>";
-        echo "<td>" . htmlspecialchars($solicitud['domicilio']) . "</td>";
+        echo "<td>" . htmlspecialchars($solicitud['direccion']) . "</td>";
         echo "<td>" . htmlspecialchars($solicitud['total']) . "</td>";
         echo "<td>" . htmlspecialchars($solicitud['fecha_creacion']) . "</td>";
         echo "<td>" . htmlspecialchars($solicitud['estado']) . "</td>";

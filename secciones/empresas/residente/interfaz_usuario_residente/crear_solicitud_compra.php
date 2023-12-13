@@ -20,7 +20,7 @@ if ($resultado) {
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Recibir datos del formulario
     $obra = $_POST['obra'];
-    $domicilio = $_POST['domicilio'];
+    $direccion = $_POST['direccion'];
     $solicitado_por = $_POST['solicitado_por'];
     $metodo_pago = $_POST['metodo_pago'];
 
@@ -78,14 +78,14 @@ if (isset($_FILES['cotizacion']) && $_FILES['cotizacion']['error'] === UPLOAD_ER
 }
      // Insertar solicitud en la tabla de solicitudes
      $stmt = $conexion->prepare("INSERT INTO solicitudes_orden_compra 
-     (id_residente, id_empresa, obra, domicilio, solicitado_por, total_neto, iva, total, metodo_pago, nombre_pago, rut_pago, correo_pago, banco, numero_cuenta, archivo_cotizacion, estado, fecha_pago) 
+     (id_residente, id_empresa, obra, direccion, solicitado_por, total_neto, iva, total, metodo_pago, nombre_pago, rut_pago, correo_pago, banco, numero_cuenta, archivo_cotizacion, estado, fecha_pago) 
      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'En espera', ?)");
 
     // Vinculación de los parámetros a la consulta
     $stmt->bindParam(1, $id_residente);
     $stmt->bindParam(2, $id_empresa);
     $stmt->bindParam(3, $obra);
-    $stmt->bindParam(4, $domicilio);
+    $stmt->bindParam(4, $direccion);
     $stmt->bindParam(5, $solicitado_por);
     $stmt->bindParam(6, $total_neto);
     $stmt->bindParam(7, $iva);
@@ -144,8 +144,8 @@ if (isset($_FILES['cotizacion']) && $_FILES['cotizacion']['error'] === UPLOAD_ER
         </div>
 
         <div class="mb-3">
-            <label for="domicilio" class="form-label">Domicilio:</label>
-            <input type="text" id="domicilio" name="domicilio" class="form-control" required>
+            <label for="direccion" class="form-label">Dirección :</label>
+            <input type="text" id="direccion" name="direccion" class="form-control" required>
         </div>
 
         <div class="mb-3">
@@ -167,7 +167,9 @@ if (isset($_FILES['cotizacion']) && $_FILES['cotizacion']['error'] === UPLOAD_ER
                 <option value="GL">GL</option>
             </select>
                 <input type="number" name="cantidad[]" class="form-control" placeholder="Cantidad" required step="1" oninput="calcularTotalItem(this)">
+                <span class="input-group-text">$</span>
                 <input type="number" name="precio_unitario[]" class="form-control" placeholder="Precio Unitario" required step="1" oninput="calcularTotalItem(this)">
+                <span class="input-group-text">$</span>
                 <input type="text" name="total_item[]" class="form-control" placeholder="Total Ítem" readonly>
                 <button type="button" onclick="eliminarItem(this)">X</button>
             </div>
@@ -179,18 +181,27 @@ if (isset($_FILES['cotizacion']) && $_FILES['cotizacion']['error'] === UPLOAD_ER
         <div class="card-body">
             <h4>Totales</h4>
             <div class="mt-4">
-                    <label for="total_neto" class="form-label">Total Neto:</label>
-                    <input type="number" id="total_neto" name="total_neto" class="form-control" readonly>
+    <label for="total_neto" class="form-label">Total Neto:</label>
+                <div class="input-group">
+                    <span class="input-group-text">$</span>
+                    <input type="text" id="total_neto" name="total_neto" class="form-control" readonly>
                 </div>
-                <div class="mt-4">
-                    <label for="iva" class="form-label">IVA (19%):</label>
-                    <input type="number" id="iva" name="iva" class="form-control" readonly>
+            </div>
+            <div class="mt-4">
+                <label for="iva" class="form-label">IVA (19%):</label>
+                <div class="input-group">
+                    <span class="input-group-text">$</span>
+                    <input type="text" id="iva" name="iva" class="form-control" readonly>
                 </div>
-                <div class="mt-4 mb-4">
-                    <label for="total" class="form-label">Total:</label>
-                    <input type="number" id="total" name="total" class="form-control" readonly>
+            </div>
+            <div class="mt-4 mb-4">
+                <label for="total" class="form-label">Total:</label>
+                <div class="input-group">
+                    <span class="input-group-text">$</span>
+                    <input type="text" id="total" name="total" class="form-control" readonly>
                 </div>
-        </div>
+            </div>
+            </div>
     </div>
         <!-- Subir Cotización -->
         <div class="mb-3">
@@ -247,7 +258,9 @@ if (isset($_FILES['cotizacion']) && $_FILES['cotizacion']['error'] === UPLOAD_ER
 <!-- Aquí iría el pie de página o cualquier otro contenido adicional -->
 <script>
 var itemCount = 0; // Mantiene el seguimiento del número de ítems
-
+function formatearNumero(numero) {
+    return numero.toLocaleString('es-CL'); // Cambia 'es-ES' según tu localización deseada
+}
 function agregarItem() {
     if (!todosLosCamposLlenos()) {
         alert("Por favor, complete todos los campos del ítem actual antes de añadir uno nuevo.");
@@ -259,7 +272,13 @@ function agregarItem() {
         <div class="input-group mb-3" id="item_${itemCount}">
             <input type="text" name="item[]" class="form-control" placeholder="Ítem" required>
             <input type="text" name="descripcion[]" class="form-control" placeholder="Descripción" required>
-            <input type="text" name="unidad[]" class="form-control" placeholder="Unidad" required>
+            <select name="unidad[]" class="form-control" required>
+                <option value="" disabled selected>Seleccionar Unidad</option>
+                <option value="m2">m2</option>
+                <option value="m3">m3</option>
+                <option value="c/u">c/u</option>
+                <option value="GL">GL</option>
+            </select>
             <input type="number" name="cantidad[]" class="form-control" placeholder="Cantidad" required step="1" oninput="calcularTotalItem(this)">
             <input type="number" name="precio_unitario[]" class="form-control" placeholder="Precio Unitario" required step="1" oninput="calcularTotalItem(this)">
             <input type="text" name="total_item[]" class="form-control" placeholder="Total Ítem" readonly>
@@ -324,11 +343,11 @@ function calcularTotales() {
     var iva = Math.round(totalNeto * 0.19); // Redondea el 19% de IVA
     var total = Math.round(totalNeto + iva); // Redondea el total
 
-    document.getElementById('total_neto').value = Math.round(totalNeto);
-    document.getElementById('iva').value = iva;
-    document.getElementById('total').value = total;
+    // Formatea los números antes de asignarlos a los campos HTML
+    document.getElementById('total_neto').value = formatearNumero(Math.round(totalNeto));
+    document.getElementById('iva').value = formatearNumero(iva);
+    document.getElementById('total').value = formatearNumero(total);
 }
-
 function calcularTotalItem(input) {
     var itemDiv = input.closest('.input-group');
     var cantidad = itemDiv.querySelector('[name="cantidad[]"]').value;

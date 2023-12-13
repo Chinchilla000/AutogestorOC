@@ -15,7 +15,7 @@ $id_visitador = $_SESSION['id_visitador'];
 $nombre_empresa = '';
 
 // Consultar la base de datos para obtener el nombre de la empresa
-$sentencia = $conexion->prepare("SELECT e.nombre_empresa FROM visitadores_obra vo
+$sentencia = $conexion->prepare("SELECT e.id, e.nombre_empresa FROM visitadores_obra vo
                                  JOIN empresas e ON vo.id_empresa = e.id
                                  WHERE vo.id = :id_visitador");
 $sentencia->bindParam(':id_visitador', $id_visitador, PDO::PARAM_INT);
@@ -24,6 +24,7 @@ $resultado = $sentencia->fetch(PDO::FETCH_ASSOC);
 
 if ($resultado) {
     $nombre_empresa = $resultado['nombre_empresa'];
+    $_SESSION['id_empresa'] = $resultado['id']; // Guardar el ID de la empresa en la sesión
 }
 
 ?>
@@ -72,6 +73,9 @@ if ($resultado) {
                             <li><a class="dropdown-item" href="crear_solicitud_compra.php">Crear Solicitud de Compra</a></li>
                             <li><a class="dropdown-item" href="estado_solicitudes.php">Estado de Solicitudes</a></li>
                         </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="solicitudes_compra.php"><strong>Solicitudes</strong></a>
                     </li>
                     <?php if (isset($_SESSION['nombre_visitador'])) : ?>
                     <li class="nav-item">
