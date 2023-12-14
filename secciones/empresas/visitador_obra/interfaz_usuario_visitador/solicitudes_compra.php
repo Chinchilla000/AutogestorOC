@@ -3,7 +3,7 @@ error_reporting(E_ALL);
 include("../../../../bd.php");
 include("./templates_visitador/header_visitador.php");
 
-// Asegúrate de que el ID de la empresa del visitador de obras está en la sesión
+// Asegúrate de que el ID de la empresa del visitador de obras esté en la sesión
 $id_empresa = $_SESSION['id_empresa']; 
 
 // Modificar la consulta para obtener todas las solicitudes de la empresa específica, no solo las que están en espera
@@ -12,6 +12,13 @@ $stmt = $conexion->prepare($query);
 $stmt->bindParam(1, $id_empresa, PDO::PARAM_INT);
 $stmt->execute();
 $solicitudes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Función para formatear el número de solicitud
+function formatearNumeroSolicitud($id_solicitud) {
+    $annoActual = date('Y');
+    $numeroSolicitudFormateado = '#' . str_pad($id_solicitud, 4, '0', STR_PAD_LEFT) . '-' . $annoActual;
+    return $numeroSolicitudFormateado;
+}
 
 function mostrarDetalles($id_solicitud, $conexion) {
     $query = "SELECT * FROM detalles_solicitud_orden_compra WHERE id_solicitud = ?";
@@ -59,8 +66,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </thead>
             <tbody>
                 <?php foreach ($solicitudes as $solicitud) : ?>
-                    <tr onclick="window.location='detalle_solicitud.php?id=<?php echo $solicitud['id_solicitud']; ?>';" style="cursor:pointer;">
-                        <td><?php echo htmlspecialchars($solicitud['id_solicitud']); ?></td>
+                    <tr data-id-solicitud="<?php echo $solicitud['id_solicitud']; ?>" onclick="window.location='detalle_solicitud.php?id=<?php echo $solicitud['id_solicitud']; ?>';" style="cursor:pointer;">
+                        <td><?php echo htmlspecialchars(formatearNumeroSolicitud($solicitud['id_solicitud'])); ?></td>
                         <td><?php echo htmlspecialchars($solicitud['obra']); ?></td>
                         <td><?php echo htmlspecialchars($solicitud['fecha_creacion']);?></td>
                         <td><?php echo htmlspecialchars($solicitud['total']); ?></td>
@@ -83,7 +90,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         });
     });
 </script>
-
-
 
 <?php include("./templates_visitador/footer_visitador.php"); ?>

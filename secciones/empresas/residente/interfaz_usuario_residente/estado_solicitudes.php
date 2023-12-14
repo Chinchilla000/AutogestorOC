@@ -41,46 +41,51 @@ if ($id_residente) {
     $solicitudes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     if ($id_residente) {
-    echo "<div class='container mt-5'>";
-    echo "<h3>Solicitudes de Ordenes de Compras</h3>";
-
-    // Envolver la tabla en un div con la clase .table-responsive
-    echo "<div class='table-responsive'>";
-    echo "<table class='table table-hover'>";
-    echo "<thead><tr><th>N° Solicitud</th><th>Obra</th><th>Dirección</th><th>Total</th><th>Fecha de Creación</th><th>Archivo Cotización</th><th>Acciones</th></tr></thead>";
-    echo "<tbody>";
-
-    foreach ($solicitudes as $solicitud) {
-        echo "<tr>";
-        echo "<td>" . (isset($solicitud['id_solicitud']) ? htmlspecialchars($solicitud['id_solicitud']) : "") . "</td>";
-echo "<td>" . (isset($solicitud['obra']) ? htmlspecialchars($solicitud['obra']) : "") . "</td>";
-echo "<td>" . (isset($solicitud['direccion']) ? htmlspecialchars($solicitud['direccion']) : "") . "</td>";
-echo "<td>" . (isset($solicitud['total']) ? htmlspecialchars($solicitud['total']) : "") . "</td>";
-echo "<td>" . (isset($solicitud['fecha_creacion']) ? htmlspecialchars($solicitud['fecha_creacion']) : "") . "</td>";
-
-
-        if (!empty($solicitud['archivo_cotizacion'])) {
-            echo "<td><a href='" . htmlspecialchars($solicitud['archivo_cotizacion']) . "' target='_blank'>Ver Cotización</a></td>";
-        } else {
-            echo "<td>No disponible</td>";
+        echo "<div class='container mt-5'>";
+        echo "<h3>Solicitudes de Ordenes de Compras</h3>";
+        
+        // Envolver la tabla en un div con la clase .table-responsive
+        echo "<div class='table-responsive'>";
+        echo "<table class='table table-hover'>";
+        echo "<thead><tr><th>N° Solicitud</th><th>Obra</th><th>Dirección</th><th>Total</th><th>Fecha de Creación</th><th>Archivo Cotización</th><th>Acciones</th></tr></thead>";
+        echo "<tbody>";
+        
+        foreach ($solicitudes as $solicitud) {
+            echo "<tr>";
+        
+            // Formatear el número de solicitud al formato deseado (#0043-2023)
+            $numeroSolicitud = str_pad($solicitud['id_solicitud'], 4, '0', STR_PAD_LEFT);
+            $annoActual = date('Y');
+            $numeroSolicitudFormateado = "#{$numeroSolicitud}-{$annoActual}";
+        
+            echo "<td>" . htmlspecialchars($numeroSolicitudFormateado) . "</td>";
+            echo "<td>" . (isset($solicitud['obra']) ? htmlspecialchars($solicitud['obra']) : "") . "</td>";
+            echo "<td>" . (isset($solicitud['direccion']) ? htmlspecialchars($solicitud['direccion']) : "") . "</td>";
+            echo "<td>" . (isset($solicitud['total']) ? htmlspecialchars($solicitud['total']) : "") . "</td>";
+            echo "<td>" . (isset($solicitud['fecha_creacion']) ? htmlspecialchars($solicitud['fecha_creacion']) : "") . "</td>";
+        
+            if (!empty($solicitud['archivo_cotizacion'])) {
+                echo "<td><a href='" . htmlspecialchars($solicitud['archivo_cotizacion']) . "' target='_blank'>Ver Cotización</a></td>";
+            } else {
+                echo "<td>No disponible</td>";
+            }
+        
+            // Acciones disponibles solo si el estado es "espera"
+            if ($solicitud['estado'] == 'En espera') {
+                echo "<td><a class='btn btn-primary btn-sm' href='editar_solicitud.php?id_solicitud=" . $solicitud['id_solicitud'] . "'>Editar</a> <a class='btn btn-danger btn-sm' href='?eliminar=1&id_solicitud=" . $solicitud['id_solicitud'] . "' onclick='return confirm(\"¿Estás seguro de querer eliminar esta solicitud?\")'>Eliminar</a></td>";
+            } else {
+                echo "<td>Acciones no disponibles</td>";
+            }
+        
+            echo "</tr>";
         }
-    
-
-        // Acciones disponibles solo si el estado es "espera"
-        if ($solicitud['estado'] == 'En espera') {
-            echo "<td><a class='btn btn-primary btn-sm' href='editar_solicitud.php?id_solicitud=" . $solicitud['id_solicitud'] . "'>Editar</a> <a class='btn btn-danger btn-sm' href='?eliminar=1&id_solicitud=" . $solicitud['id_solicitud'] . "' onclick='return confirm(\"¿Estás seguro de querer eliminar esta solicitud?\")'>Eliminar</a></td>";
-        } else {
-            echo "<td>Acciones no disponibles</td>";
-        }
-
-        echo "</tr>";
-    }
-
-    echo "</tbody></table></div>";
-    echo "</table>";
-    echo "</div>"; // Cierre del div .table-responsive
-
-    echo "</div>"; // Cierre del contenedor
+        
+        echo "</tbody></table></div>";
+        echo "</table>";
+        echo "</div>"; // Cierre del div .table-responsive
+        
+        echo "</div>"; // Cierre del contenedor
+        
 } else {
     echo "<div class='container mt-5'><p>Error: No se pudo identificar al residente.</p></div>";
 }

@@ -65,7 +65,7 @@ if ($resultado) {
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <li><a class="dropdown-item" href="crear_solicitud_compra.php">Crear Solicitud de OC</a></li>
                             <li><a class="dropdown-item" href="estado_solicitudes.php">Solicitudes de OC</a></li>
-                            <li><a class="dropdown-item" href="estado_solicitudes.php">Historial de Solicitudes de OC</a></li>
+                            <li><a class="dropdown-item" href="historial_solicitudes.php">Historial de Solicitudes de OC</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
@@ -74,7 +74,7 @@ if ($resultado) {
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <li><a class="dropdown-item" href="estado_solicitudes.php">Ordenes de Compra</a></li>
-                            <li><a class="dropdown-item" href="estado_solicitudes.php">Historial de OC</a></li>
+                            <li><a class="dropdown-item" href="historial_solicitudes.php">Historial de OC</a></li>
                         </ul>
                     </li>
                     <?php if (isset($_SESSION['nombre_residente'])) : ?>
