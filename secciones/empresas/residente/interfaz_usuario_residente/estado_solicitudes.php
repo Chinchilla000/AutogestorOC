@@ -52,11 +52,12 @@ if ($id_residente) {
 
     foreach ($solicitudes as $solicitud) {
         echo "<tr>";
-        echo "<td>" . htmlspecialchars($solicitud['id_solicitud']) . "</td>";
-        echo "<td>" . htmlspecialchars($solicitud['obra']) . "</td>";
-        echo "<td>" . htmlspecialchars($solicitud['direccion']) . "</td>";
-        echo "<td>" . htmlspecialchars($solicitud['total']) . "</td>";
-        echo "<td>" . htmlspecialchars($solicitud['fecha_creacion']) . "</td>";
+        echo "<td>" . (isset($solicitud['id_solicitud']) ? htmlspecialchars($solicitud['id_solicitud']) : "") . "</td>";
+echo "<td>" . (isset($solicitud['obra']) ? htmlspecialchars($solicitud['obra']) : "") . "</td>";
+echo "<td>" . (isset($solicitud['direccion']) ? htmlspecialchars($solicitud['direccion']) : "") . "</td>";
+echo "<td>" . (isset($solicitud['total']) ? htmlspecialchars($solicitud['total']) : "") . "</td>";
+echo "<td>" . (isset($solicitud['fecha_creacion']) ? htmlspecialchars($solicitud['fecha_creacion']) : "") . "</td>";
+
 
         if (!empty($solicitud['archivo_cotizacion'])) {
             echo "<td><a href='" . htmlspecialchars($solicitud['archivo_cotizacion']) . "' target='_blank'>Ver Cotización</a></td>";

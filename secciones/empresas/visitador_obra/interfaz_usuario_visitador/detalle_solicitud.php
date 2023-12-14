@@ -59,7 +59,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <div class="container mt-5">
     <div class="card">
         <div class="card-header text-center">
-            <h2>Detalle de la Solicitud #<?php echo str_pad($id_solicitud, 4, '0', STR_PAD_LEFT) . "-" . date('Y'); ?></h2>
+            <h2>Solicitud de OC #<?php echo str_pad($id_solicitud, 4, '0', STR_PAD_LEFT) . "-" . date('Y'); ?></h2>
         </div>
         <div class="card-body">
             <!-- Encabezado con número de solicitud y fecha -->
@@ -205,7 +205,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <?php endif; ?>
                     
             </div>
-    </div>
+             <!-- Botón para la Cotización -->
+             <div class="col-md-12 text-center mt-3">
+                <a href="<?php echo $full_url; ?>" class="btn btn-warning btn-lg" target="_blank">Ver Cotización</a>
+            </div>
+
+            </div>
+         </div>
                 <!-- Botones de Aprobar/Rechazar y Estado de la Solicitud -->
                 <div class="col-md-6 text-center">
                     <?php if ($solicitud['estado'] == 'En espera') : ?>
@@ -213,12 +219,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <?php else: ?>
                         <!-- Mostrar el estado de la solicitud -->
                     <?php endif; ?>
+                    
                 </div>
             </div>
 
             <div class="text-center mt-3">
-                <a href="solicitudes_compra.php" class="btn btn-secondary">Volver a Historial</a>
+                <a href="solicitudes_compra.php" class="btn btn-secondary btn-lg">Volver a Historial</a>
+                
             </div>
+            <br>
         </div>
     </div>
 </div>

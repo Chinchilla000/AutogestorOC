@@ -68,7 +68,7 @@ if ($resultado) {
                             Solicitudes
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="<?php echo $url_base; ?>secciones/empresas/residente/interfaz_usuario_residente/estado_solicitudes.php">Solicitudes de OC</a></li>
+                            
                             <li><a class="dropdown-item" href="solicitudes_compra.php">Historial de Solicitudes de OC</a></li>
                         </ul>
                     </li>
