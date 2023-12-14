@@ -63,8 +63,18 @@ if ($resultado) {
                             Solicitudes
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="crear_solicitud_compra.php">Crear Solicitud de Compra</a></li>
-                            <li><a class="dropdown-item" href="estado_solicitudes.php">Estado de Solicitudes</a></li>
+                            <li><a class="dropdown-item" href="crear_solicitud_compra.php">Crear Solicitud de OC</a></li>
+                            <li><a class="dropdown-item" href="estado_solicitudes.php">Solicitudes de OC</a></li>
+                            <li><a class="dropdown-item" href="estado_solicitudes.php">Historial de Solicitudes de OC</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Ordenes de Compra
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="estado_solicitudes.php">Ordenes de Compra</a></li>
+                            <li><a class="dropdown-item" href="estado_solicitudes.php">Historial de OC</a></li>
                         </ul>
                     </li>
                     <?php if (isset($_SESSION['nombre_residente'])) : ?>

@@ -43,22 +43,47 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     exit;
 }
 ?>
-
 <div class="container mt-4">
-    <h2 class="mb-4">Solicitudes de Ordenes de Compra</h2>
-    <div class="list-group">
-        <?php foreach ($solicitudes as $solicitud) : ?>
-            <a href="detalle_solicitud.php?id=<?php echo $solicitud['id_solicitud']; ?>" class="list-group-item list-group-item-action flex-column align-items-start">
-                <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">Solicitud #<?php echo $solicitud['id_solicitud']; ?></h5>
-                    <small>Estado: <?php echo $solicitud['estado']; ?></small>
-                </div>
-                <p class="mb-1"><strong>Obra:</strong> <?php echo $solicitud['obra']; ?></p>
-                <p class="mb-1"><strong>Dirección:</strong> <?php echo isset($solicitud['direccion']) ? $solicitud['direccion'] : 'No especificado'; ?></p>
-                <p class="mb-1"><strong>Solicitado por:</strong> <?php echo $solicitud['solicitado_por']; ?></p>
-            </a>
-        <?php endforeach; ?>
+    <h2 class="mb-4">Historial de Solicitudes de Ordenes de Compras</h2>
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>N° Solicitud</th>
+                    <th>Obra</th>
+                    <th>Fecha de creación</th>
+                    <th>Total</th>
+                    <th>Solicitado por</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($solicitudes as $solicitud) : ?>
+                    <tr onclick="window.location='detalle_solicitud.php?id=<?php echo $solicitud['id_solicitud']; ?>';" style="cursor:pointer;">
+                        <td><?php echo htmlspecialchars($solicitud['id_solicitud']); ?></td>
+                        <td><?php echo htmlspecialchars($solicitud['obra']); ?></td>
+                        <td><?php echo htmlspecialchars($solicitud['fecha_creacion']);?></td>
+                        <td><?php echo htmlspecialchars($solicitud['total']); ?></td>
+                        <td><?php echo htmlspecialchars($solicitud['solicitado_por']); ?></td>
+                        <td><?php echo htmlspecialchars($solicitud['estado']); ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
     </div>
 </div>
+
+<script>
+    document.querySelectorAll('.table-hover tr').forEach(row => {
+        row.addEventListener('click', () => {
+            var idSolicitud = row.getAttribute('data-id-solicitud');
+            if (idSolicitud) {
+                window.location = '/ProyectoOC/secciones/empresas/visitador_obra/interfaz_usuario_visitador/detalle_solicitud.php?id=' + idSolicitud;
+            }
+        });
+    });
+</script>
+
+
 
 <?php include("./templates_visitador/footer_visitador.php"); ?>

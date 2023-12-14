@@ -6,6 +6,22 @@ include("./templates_residente/header_residente.php");
 $id_residente = $_SESSION['id_residente'];
 $id_empresa = null;
 
+// Obtener el último número de solicitud y calcular el nuevo número
+$stmt = $conexion->prepare("SELECT MAX(id_solicitud) AS ultimo_id FROM solicitudes_orden_compra");
+$stmt->execute();
+$resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+
+$ultimoNumero = 0;
+if ($resultado && $resultado['ultimo_id']) {
+    $ultimoNumero = intval($resultado['ultimo_id']);
+}
+$nuevoNumero = $ultimoNumero + 1;
+
+$numeroSolicitud = str_pad($nuevoNumero, 4, '0', STR_PAD_LEFT) . "-" . date('Y');
+
+// Obtener la fecha actual
+$fechaActual = date('d/m/Y');
+
 
 // Obtener el id_empresa
 $sentencia = $conexion->prepare("SELECT id_empresa FROM residentes_obra WHERE id = :id_residente");
@@ -63,6 +79,8 @@ $iva = floatval($iva);
 $total = str_replace('.', '', $total);
 $total = str_replace(',', '.', $total);
 $total = floatval($total);
+$numeroSolicitud = "OC-" . date('YmdHis') . "-" . rand(100, 999);
+
 
 // Subida de archivo de cotización
 if (isset($_FILES['cotizacion']) && $_FILES['cotizacion']['error'] === UPLOAD_ERR_OK) {
@@ -144,29 +162,41 @@ if (isset($_FILES['cotizacion']) && $_FILES['cotizacion']['error'] === UPLOAD_ER
         }
 ?>
 
-    <div class="container mt-5">
-        <div class="card">
-            <div class="card-body">
-                <h2 class="mb-4">Solicitud de Orden de Compra</h2>
-    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
-        
-        <div class="mb-3">
-            <label for="obra" class="form-label">Obra:</label>
-            <input type="text" id="obra" name="obra" class="form-control" required>
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-header text-center">
+            <h2>Solicitud de Orden de Compra</h2>
         </div>
+        <div class="card-body">
+            <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+                <!-- Encabezado con número de solicitud y fecha/hora -->
+                <div class="row ">
+                <div class="col text-center">
+                        <strong>Número de Solicitud: <?php echo $numeroSolicitud; ?></strong>
+                    </div>
+                    <div class="col text-center">
+                        <strong>Fecha: <?php echo $fechaActual; ?></strong>
+                    </div>
+                    
+                </div>
+                <div class="row mb-4">
+                    <div class="col-md-6 mb-3">
+                        <label for="obra" class="form-label">Obra:</label>
+                        <input type="text" id="obra" name="obra" class="form-control" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="direccion" class="form-label">Dirección:</label>
+                        <input type="text" id="direccion" name="direccion" class="form-control" required>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="solicitado_por" class="form-label">Solicitado por:</label>
+                    <input type="text" id="solicitado_por" name="solicitado_por" class="form-control" required>
+                </div>
 
-        <div class="mb-3">
-            <label for="direccion" class="form-label">Dirección :</label>
-            <input type="text" id="direccion" name="direccion" class="form-control" required>
-        </div>
-
-        <div class="mb-3">
-            <label for="solicitado_por" class="form-label">Solicitado por:</label>
-            <input type="text" id="solicitado_por" name="solicitado_por" class="form-control" required>
-        </div>
-
-        <!-- Detalles de los Ítems -->
-        <div id="items_container" class="mb-3">
+                <!-- Detalles de los Ítems -->
+                <div id="items_container" class="mb-3">
             <label class="form-label">Ítems:</label>
             <div class="input-group mb-3">
                 <input type="text" name="item[]" class="form-control" placeholder="Ítem" required>
@@ -185,87 +215,90 @@ if (isset($_FILES['cotizacion']) && $_FILES['cotizacion']['error'] === UPLOAD_ER
                 <input type="text" name="total_item[]" class="form-control" placeholder="Total Ítem" readonly>
                 <button type="button" onclick="eliminarItem(this)">X</button>
             </div>
-        </div>
-        <button type="button" id="add_item" class="btn btn-primary mb-3" onclick="agregarItem()">Añadir Ítem</button>
+            </div>
+                <button type="button" id="add_item" class="btn btn-primary mb-3" onclick="agregarItem()">Añadir Ítem</button>
 
-        <!-- Totales -->
-        <div class="card mt-4">
-        <div class="card-body">
-            <h4>Totales</h4>
-            <div class="mt-4">
-    <label for="total_neto" class="form-label">Total Neto:</label>
-                <div class="input-group">
-                    <span class="input-group-text">$</span>
-                    <input type="text" id="total_neto" name="total_neto" class="form-control" readonly>
+                 <!-- Sección Totales, más compacta -->
+                 <div class="row mt-4">
+                    <div class="col-md-4">
+                        <label for="total_neto" class="form-label">Total Neto:</label>
+                        <input type="text" id="total_neto" name="total_neto" class="form-control" readonly>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="iva" class="form-label">IVA (19%):</label>
+                        <input type="text" id="iva" name="iva" class="form-control" readonly>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="total" class="form-label">Total:</label>
+                        <input type="text" id="total" name="total" class="form-control" readonly>
+                    </div>
                 </div>
-            </div>
-            <div class="mt-4">
-                <label for="iva" class="form-label">IVA (19%):</label>
-                <div class="input-group">
-                    <span class="input-group-text">$</span>
-                    <input type="text" id="iva" name="iva" class="form-control" readonly>
-                </div>
-            </div>
-            <div class="mt-4 mb-4">
-                <label for="total" class="form-label">Total:</label>
-                <div class="input-group">
-                    <span class="input-group-text">$</span>
-                    <input type="text" id="total" name="total" class="form-control" readonly>
-                </div>
-            </div>
-            </div>
-    </div>
         <!-- Subir Cotización -->
         <div class="mb-3">
-            <label for="cotizacion" class="form-label">Cotización:</label>
-            <input type="file" id="cotizacion" name="cotizacion" class="form-control" accept=".pdf, .jpg, .jpeg, .png" required>
-        </div>
-
-        <!-- Método de Pago -->
-        <div class="mb-3">
-            <label for="metodo_pago" class="form-label">Método de Pago:</label>
-            <select id="metodo_pago" name="metodo_pago" class="form-select" onchange="mostrarCamposPago()">
-                <option value="efectivo">Efectivo</option>
-                <option value="credito">Crédito</option>
-            </select>
-        </div>
-
-        <!-- Campos para Crédito y Efectivo -->
-        <div id="datos_pago_credito_efectivo" class="mb-3" style="display:none;">
-            <!-- Campos comunes -->
-            <label>Nombre:</label>
-            <input type="text" name="nombre_pago" class="form-control" required>
-            <label>RUT:</label>
-            <input type="text" name="rut_pago" class="form-control" required>
-            <label>Correo:</label>
-            <input type="email" name="correo_pago" class="form-control" required>
-            <label>Banco:</label>
-            <input type="text" name="banco" class="form-control" required>
-            <label>Número de Cuenta:</label>
-            <input type="text" name="numero_cuenta" class="form-control" required>
-
-            <!-- Campo adicional para Crédito -->
-            <div id="fecha_pago_credito" style="display:none;">
-            <label>Fecha de Pago:</label>
-            <select name="fecha_pago" class="form-select">
-                <option value="">Selecciona</option>
-                <option value="15">15 días</option>
-                <option value="30">30 días</option>
-                <option value="45">45 días</option>
-                <option value="60">60 días</option>
-            </select>
-        </div>
-        </div>
-
-        <!-- Botón de Envío -->
-        <input type="submit" value="Enviar Solicitud" class="btn btn-success">
+                    <label for="cotizacion" class="form-label">Cotización:</label>
+                    <input type="file" id="cotizacion" name="cotizacion" class="form-control" accept=".pdf, .jpg, .jpeg, .png" required>
+                </div>
 
 
-
-            </form>
+<!-- Método de Pago y Campos Relacionados -->
+<div class="row mt-4">
+    <!-- Campos adicionales que aparecen según el método de pago seleccionado -->
+    <div id="datos_pago_credito_efectivo" class="col-md-6 mb-3" style="display:none;">
+        <div class="row">
+            <div class="col-md-6">
+                <label>Nombre:</label>
+                <input type="text" name="nombre_pago" class="form-control" required>
+            </div>
+            <div class="col-md-6">
+                <label>RUT:</label>
+                <input type="text" name="rut_pago" class="form-control" required>
             </div>
         </div>
+        <div class="row mt-2">
+            <div class="col-md-6">
+                <label>Correo:</label>
+                <input type="email" name="correo_pago" class="form-control" required>
+            </div>
+            <div class="col-md-6">
+                <label>Banco:</label>
+                <input type="text" name="banco" class="form-control" required>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-md-6">
+                <label>Número de Cuenta:</label>
+                <input type="text" name="numero_cuenta" class="form-control" required>
+            </div>
+            <div id="fecha_pago_credito" class="col-md-6 mb-3" style="display:none;">
+        <label>Fecha de Pago:</label>
+        <select name="fecha_pago" class="form-select" required>
+            <option value="">Selecciona</option>
+            <option value="15">15 días</option>
+            <option value="30">30 días</option>
+            <option value="45">45 días</option>
+            <option value="60">60 días</option>
+        </select>
     </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <label for="metodo_pago" class="form-label">Método de Pago:</label>
+        <select id="metodo_pago" name="metodo_pago" class="form-select" onchange="mostrarCamposPago()">
+            <option value="efectivo">Efectivo</option>
+            <option value="credito">Crédito</option>
+        </select>
+    </div>
+
+
+        <!-- Botón de Envío -->
+        <div class="text-center mt-4">
+                    <input type="submit" value="Enviar Solicitud" class="btn btn-success">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 <!-- Aquí iría el pie de página o cualquier otro contenido adicional -->
 <script>
@@ -292,7 +325,9 @@ function agregarItem() {
                 <option value="GL">GL</option>
             </select>
             <input type="number" name="cantidad[]" class="form-control" placeholder="Cantidad" required step="1" oninput="calcularTotalItem(this)">
+            <span class="input-group-text">$</span>
             <input type="number" name="precio_unitario[]" class="form-control" placeholder="Precio Unitario" required step="1" oninput="calcularTotalItem(this)">
+            <span class="input-group-text">$</span>
             <input type="text" name="total_item[]" class="form-control" placeholder="Total Ítem" readonly>
             <button type="button" onclick="eliminarItem(${itemCount})">X</button>
         </div>`;

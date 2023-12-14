@@ -42,12 +42,12 @@ if ($id_residente) {
 
     if ($id_residente) {
     echo "<div class='container mt-5'>";
-    echo "<h3>Sus Solicitudes Enviadas</h3>";
+    echo "<h3>Solicitudes de Ordenes de Compras</h3>";
 
     // Envolver la tabla en un div con la clase .table-responsive
     echo "<div class='table-responsive'>";
     echo "<table class='table table-hover'>";
-    echo "<thead><tr><th>N° Solicitud</th><th>Obra</th><th>Dirección</th><th>Total</th><th>Fecha de Creación</th><th>Estado</th><th>Archivo Cotización</th><th>Acciones</th></tr></thead>";
+    echo "<thead><tr><th>N° Solicitud</th><th>Obra</th><th>Dirección</th><th>Total</th><th>Fecha de Creación</th><th>Archivo Cotización</th><th>Acciones</th></tr></thead>";
     echo "<tbody>";
 
     foreach ($solicitudes as $solicitud) {
@@ -57,7 +57,6 @@ if ($id_residente) {
         echo "<td>" . htmlspecialchars($solicitud['direccion']) . "</td>";
         echo "<td>" . htmlspecialchars($solicitud['total']) . "</td>";
         echo "<td>" . htmlspecialchars($solicitud['fecha_creacion']) . "</td>";
-        echo "<td>" . htmlspecialchars($solicitud['estado']) . "</td>";
 
         if (!empty($solicitud['archivo_cotizacion'])) {
             echo "<td><a href='" . htmlspecialchars($solicitud['archivo_cotizacion']) . "' target='_blank'>Ver Cotización</a></td>";

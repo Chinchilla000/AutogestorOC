@@ -37,7 +37,7 @@ if ($resultado) {
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Panel del Visitador de Obras</title>
 
-    <link rel="icon" href="<?php echo $url_base; ?>img/logo2.png" type="image/x-icon">
+    <link rel="icon" href="<?php echo $url_base; ?>img/logo.png" type="image/x-icon">
     <!-- Bootstrap CSS v5.3.2 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
@@ -62,8 +62,24 @@ if ($resultado) {
                     <li class="nav-item">
                         <a class="nav-link" href="index_usuario_visitador.php"><strong>Inicio</strong></a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="solicitudes_compra.php"><strong>Solicitudes</strong></a>
+                    
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="solicitudes_compra.php" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Solicitudes
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="<?php echo $url_base; ?>secciones/empresas/residente/interfaz_usuario_residente/estado_solicitudes.php">Solicitudes de OC</a></li>
+                            <li><a class="dropdown-item" href="solicitudes_compra.php">Historial de Solicitudes de OC</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Ordenes de Compra
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="estado_solicitudes.php">Ordenes de Compra</a></li>
+                            <li><a class="dropdown-item" href="estado_solicitudes.php">Historial de OC</a></li>
+                        </ul>
                     </li>
                     <?php if (isset($_SESSION['nombre_visitador'])) : ?>
                         <li class="nav-item">

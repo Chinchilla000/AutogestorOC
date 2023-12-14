@@ -188,7 +188,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     
             </div>
             <div class="text-center mt-3">
-                <a href="solicitudes_compra.php" class="btn btn-secondary">Volver a Solicitudes</a>
+                <a href="solicitudes_compra.php" class="btn btn-secondary">Volver a Historial</a>
             </div>
             <br>
         </div>
