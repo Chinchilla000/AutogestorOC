@@ -56,111 +56,129 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 ?>
-
 <div class="container mt-5">
-    <div class="card shadow">
-    <div class="card-header bg-primary text-white text-center">
-        <h2>Detalle de la Solicitud #<?php echo $id_solicitud; ?></h2>
-    </div>
-    <div class="card" style="margin: 50px;">
-    
-    <div class="card-body">
-    <!-- Primera fila con Información General y Detalles Financieros -->
-    <div class="row mb-4">
-    <!-- Columna izquierda con Información General y Detalles Financieros -->
-    <div class="col-md-6">
-        <div class="text-center">
-            <h5 class="text-primary">Información General</h5>
-            <p><strong>Obra:</strong> <?php echo $solicitud['obra']; ?></p>
-            <p><strong>Dirección:</strong> <?php echo $solicitud['direccion']; ?></p>
-            <p><strong>Solicitado por:</strong> <?php echo $solicitud['solicitado_por']; ?></p>
+    <div class="card">
+        <div class="card-header text-center">
+            <h2>Detalle de la Solicitud #<?php echo str_pad($id_solicitud, 4, '0', STR_PAD_LEFT) . "-" . date('Y'); ?></h2>
         </div>
-        <div class="text-center">
-            <h5 class="text-primary">Detalles Financieros</h5>
-            <p><strong>Total Neto:</strong> $<?php echo formatoChileno($solicitud['total_neto']); ?></p>
-            <p><strong>IVA:</strong> $<?php echo formatoChileno($solicitud['iva']); ?></p>
-            <p><strong>Total:</strong> $<?php echo formatoChileno($solicitud['total']); ?></p>
-        </div>
-    </div>
-
-    <!-- Columna derecha con Detalles de Pago -->
-    <div class="col-md-6 text-center">
-        <h5 class="text-primary">Detalles de Pago</h5>
-        <p><strong>Método de Pago:</strong> <?php echo $solicitud['metodo_pago']; ?></p>
-        <p><strong>Nombre de Pago:</strong> <?php echo $solicitud['nombre_pago']; ?></p>
-        <p><strong>RUT de Pago:</strong> <?php echo $solicitud['rut_pago']; ?></p>
-        <p><strong>Correo de Pago:</strong> <?php echo $solicitud['correo_pago']; ?></p>
-        <p><strong>Banco:</strong> <?php echo $solicitud['banco']; ?></p>
-        <p><strong>Número de Cuenta:</strong> <?php echo $solicitud['numero_cuenta']; ?></p>
-        <?php if ($solicitud['metodo_pago'] == 'credito'): ?>
-            <p><strong>Fecha de Pago:</strong> <?php echo $solicitud['fecha_pago']; ?></p>
-        <?php endif; ?>
-    </div>
-</div>
-
-    <!-- Segunda fila con Detalles de Pago y Correo, Banco, etc. -->
-    
-        <div class="text-center">
-            <h5 class="text-primary">Cotización:</h5>
-            <a href="<?php echo htmlspecialchars($full_url); ?>" target="_blank" class="btn btn-primary">Ver Cotización</a>
-        </div>
-    </div>
-</div>
-
-<div class="mx-auto w-75"> <!-- Ajusta el w-75 a w-50, w-100, etc., según tus necesidades -->
-    <h4 class="text-center text-primary">Ítems de la Solicitud:</h4>
-    
-<div class="table-responsive mt-4">
-    <table class="table table-bordered table-hover text-center">
-        <thead>
-            <tr>
-                <th>Ítem</th>
-                <th>Descripción</th>
-                <th>Cantidad</th>
-                <th>Precio Unitario</th>
-                <th>Total Ítem</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($items as $item): ?>
-                <tr>
-                    <td>
-                        <div class="text-truncate" style="max-width: 150px; cursor: pointer;" onclick="showModal('<?php echo htmlspecialchars(addslashes($item['item'])); ?>')">
-                            <?php echo htmlspecialchars($item['item']); ?>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="text-truncate" style="max-width: 150px; cursor: pointer;" onclick="showModal('<?php echo htmlspecialchars(addslashes($item['descripcion'])); ?>')">
-                            <?php echo htmlspecialchars($item['descripcion']); ?>
-                        </div>
-                    </td>
-                    <td><?php echo htmlspecialchars($item['cantidad']); ?></td>
-                    <td>$<?php echo formatoChileno($item['precio_unitario']); ?></td>
-                    <td>$<?php echo formatoChileno($item['cantidad'] * $item['precio_unitario']); ?></td>
-                </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
-</div>
-
-<!-- Modal para mostrar la descripción completa -->
-<div class="modal fade" id="descriptionModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalLabel">Detalle</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="card-body">
+            <!-- Encabezado con número de solicitud y fecha -->
+            <div class="row mb-4">
+                <div class="col text-center">
+                    <strong>Número de Solicitud: <?php echo str_pad($id_solicitud, 4, '0', STR_PAD_LEFT) . "-" . date('Y'); ?></strong>
+                </div>
+                <div class="col text-center">
+                    <strong>Fecha: <?php echo date('d/m/Y'); ?></strong>
+                </div>
             </div>
-            <div class="modal-body" id="modalDescription">
-                <!-- Aquí se mostrará la descripción completa o el ítem -->
+
+            <!-- Información General -->
+            <div class="row mb-4">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Obra:</label>
+                    <input type="text" class="form-control" value="<?php echo $solicitud['obra']; ?>" readonly>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Dirección:</label>
+                    <input type="text" class="form-control" value="<?php echo $solicitud['direccion']; ?>" readonly>
+                </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Aceptar</button>
+            
+            <div class="mb-3">
+                <label class="form-label">Solicitado por:</label>
+                <input type="text" class="form-control" value="<?php echo $solicitud['solicitado_por']; ?>" readonly>
+            </div>
+
+            <!-- Detalles de los Ítems -->
+            <div class="table-responsive mt-4">
+                <table class="table table-bordered table-hover text-center">
+                    <thead>
+                        <tr>
+                            <th>Ítem</th>
+                            <th>Descripción</th>
+                            <th>Unidad</th>
+                            <th>Cantidad</th>
+                            <th>Precio Unitario</th>
+                            <th>Total Ítem</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($items as $item): ?>
+                            <tr>
+                                <td><?php echo $item['item']; ?></td>
+                                <td><?php echo $item['descripcion']; ?></td>
+                                <td><?php echo $item['unidad']; ?></td>
+                                <td><?php echo $item['cantidad']; ?></td>
+                                <td>$<?php echo formatoChileno($item['precio_unitario']); ?></td>
+                                <td>$<?php echo formatoChileno($item['total_item']); ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+
+             <!-- Sección Totales -->
+             <div class="row mt-4">
+                <div class="col-md-4">
+                    <label class="form-label">Total Neto:</label>
+                    <input type="text" class="form-control" value="<?php echo formatoChileno($solicitud['total_neto']); ?>" readonly>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">IVA (19%):</label>
+                    <input type="text" class="form-control" value="<?php echo formatoChileno($solicitud['iva']); ?>" readonly>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Total:</label>
+                    <input type="text" class="form-control" value="<?php echo formatoChileno($solicitud['total']); ?>" readonly>
+                </div>
+            </div>
+
+            <!-- Método de Pago y Campos Relacionados -->
+<div class="row mt-4">
+    <!-- Columna izquierda con detalles del método de pago -->
+    <div class="col-md-6 mb-3">
+        <div class="row">
+            <div class="col-md-6">
+                <label class="form-label">Nombre:</label>
+                <input type="text" class="form-control" value="<?php echo $solicitud['nombre_pago']; ?>" readonly>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">RUT:</label>
+                <input type="text" class="form-control" value="<?php echo $solicitud['rut_pago']; ?>" readonly>
             </div>
         </div>
+        <div class="row mt-2">
+            <div class="col-md-6">
+                <label class="form-label">Correo:</label>
+                <input type="email" class="form-control" value="<?php echo $solicitud['correo_pago']; ?>" readonly>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Banco:</label>
+                <input type="text" class="form-control" value="<?php echo $solicitud['banco']; ?>" readonly>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-md-6">
+                <label class="form-label">Número de Cuenta:</label>
+                <input type="text" class="form-control" value="<?php echo $solicitud['numero_cuenta']; ?>" readonly>
+            </div>
+            <?php if ($solicitud['metodo_pago'] == 'credito'): ?>
+            <div class="col-md-6">
+                <label class="form-label">Fecha de Pago:</label>
+                <input type="text" class="form-control" value="<?php echo $solicitud['fecha_pago']; ?>" readonly>
+            </div>
+            <?php endif; ?>
+        </div>
     </div>
-</div>
-    <div class="text-center mt-4">
+
+    <!-- Columna derecha con selección de método de pago -->
+    <div class="col-md-6 mb-3">
+        <label class="form-label">Método de Pago:</label>
+        <select class="form-select" disabled>
+            <option value="efectivo" <?php echo ($solicitud['metodo_pago'] == 'efectivo') ? 'selected' : ''; ?>>Efectivo</option>
+            <option value="credito" <?php echo ($solicitud['metodo_pago'] == 'credito') ? 'selected' : ''; ?>>Crédito</option>
+        </select>
+        <div class="text-center mt-4">
                 <?php if ($solicitud['estado'] == 'En espera') : ?>
                     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?id=' . $id_solicitud; ?>" method="post">
                         <button type="submit" name="accion" value="aprobar" class="btn btn-success">Aprobar</button>
@@ -187,14 +205,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <?php endif; ?>
                     
             </div>
+    </div>
+                <!-- Botones de Aprobar/Rechazar y Estado de la Solicitud -->
+                <div class="col-md-6 text-center">
+                    <?php if ($solicitud['estado'] == 'En espera') : ?>
+                        <!-- Formulario de acción para Aprobar/Rechazar -->
+                    <?php else: ?>
+                        <!-- Mostrar el estado de la solicitud -->
+                    <?php endif; ?>
+                </div>
+            </div>
+
             <div class="text-center mt-3">
                 <a href="solicitudes_compra.php" class="btn btn-secondary">Volver a Historial</a>
             </div>
-            <br>
         </div>
     </div>
 </div>
-
 <script>
      function showModal(description) {
         var modalDescription = document.getElementById('modalDescription');

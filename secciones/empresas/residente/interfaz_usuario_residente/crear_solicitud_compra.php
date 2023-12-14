@@ -377,20 +377,11 @@ function calcularTotalItem(input) {
         totalItem.value = total.toFixed(2);
     }
 }
+
+
 //totales
 
-function calcularTotalItem(input) {
-    var itemDiv = input.closest('.input-group');
-    var cantidad = itemDiv.querySelector('[name="cantidad[]"]').value;
-    var precioUnitario = itemDiv.querySelector('[name="precio_unitario[]"]').value;
-    var totalItem = itemDiv.querySelector('[name="total_item[]"]');
-    var total = parseFloat(cantidad) * parseFloat(precioUnitario);
 
-    if (!isNaN(total)) {
-        totalItem.value = formatearNumero(total);
-        calcularTotales(); // Actualizar totales cada vez que se cambia un ítem
-    }
-}
 
 function calcularTotales() {
     var totalNeto = 0;
@@ -406,6 +397,18 @@ function calcularTotales() {
     document.getElementById('total_neto').value = formatearNumero(totalNeto);
     document.getElementById('iva').value = formatearNumero(iva);
     document.getElementById('total').value = formatearNumero(total);
+}
+function calcularTotalItem(input) {
+    var itemDiv = input.closest('.input-group');
+    var cantidad = itemDiv.querySelector('[name="cantidad[]"]').value;
+    var precioUnitario = itemDiv.querySelector('[name="precio_unitario[]"]').value;
+    var totalItem = itemDiv.querySelector('[name="total_item[]"]');
+    var total = parseFloat(cantidad) * parseFloat(precioUnitario);
+
+    if (!isNaN(total)) {
+        totalItem.value = Math.round(total);
+        calcularTotales(); // Actualizar totales cada vez que se cambia un ítem
+    }
 }
 // Función para manejar el cambio en el método de pago
 function mostrarCamposPago() {
