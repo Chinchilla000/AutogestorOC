@@ -18,7 +18,7 @@ if ($id_residente) {
         // Envolver la tabla en un div con la clase .table-responsive
         echo "<div class='table-responsive'>";
         echo "<table class='table table-hover'>";
-        echo "<thead><tr><th>N° Solicitud</th><th>Obra</th><th>Dirección</th><th>Total</th><th>Fecha de Creación</th><th>Archivo Cotización</th><th>Estado</th></tr></thead>";
+        echo "<thead><tr><th>N° Solicitud</th><th>Obra</th><th>Dirección</th><th>Total</th><th>Fecha de Creación</th><th>Estado</th></tr></thead>";
         echo "<tbody>";
 
         foreach ($solicitudes as $solicitud) {
@@ -27,14 +27,13 @@ if ($id_residente) {
             echo "<td>" . $numero_solicitud . "</td>";
             echo "<td>" . (isset($solicitud['obra']) ? htmlspecialchars($solicitud['obra']) : "") . "</td>";
             echo "<td>" . (isset($solicitud['direccion']) ? htmlspecialchars($solicitud['direccion']) : "") . "</td>";
-            echo "<td>" . (isset($solicitud['total']) ? htmlspecialchars($solicitud['total']) : "") . "</td>";
+
+            // Mostrar el total en formato de peso chileno con el símbolo "$"
+            echo "<td>" . (isset($solicitud['total']) ? htmlspecialchars('$' . number_format($solicitud['total'], 0, ',', '.')) : "") . "</td>";
+            
             echo "<td>" . (isset($solicitud['fecha_creacion']) ? htmlspecialchars($solicitud['fecha_creacion']) : "") . "</td>";
 
-            if (!empty($solicitud['archivo_cotizacion'])) {
-                echo "<td><a href='" . htmlspecialchars($solicitud['archivo_cotizacion']) . "' target='_blank'>Ver Cotización</a></td>";
-            } else {
-                echo "<td>No disponible</td>";
-            }
+            
 
             echo "<td>" . (isset($solicitud['estado']) ? htmlspecialchars($solicitud['estado']) : "") . "</td>";
             echo "</tr>";

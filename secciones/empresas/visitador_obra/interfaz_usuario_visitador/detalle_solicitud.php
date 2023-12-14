@@ -119,19 +119,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
              <!-- Sección Totales -->
              <div class="row mt-4">
-                <div class="col-md-4">
-                    <label class="form-label">Total Neto:</label>
-                    <input type="text" class="form-control" value="<?php echo formatoChileno($solicitud['total_neto']); ?>" readonly>
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label">IVA (19%):</label>
-                    <input type="text" class="form-control" value="<?php echo formatoChileno($solicitud['iva']); ?>" readonly>
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label">Total:</label>
-                    <input type="text" class="form-control" value="<?php echo formatoChileno($solicitud['total']); ?>" readonly>
-                </div>
-            </div>
+    <div class="col-md-4">
+        <label class="form-label">Total Neto:</label>
+        <div class="input-group">
+            <span class="input-group-text">$</span>
+            <input type="text" class="form-control" value="<?php echo formatoChileno($solicitud['total_neto']); ?>" readonly>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <label class="form-label">IVA (19%):</label>
+        <div class="input-group">
+            <span class="input-group-text">$</span>
+            <input type="text" class="form-control" value="<?php echo formatoChileno($solicitud['iva']); ?>" readonly>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <label class="form-label">Total:</label>
+        <div class="input-group">
+            <span class="input-group-text">$</span>
+            <input type="text" class="form-control" value="<?php echo formatoChileno($solicitud['total']); ?>" readonly>
+        </div>
+    </div>
+</div>
 
             <!-- Método de Pago y Campos Relacionados -->
 <div class="row mt-4">

@@ -70,7 +70,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <td><?php echo htmlspecialchars(formatearNumeroSolicitud($solicitud['id_solicitud'])); ?></td>
                         <td><?php echo htmlspecialchars($solicitud['obra']); ?></td>
                         <td><?php echo htmlspecialchars($solicitud['fecha_creacion']);?></td>
-                        <td><?php echo htmlspecialchars($solicitud['total']); ?></td>
+                        <td><?php echo htmlspecialchars('$' . number_format($solicitud['total'], 0, ',', '.')); ?></td>
                         <td><?php echo htmlspecialchars($solicitud['solicitado_por']); ?></td>
                         <td><?php echo htmlspecialchars($solicitud['estado']); ?></td>
                     </tr>

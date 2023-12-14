@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 13-12-2023 a las 17:16:27
+-- Tiempo de generación: 14-12-2023 a las 19:49:13
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -62,7 +62,26 @@ INSERT INTO `detalles_solicitud_orden_compra` (`id_detalle`, `id_solicitud`, `it
 (27, 21, 'a', 'a', 'm3', 1, 2, 2),
 (28, 22, 'bb', 'bb', 'm3', 2, 3, 6),
 (29, 23, 'asd', 'asd', 'm2', 2, 300, 600),
-(30, 23, 'v', 'v', 'm3', 5, 2500, 12500);
+(30, 23, 'v', 'v', 'm3', 5, 2500, 12500),
+(31, 24, 'b', 'b', 'm3', 2, 1500, 3000),
+(37, 28, 'a', 'a', 'm3', 2, 2000, 4),
+(38, 28, 'vv', 'vv', 'm2', 3, 3500, 11),
+(39, 29, 'PErfume', 'shimmer shinny abby', 'm2', 1, 16500, 17),
+(42, 32, 'aa', 'aa', 'm2', 2, 15000, 30),
+(43, 32, 'aa', 'aa', 'm3', 2, 3550, 7),
+(44, 33, 'v', 'v', 'm3', 2, 500, 1),
+(45, 33, 'vv', 'vv', 'c/u', 3, 1500, 5),
+(50, 36, 't', 't', 'm2', 2, 2000, 4),
+(51, 36, 'tt', 'tt', 'm3', 3, 3000, 9),
+(54, 38, 'c', 'c', 'c/u', 5, 1500000, 7500),
+(55, 39, 'asas', 'as', 'm3', 5, 1500000, 7500),
+(56, 40, 'kk', 'kk', 'm2', 2, 2000, 4000),
+(57, 40, 'kk', 'kk', 'kk', 3, 3000, 9000),
+(58, 41, 's', 's', 'm3', 2, 2000, 4000),
+(59, 41, 'ss', 'ss', 'c/u', 3, 3000, 9000),
+(60, 42, '001N', 'descripcion', 'm2', 5, 150000, 750000),
+(63, 44, 'N001', 'asdasdas', 'GL', 2, 25000, 50000),
+(64, 44, 'N002', 'asdasdasdasd', 'c/u', 3, 75000, 225000);
 
 -- --------------------------------------------------------
 
@@ -90,7 +109,7 @@ INSERT INTO `empresas` (`id`, `nombre_usuario`, `password`, `nombre_empresa`, `r
 (19, 'usuario1', '$2y$10$esRygOJGBpU5bvsWOnNKZOFenIxMDbE5eOvKT/Thyl8bnq6S3VC3C', 'Empresa Ficticia LTDA.', '124124124123', 'Ganaderia', 'asd@gmail.com', '1234124124', '2023-12-06 15:08:55'),
 (21, 'aaaaa', '$2y$10$MdPMlCrQr.yM/Cl4oFH2H.gBL6uE661qX3FrQ.TZI33s4.7RClV7C', 'Empresa Nueva LTDA', '11111', '51111', 'empresa99@gmail.com', '222', '2023-12-11 03:01:55'),
 (25, 'Valentina', '$2y$10$sUQgD4q1sdLoUsdpvU4Gueen68KZzQMGy587GTueOjAwkehOsBhxa', 'shynny baby shop', '12321323123', 'Cosmeticos', 'valentina@123', '123', '2023-12-11 14:11:59'),
-(26, 'aaaa', '$2y$10$iXziInfplXpautuAwNqus.sx35FH6.Z3nWKOtP3rwig8LVE3lcKrG', 'aaaa', '123123', 'sdasdas', '123@123', 'aaaaa', '2023-12-13 15:30:35');
+(27, 'Usuario Empresa', '$2y$10$O8tPjVKqrnUwPlVcuzXIEeZ7DhrSoBDTOMH1PcOK/3B9Vkzwfh1PC', 'EmpresaNueva LTDA', '1243124123123', '124123123', 'correoempresa@123', '12312412312412', '2023-12-14 13:57:26');
 
 -- --------------------------------------------------------
 
@@ -141,7 +160,8 @@ CREATE TABLE `residentes_obra` (
 
 INSERT INTO `residentes_obra` (`id`, `id_empresa`, `nombre`, `apellido`, `rut`, `cargo`, `correo`, `contrasena`) VALUES
 (10, 19, 'residente1', 'aa', '123', 'Residente de Obras', 'residente@hotmail.com', '$2y$10$DvnoRj.7Fwmig7g3GUHvZunavo9zi6Z73oXzqk4A3K4nFNaPZssMq'),
-(12, 25, 'Xinxilla', 'Obando', '20010126-k', 'Residente de Obras', 'callito@123', '$2y$10$fJ9W8HYz3KNJzm7ym7vHR.pbV6zzvixle5A1K.kGewHA8cCDL9Wb2');
+(12, 25, 'Xinxilla', 'Obando', '20010126-k', 'Residente de Obras', 'callito@123', '$2y$10$fJ9W8HYz3KNJzm7ym7vHR.pbV6zzvixle5A1K.kGewHA8cCDL9Wb2'),
+(13, 27, 'Residente1', 'xxxxx', 'xxxxxxxxxx', 'Residente de Obras', 'residente1@hotmail.com', '$2y$10$MzZk2JDipPBcTojmgsjrJ.FEXaHLtzF9nwI/JFkXxs8BxRGJrj4yy');
 
 -- --------------------------------------------------------
 
@@ -191,7 +211,19 @@ INSERT INTO `solicitudes_orden_compra` (`id_solicitud`, `id_residente`, `id_empr
 (20, 12, 25, '2023-12-12 04:44:07', 'xxxx', 'xxxx', 'xxxxx', 1, 0, 1, 'credito', 'xx', 'xx', 'xx@xx', 'xx', 'xx', '../cotizacion_solicitudes/cotizacion_20231212054407_6577e51723f88.png', 'En espera', '45'),
 (21, 12, 25, '2023-12-12 05:11:52', 'aaaaaa', 'aaaaaaa', 'aaaaa', 2, 0, 2, 'efectivo', 'aaa', 'aa', 'aa@a', 'aa', 'aa', '../cotizacion_solicitudes/cotizacion_20231212061152_6577eb983150b.png', 'En espera', NULL),
 (22, 12, 25, '2023-12-12 05:12:34', 'bb', 'bb', 'bb', 6, 1, 7, 'credito', 'bb', 'bb', 'b@b', 'bbb', 'bbb', '../cotizacion_solicitudes/cotizacion_20231212061234_6577ebc266acb.png', 'En espera', '30'),
-(23, 10, 19, '2023-12-13 15:02:46', 'Obra 3', 'Tenaun 145', 'Valentina', 13, 2, 16, 'efectivo', 'Claudio', '20010126-k', 'cayoperesz@gmail.com', 'Copeuch', '20010126', '../cotizacion_solicitudes/cotizacion_20231213160246_6579c79621b1e.png', 'En espera', NULL);
+(23, 10, 19, '2023-12-13 15:02:46', 'Obra 3', 'Tenaun 145', 'Valentina', 13, 2, 16, 'efectivo', 'Claudio', '20010126-k', 'cayoperesz@gmail.com', 'Copeuch', '20010126', '../cotizacion_solicitudes/cotizacion_20231213160246_6579c79621b1e.png', 'Rechazado', NULL),
+(24, 10, 19, '2023-12-13 16:21:34', 'bb', 'bb', 'bb', 3, 570, 4, 'credito', 'Jose', 'Bahamonde', 'cayoperez98@gmail.com', 'Falabella', '12312412321', '../cotizacion_solicitudes/cotizacion_20231213172134_6579da0eb8d1c.png', 'Rechazado', '60'),
+(28, 10, 19, '2023-12-13 20:32:15', 'ss', 'ss', 'ss', 14500, 2755, 17255, 'credito', 'ss', 'ss', 'ss@ss', 'ss', 'ss', '../cotizacion_solicitudes/cotizacion_20231213213215_657a14cf718e9.png', 'Rechazado', '45'),
+(29, 10, 19, '2023-12-13 21:33:33', 'Valentina', 'Huenteo 725', 'bb', 16500, 3135, 19635, 'efectivo', 'Valentina', '20010126-k', 'cayo@gmail.com', 'Falabella', '4123123123', '../cotizacion_solicitudes/cotizacion_20231213223333_657a232d2580a.png', 'Aprobado', NULL),
+(32, 10, 19, '2023-12-14 04:00:45', 'aaaa', 'aaaaaa', 'aaaa', 37100, 7049, 44149, 'efectivo', 'aa', 'aa', 'aa@aa', 'aa', 'aa', '../cotizacion_solicitudes/cotizacion_20231214050045_657a7dedcfd70.png', 'En espera', NULL),
+(33, 10, 19, '2023-12-14 04:24:38', 'vv', 'vv', 'vv', 5500, 1045, 6545, 'credito', 'vv', 'vv', 'v@v', 'vv', 'vv', '../cotizacion_solicitudes/cotizacion_20231214052438_657a83862838d.png', 'En espera', '60'),
+(36, 10, 19, '2023-12-14 05:11:26', 'tt', 'tt', 'tt', 13000, 2470, 15470, 'credito', 'tt', 'tt', 'tt@t', 'tt', 'tt', '../cotizacion_solicitudes/cotizacion_20231214061126_657a8e7ea36dd.png', 'En espera', '15'),
+(38, 10, 19, '2023-12-14 05:15:13', 'cc', 'c', 'c', 7500000, 1425000, 8925000, 'efectivo', 'cc', 'cc', 'ccc@c', 'cc', 'cc', '../cotizacion_solicitudes/cotizacion_20231214061513_657a8f6192e47.png', 'En espera', NULL),
+(39, 10, 19, '2023-12-14 05:18:29', 'asasas', 'asas', 'asas', 7500000, 1425000, 8925000, 'credito', 'asa', 'asa', 'asa@asa', 'asa', 'sas', '../cotizacion_solicitudes/cotizacion_20231214061829_657a902564017.png', 'En espera', '45'),
+(40, 10, 19, '2023-12-14 05:25:01', 'kk', NULL, 'kk', 13000, 2470, 15470, 'efectivo', 'kk', 'kk', 'k@kj', 'k', 'kj', '../cotizacion_solicitudes/cotizacion_20231214062501_657a91ad5b4ef.png', 'En espera', NULL),
+(41, 10, 19, '2023-12-14 05:33:42', 'sss', 'ss', 'ss', 13000, 2470, 15470, 'efectivo', 'asdasd', 'asdas', 'cayo@gmail.com', 'asdas', 'asdas', '../cotizacion_solicitudes/cotizacion_20231214063342_657a93b612458.png', 'En espera', NULL),
+(42, 13, 27, '2023-12-14 13:59:53', 'Hospital', 'Huenteo 725', 'Marcelo', 750000, 142500, 892500, 'credito', 'Valentina', '20010126-k', 'cayo@gmail.com', 'Falabella', '213414123', '../cotizacion_solicitudes/cotizacion_20231214145953_657b0a59321f8.png', 'Rechazado', '30'),
+(44, 13, 27, '2023-12-14 18:43:17', 'Hospital', 'Huenteo 725', 'Marcelo', 275000, 52250, 327250, 'credito', 'Valentina', 'zadasdasd', 'aaa@aaaaa', 'aaaa', 'dasdasd', '../cotizacion_solicitudes/cotizacion_20231214194317_657b4cc5bc71c.png', 'Aprobado', '30');
 
 -- --------------------------------------------------------
 
@@ -216,7 +248,7 @@ CREATE TABLE `visitadores_obra` (
 
 INSERT INTO `visitadores_obra` (`id`, `id_empresa`, `nombre`, `apellido`, `rut`, `cargo`, `correo`, `contrasena`) VALUES
 (9, 19, 'bb', 'aa', 'vv', 'Visitador de Obras', 'a@a', '$2y$10$4TX4TljVkeezhiP5jSPxlOMK7NZAul9n0mNQhNQCIyCtxV7NoF.7K'),
-(10, 26, 'xxxx', 'xxxxx', 'xxxxxx', 'Visitador de Obras', 'x@x', '$2y$10$1NPar.Tp84SRdxYlP8FUfOPkfbDFXPhM6ihmfQiTIsgMW0ODMPsHW');
+(11, 27, 'Visitador 1', 'asdsadasd', 'sdasdasdasdasdas', 'Visitador de Obras', 'visitador@1', '$2y$10$D.Wlq1EIKOFAGlMeqrp6K.WkebHtuDsyLAQ8ztDGqGAgHtVTw7JVC');
 
 --
 -- Índices para tablas volcadas
@@ -272,13 +304,13 @@ ALTER TABLE `visitadores_obra`
 -- AUTO_INCREMENT de la tabla `detalles_solicitud_orden_compra`
 --
 ALTER TABLE `detalles_solicitud_orden_compra`
-  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=65;
 
 --
 -- AUTO_INCREMENT de la tabla `empresas`
 --
 ALTER TABLE `empresas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT de la tabla `gerentes_generales`
@@ -290,19 +322,19 @@ ALTER TABLE `gerentes_generales`
 -- AUTO_INCREMENT de la tabla `residentes_obra`
 --
 ALTER TABLE `residentes_obra`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT de la tabla `solicitudes_orden_compra`
 --
 ALTER TABLE `solicitudes_orden_compra`
-  MODIFY `id_solicitud` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id_solicitud` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 
 --
 -- AUTO_INCREMENT de la tabla `visitadores_obra`
 --
 ALTER TABLE `visitadores_obra`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- Restricciones para tablas volcadas

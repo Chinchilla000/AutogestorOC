@@ -61,7 +61,15 @@ if ($id_residente) {
             echo "<td>" . htmlspecialchars($numeroSolicitudFormateado) . "</td>";
             echo "<td>" . (isset($solicitud['obra']) ? htmlspecialchars($solicitud['obra']) : "") . "</td>";
             echo "<td>" . (isset($solicitud['direccion']) ? htmlspecialchars($solicitud['direccion']) : "") . "</td>";
-            echo "<td>" . (isset($solicitud['total']) ? htmlspecialchars($solicitud['total']) : "") . "</td>";
+            
+            // Formatear el total en formato de peso chileno con el símbolo "$"
+            if (isset($solicitud['total'])) {
+                $totalFormateado = "$" . number_format($solicitud['total'], 0, ',', '.');
+                echo "<td>" . htmlspecialchars($totalFormateado) . "</td>";
+            } else {
+                echo "<td></td>";
+            }
+            
             echo "<td>" . (isset($solicitud['fecha_creacion']) ? htmlspecialchars($solicitud['fecha_creacion']) : "") . "</td>";
         
             if (!empty($solicitud['archivo_cotizacion'])) {
