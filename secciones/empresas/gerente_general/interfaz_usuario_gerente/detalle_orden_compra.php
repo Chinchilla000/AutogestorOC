@@ -33,7 +33,7 @@ try {
         <div class="container mt-5">
             <div class="card">
                 <div class="card-header text-center">
-                    <h2>Detalle de Orden de Compra #<?php echo str_pad($id_orden_compra, 4, '0', STR_PAD_LEFT) . "-" . date('Y'); ?></h2>
+                    <h2>Orden de Compra #<?php echo str_pad($id_orden_compra, 4, '0', STR_PAD_LEFT) . "-" . date('Y'); ?></h2>
                 </div>
                 <div class="card-body">
                     <!-- Encabezado con número de orden de compra y fecha -->
