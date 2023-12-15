@@ -68,21 +68,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $fecha_pago = $_POST['fecha_pago'] ?? NULL;
     }
 
-    $total_neto = str_replace('.', '', $total_neto);
-$total_neto = str_replace(',', '.', $total_neto);
-$total_neto = floatval($total_neto);
+ // Calcula el total y el IVA
+$total = 0;
 
-$iva = str_replace('.', '', $iva);
-$iva = str_replace(',', '.', $iva);
-$iva = floatval($iva);
+foreach ($_POST['total_item'] as $total_item) {
+    $total += floatval(str_replace(',', '.', str_replace('.', '', $total_item)));
+}
 
-$total = str_replace('.', '', $total);
-$total = str_replace(',', '.', $total);
-$total = floatval($total);
-$numeroSolicitud = "OC-" . date('YmdHis') . "-" . rand(100, 999);
+$iva = $total * 0.19;
+$total_neto = $total - $iva;
 
 
-// Subida de archivo de cotización
 if (isset($_FILES['cotizacion']) && $_FILES['cotizacion']['error'] === UPLOAD_ERR_OK) {
     $archivoCotizacion = $_FILES['cotizacion']['name'];
     $extension = pathinfo($archivoCotizacion, PATHINFO_EXTENSION);
@@ -198,41 +194,53 @@ if (isset($_FILES['cotizacion']) && $_FILES['cotizacion']['error'] === UPLOAD_ER
                 <!-- Detalles de los Ítems -->
                 <div id="items_container" class="mb-3">
             <label class="form-label"><strong>Ítems:</strong></label>
-            <div class="input-group mb-3">
-                <input type="text" name="item[]" class="form-control" placeholder="Ítem" required>
-                <input type="text" name="descripcion[]" class="form-control" placeholder="Descripción" required>
-                <select name="unidad[]" class="form-control" required>
-                <option value="" disabled selected>Seleccionar Unidad</option>
-                <option value="m2">m2</option>
-                <option value="m3">m3</option>
-                <option value="c/u">c/u</option>
-                <option value="GL">GL</option>
-            </select>
-                <input type="number" name="cantidad[]" class="form-control" placeholder="Cantidad" required step="1" oninput="calcularTotalItem(this)">
-                <span class="input-group-text">$</span>
-                <input type="number" name="precio_unitario[]" class="form-control" placeholder="Precio Unitario" required step="1" oninput="calcularTotalItem(this)">
-                <span class="input-group-text">$</span>
-                <input type="text" name="total_item[]" class="form-control" placeholder="Total Ítem" readonly>
-                <button type="button" onclick="eliminarItem(this)">X</button>
-            </div>
+            <div class="input-group mb-3" id="item_${itemCount}">
+    <input type="text" name="item[]" class="form-control" placeholder="Ítem" required>
+    <input type="text" name="descripcion[]" class="form-control" placeholder="Descripción" required>
+    <select name="unidad[]" class="form-control" required>
+        <option value="" disabled selected>Seleccionar Unidad</option>
+        <option value="m2">m2</option>
+        <option value="m3">m3</option>
+        <option value="c/u">c/u</option>
+        <option value="GL">GL</option>
+    </select>
+    <input type="number" name="cantidad[]" class="form-control" placeholder="Cantidad" required step="1" oninput="calcularTotalItem(this)">
+    <span class="input-group-text">$</span>
+    <input type="number" name="precio_unitario[]" class="form-control" placeholder="Precio Unitario" required step="1" oninput="calcularTotalItem(this)">
+    <span class="input-group-text">$</span>
+    <input type="text" name="total_item[]" class="form-control" placeholder="Total Ítem" readonly>
+    <button type="button" onclick="eliminarItem(${itemCount})">X</button>
+</div>
             </div>
                 <button type="button" id="add_item" class="btn btn-primary mb-3" onclick="agregarItem()">Añadir Ítem</button>
 
-                 <!-- Sección Totales, más compacta -->
+                 <!-- Sección Totales, utilizando prepend en los campos -->
                  <div class="row mt-4">
-                    <div class="col-md-4">
-                        <label for="total_neto" class="form-label"><strong>Total Neto:</strong></label>
+                <div class="col-md-4">
+                    <label for="total_neto" class="form-label"><strong>Total Neto:</strong></label>
+                    <div class="input-group">
+                        <span class="input-group-text" id="basic-addon1">$</span>
                         <input type="text" id="total_neto" name="total_neto" class="form-control" readonly>
                     </div>
-                    <div class="col-md-4">
-                        <label for="iva" class="form-label"><strong>IVA (19%):</strong></label>
+                </div>
+                <div class="col-md-4">
+                    <label for="iva" class="form-label"><strong>IVA (19%):</strong></label>
+                    <div class="input-group">
+                        <span class="input-group-text" id="basic-addon2">$</span>
                         <input type="text" id="iva" name="iva" class="form-control" readonly>
                     </div>
-                    <div class="col-md-4">
-                        <label for="total" class="form-label"><strong>Total:</strong></label>
+                </div>
+                <div class="col-md-4">
+                    <label for="total" class="form-label"><strong>Total:</strong></label>
+                    <div class="input-group">
+                        <span class="input-group-text" id="basic-addon3">$</span>
                         <input type="text" id="total" name="total" class="form-control" readonly>
                     </div>
                 </div>
+            </div>
+
+
+
         <!-- Subir Cotización -->
         <div class="mb-3">
                     <label for="cotizacion" class="form-label"><strong>Cotización:</strong></label>
@@ -363,53 +371,54 @@ function eliminarItem(index) {
     var itemDiv = document.getElementById('item_' + index);
     if (itemDiv) {
         itemDiv.parentNode.removeChild(itemDiv);
+        calcularTotales(); // Actualizar los totales después de eliminar un ítem
     }
 }
-
+function formatearNumero(numero) {
+    var partes = numero.toLocaleString('es-CL').split('.');
+    if (partes.length > 1 && partes[1] === '00') {
+        return partes[0]; // Elimina los decimales si son '.00'
+    }
+    return numero.toLocaleString('es-CL');
+}
 function calcularTotalItem(input) {
     var itemDiv = input.closest('.input-group');
-    var cantidad = itemDiv.querySelector('[name="cantidad[]"]').value;
-    var precioUnitario = itemDiv.querySelector('[name="precio_unitario[]"]').value;
+    var cantidad = parseFloat(itemDiv.querySelector('[name="cantidad[]"]').value.replace(/\./g, '').replace(',', '.')) || 0;
+    var precioUnitario = parseFloat(itemDiv.querySelector('[name="precio_unitario[]"]').value.replace(/\./g, '').replace(',', '.')) || 0;
+
+    var total = cantidad * precioUnitario;
     var totalItem = itemDiv.querySelector('[name="total_item[]"]');
-    var total = parseFloat(cantidad) * parseFloat(precioUnitario);
-    
+
     if (!isNaN(total)) {
-        totalItem.value = total.toFixed(2);
+        totalItem.value = formatearNumero(total.toFixed(2)); // Formatea el total con dos decimales
+        calcularTotales(); // Actualizar totales cada vez que se cambia un ítem
     }
 }
-
-
-//totales
 
 
 
 function calcularTotales() {
     var totalNeto = 0;
     var totalItems = document.getElementsByName('total_item[]');
-    
+
     for (var i = 0; i < totalItems.length; i++) {
-        totalNeto += parseFloat(totalItems[i].value.replace(/\./g, '').replace(',', '.')) || 0;
+        var totalItemValue = totalItems[i].value.replace(/\./g, '').replace(',', '.');
+        totalNeto += parseFloat(totalItemValue) || 0;
     }
 
     var iva = totalNeto * 0.19;
     var total = totalNeto + iva;
 
+    // Formatear los valores antes de mostrarlos en los campos de texto
     document.getElementById('total_neto').value = formatearNumero(totalNeto);
     document.getElementById('iva').value = formatearNumero(iva);
     document.getElementById('total').value = formatearNumero(total);
 }
-function calcularTotalItem(input) {
-    var itemDiv = input.closest('.input-group');
-    var cantidad = itemDiv.querySelector('[name="cantidad[]"]').value;
-    var precioUnitario = itemDiv.querySelector('[name="precio_unitario[]"]').value;
-    var totalItem = itemDiv.querySelector('[name="total_item[]"]');
-    var total = parseFloat(cantidad) * parseFloat(precioUnitario);
 
-    if (!isNaN(total)) {
-        totalItem.value = Math.round(total);
-        calcularTotales(); // Actualizar totales cada vez que se cambia un ítem
-    }
-}
+
+
+
+
 // Función para manejar el cambio en el método de pago
 function mostrarCamposPago() {
     var metodo = document.getElementById('metodo_pago').value;

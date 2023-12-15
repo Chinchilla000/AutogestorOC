@@ -37,6 +37,7 @@ function actualizarEstado($id_solicitud, $nuevoEstado, $conexion) {
     $stmt->execute();
 }
 
+
 function crearOrdenDeCompra($id_solicitud, $conexion) {
     try {
         $conexion->beginTransaction();
@@ -67,6 +68,16 @@ function crearOrdenDeCompra($id_solicitud, $conexion) {
             'numero_cuenta' => $solicitud['numero_cuenta'],
             'archivo_cotizacion' => $solicitud['archivo_cotizacion'],
             'fecha_pago' => $solicitud['fecha_pago']
+        ]);
+
+        // Obtener el ID de la orden de compra recién creada
+        $id_orden_compra = $conexion->lastInsertId();
+
+        // Ahora, actualiza los ítems de la solicitud con el ID de la orden de compra
+        $stmt = $conexion->prepare("UPDATE detalles_solicitud_orden_compra SET id_orden_compra = :id_orden_compra WHERE id_solicitud = :id_solicitud");
+        $stmt->execute([
+            'id_orden_compra' => $id_orden_compra,
+            'id_solicitud' => $id_solicitud
         ]);
 
         $conexion->commit();
