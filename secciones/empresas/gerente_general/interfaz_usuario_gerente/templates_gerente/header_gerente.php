@@ -1,6 +1,8 @@
 <?php
 $url_base = "http://localhost/ProyectoOC/";
 $url_base2 = "http://localhost/ProyectoOC/secciones/empresas/gerente_general/interfaz_usuario_gerente/";
+$url_cotizacion = "http://localhost/proyectooc/secciones/empresas/residente/interfaz_usuario_residente/";
+
 
 session_start();
 
@@ -63,6 +65,15 @@ if ($resultado) {
                 <ul class="nav navbar-nav">
                     <li class="nav-item">
                         <a class="nav-link" href="<?php echo $url_base2; ?>index_usuario_gerente.php"><strong>Inicio</strong></a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Ordenes de Compra
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="ordenes_compra.php">Ordenes de Compra</a></li>
+                            <li><a class="dropdown-item" href="historial_ordenes_compra.php">Historial de OC</a></li>
+                        </ul>
                     </li>
                     <?php if (isset($_SESSION['nombre_gerente'])) : ?>
                     <li class="nav-item">

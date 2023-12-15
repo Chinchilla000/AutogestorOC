@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 14-12-2023 a las 19:49:13
+-- Tiempo de generación: 15-12-2023 a las 02:31:28
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -35,53 +35,55 @@ CREATE TABLE `detalles_solicitud_orden_compra` (
   `unidad` varchar(50) DEFAULT NULL,
   `cantidad` int(11) DEFAULT NULL,
   `precio_unitario` int(11) DEFAULT NULL,
-  `total_item` int(11) DEFAULT NULL
+  `total_item` int(11) DEFAULT NULL,
+  `id_orden_compra` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `detalles_solicitud_orden_compra`
 --
 
-INSERT INTO `detalles_solicitud_orden_compra` (`id_detalle`, `id_solicitud`, `item`, `descripcion`, `unidad`, `cantidad`, `precio_unitario`, `total_item`) VALUES
-(8, 6, 'Martillo', 'martillo para construccion', '1', 1, 1500, 1500),
-(12, 9, '1', 'martillo para construccion', 'c/u', 2, 300, 600),
-(13, 9, '2', 'taladro dsadasdas', 'c/u', 3, 300, 900),
-(14, 10, 'a', 'martillo para construccion', 'm3', 2, 200, 400),
-(15, 11, 'dasd', 'martillo para construccion', 'c/u', 2, 300, 600),
-(16, 11, 'aa', 'aa', 'cc', 2, 100, 200),
-(17, 12, 'cc', 'martillo para construccion', 'm2', 2, 100, 200),
-(18, 12, 'ccccc', 'a', 'c/u', 3, 300, 900),
-(19, 13, 'taladro', 'b', 'm2', 1, 500, 500),
-(20, 14, 'Martillo', 'martillo para construccion', 'm3', 2, 700, 0),
-(21, 15, 'dasd', '123', 'm3', 1, 600, 600),
-(22, 16, 'q', 'q', 'm3', 2, 300, 600),
-(23, 17, '', '', '', 0, 0, 0),
-(24, 18, '', '', '', 0, 0, 0),
-(25, 19, 'taladro', 'asdas', 'm2', 2, 2, 4),
-(26, 20, 'asdas', 'asd', 'c/u', 1, 1, 1),
-(27, 21, 'a', 'a', 'm3', 1, 2, 2),
-(28, 22, 'bb', 'bb', 'm3', 2, 3, 6),
-(29, 23, 'asd', 'asd', 'm2', 2, 300, 600),
-(30, 23, 'v', 'v', 'm3', 5, 2500, 12500),
-(31, 24, 'b', 'b', 'm3', 2, 1500, 3000),
-(37, 28, 'a', 'a', 'm3', 2, 2000, 4),
-(38, 28, 'vv', 'vv', 'm2', 3, 3500, 11),
-(39, 29, 'PErfume', 'shimmer shinny abby', 'm2', 1, 16500, 17),
-(42, 32, 'aa', 'aa', 'm2', 2, 15000, 30),
-(43, 32, 'aa', 'aa', 'm3', 2, 3550, 7),
-(44, 33, 'v', 'v', 'm3', 2, 500, 1),
-(45, 33, 'vv', 'vv', 'c/u', 3, 1500, 5),
-(50, 36, 't', 't', 'm2', 2, 2000, 4),
-(51, 36, 'tt', 'tt', 'm3', 3, 3000, 9),
-(54, 38, 'c', 'c', 'c/u', 5, 1500000, 7500),
-(55, 39, 'asas', 'as', 'm3', 5, 1500000, 7500),
-(56, 40, 'kk', 'kk', 'm2', 2, 2000, 4000),
-(57, 40, 'kk', 'kk', 'kk', 3, 3000, 9000),
-(58, 41, 's', 's', 'm3', 2, 2000, 4000),
-(59, 41, 'ss', 'ss', 'c/u', 3, 3000, 9000),
-(60, 42, '001N', 'descripcion', 'm2', 5, 150000, 750000),
-(63, 44, 'N001', 'asdasdas', 'GL', 2, 25000, 50000),
-(64, 44, 'N002', 'asdasdasdasd', 'c/u', 3, 75000, 225000);
+INSERT INTO `detalles_solicitud_orden_compra` (`id_detalle`, `id_solicitud`, `item`, `descripcion`, `unidad`, `cantidad`, `precio_unitario`, `total_item`, `id_orden_compra`) VALUES
+(8, 6, 'Martillo', 'martillo para construccion', '1', 1, 1500, 1500, NULL),
+(12, 9, '1', 'martillo para construccion', 'c/u', 2, 300, 600, NULL),
+(13, 9, '2', 'taladro dsadasdas', 'c/u', 3, 300, 900, NULL),
+(14, 10, 'a', 'martillo para construccion', 'm3', 2, 200, 400, NULL),
+(15, 11, 'dasd', 'martillo para construccion', 'c/u', 2, 300, 600, NULL),
+(16, 11, 'aa', 'aa', 'cc', 2, 100, 200, NULL),
+(17, 12, 'cc', 'martillo para construccion', 'm2', 2, 100, 200, NULL),
+(18, 12, 'ccccc', 'a', 'c/u', 3, 300, 900, NULL),
+(19, 13, 'taladro', 'b', 'm2', 1, 500, 500, NULL),
+(20, 14, 'Martillo', 'martillo para construccion', 'm3', 2, 700, 0, NULL),
+(21, 15, 'dasd', '123', 'm3', 1, 600, 600, NULL),
+(22, 16, 'q', 'q', 'm3', 2, 300, 600, NULL),
+(23, 17, '', '', '', 0, 0, 0, NULL),
+(24, 18, '', '', '', 0, 0, 0, NULL),
+(25, 19, 'taladro', 'asdas', 'm2', 2, 2, 4, NULL),
+(26, 20, 'asdas', 'asd', 'c/u', 1, 1, 1, NULL),
+(27, 21, 'a', 'a', 'm3', 1, 2, 2, NULL),
+(28, 22, 'bb', 'bb', 'm3', 2, 3, 6, NULL),
+(29, 23, 'asd', 'asd', 'm2', 2, 300, 600, NULL),
+(30, 23, 'v', 'v', 'm3', 5, 2500, 12500, NULL),
+(31, 24, 'b', 'b', 'm3', 2, 1500, 3000, NULL),
+(37, 28, 'a', 'a', 'm3', 2, 2000, 4, NULL),
+(38, 28, 'vv', 'vv', 'm2', 3, 3500, 11, NULL),
+(39, 29, 'PErfume', 'shimmer shinny abby', 'm2', 1, 16500, 17, NULL),
+(42, 32, 'aa', 'aa', 'm2', 2, 15000, 30, NULL),
+(43, 32, 'aa', 'aa', 'm3', 2, 3550, 7, NULL),
+(44, 33, 'v', 'v', 'm3', 2, 500, 1, NULL),
+(45, 33, 'vv', 'vv', 'c/u', 3, 1500, 5, NULL),
+(50, 36, 't', 't', 'm2', 2, 2000, 4, NULL),
+(51, 36, 'tt', 'tt', 'm3', 3, 3000, 9, NULL),
+(54, 38, 'c', 'c', 'c/u', 5, 1500000, 7500, NULL),
+(55, 39, 'asas', 'as', 'm3', 5, 1500000, 7500, NULL),
+(56, 40, 'kk', 'kk', 'm2', 2, 2000, 4000, NULL),
+(57, 40, 'kk', 'kk', 'kk', 3, 3000, 9000, NULL),
+(58, 41, 's', 's', 'm3', 2, 2000, 4000, NULL),
+(59, 41, 'ss', 'ss', 'c/u', 3, 3000, 9000, NULL),
+(60, 42, '001N', 'descripcion', 'm2', 5, 150000, 750000, NULL),
+(63, 44, 'N001', 'asdasdas', 'GL', 2, 25000, 50000, NULL),
+(64, 44, 'N002', 'asdasdasdasd', 'c/u', 3, 75000, 225000, NULL),
+(65, 45, 'sadas', 'asdas', 'm3', 25, 10000, 250000, NULL);
 
 -- --------------------------------------------------------
 
@@ -136,6 +138,35 @@ INSERT INTO `gerentes_generales` (`id`, `id_empresa`, `nombre`, `apellido`, `rut
 (1, 19, 'Valentina', 'Obando', '20010126/k', 'Gerente General', 'valentina@123', '$2y$10$gF7NdMnpozoPxrrmLALrAuF0wvfXy.WRUFr7eECTJTn34iINP8Bju'),
 (2, 19, 'Callito', '222222', '1123', 'Gerente General', '123@123', '$2y$10$WchJ3TZCevACl4QkLge4/.vGnqKHj4lGZApU9EOJxkjiCt4gOvNsa'),
 (14, 25, 'CLaudio', 'poerez', '12312312', 'Gerente General', 'ejemplo@gmail.com', '$2y$10$/tEUcp50wx7uLw.n8AzoK.s4iFUeg0Q6REJqBSahETC1PMFIK5WMe');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `ordenes_de_compra`
+--
+
+CREATE TABLE `ordenes_de_compra` (
+  `id_orden_compra` int(11) NOT NULL,
+  `id_solicitud` int(11) NOT NULL,
+  `id_visitador` int(11) NOT NULL,
+  `id_empresa` int(11) NOT NULL,
+  `fecha_creacion` timestamp NOT NULL DEFAULT current_timestamp(),
+  `obra` varchar(255) DEFAULT NULL,
+  `direccion` varchar(255) DEFAULT NULL,
+  `solicitado_por` varchar(255) DEFAULT NULL,
+  `total_neto` int(11) DEFAULT NULL,
+  `iva` int(11) DEFAULT NULL,
+  `total` int(11) DEFAULT NULL,
+  `metodo_pago` varchar(50) DEFAULT NULL,
+  `nombre_pago` varchar(255) DEFAULT NULL,
+  `rut_pago` varchar(20) DEFAULT NULL,
+  `correo_pago` varchar(100) DEFAULT NULL,
+  `banco` varchar(100) DEFAULT NULL,
+  `numero_cuenta` varchar(50) DEFAULT NULL,
+  `archivo_cotizacion` varchar(255) DEFAULT NULL,
+  `estado` varchar(50) DEFAULT 'En espera',
+  `fecha_pago` varchar(50) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -223,7 +254,8 @@ INSERT INTO `solicitudes_orden_compra` (`id_solicitud`, `id_residente`, `id_empr
 (40, 10, 19, '2023-12-14 05:25:01', 'kk', NULL, 'kk', 13000, 2470, 15470, 'efectivo', 'kk', 'kk', 'k@kj', 'k', 'kj', '../cotizacion_solicitudes/cotizacion_20231214062501_657a91ad5b4ef.png', 'En espera', NULL),
 (41, 10, 19, '2023-12-14 05:33:42', 'sss', 'ss', 'ss', 13000, 2470, 15470, 'efectivo', 'asdasd', 'asdas', 'cayo@gmail.com', 'asdas', 'asdas', '../cotizacion_solicitudes/cotizacion_20231214063342_657a93b612458.png', 'En espera', NULL),
 (42, 13, 27, '2023-12-14 13:59:53', 'Hospital', 'Huenteo 725', 'Marcelo', 750000, 142500, 892500, 'credito', 'Valentina', '20010126-k', 'cayo@gmail.com', 'Falabella', '213414123', '../cotizacion_solicitudes/cotizacion_20231214145953_657b0a59321f8.png', 'Rechazado', '30'),
-(44, 13, 27, '2023-12-14 18:43:17', 'Hospital', 'Huenteo 725', 'Marcelo', 275000, 52250, 327250, 'credito', 'Valentina', 'zadasdasd', 'aaa@aaaaa', 'aaaa', 'dasdasd', '../cotizacion_solicitudes/cotizacion_20231214194317_657b4cc5bc71c.png', 'Aprobado', '30');
+(44, 13, 27, '2023-12-14 18:43:17', 'Hospital', 'Huenteo 725', 'Marcelo', 275000, 52250, 327250, 'credito', 'Valentina', 'zadasdasd', 'aaa@aaaaa', 'aaaa', 'dasdasd', '../cotizacion_solicitudes/cotizacion_20231214194317_657b4cc5bc71c.png', 'Aprobado', '30'),
+(45, 13, 27, '2023-12-15 00:31:34', 'AAAAAAA', 'bb', 'sdasd', 250000, 47500, 297500, 'efectivo', 'Valentina', '12345123', 'sodimac@hopmtaiol', 'vv', 'asdasd', '../cotizacion_solicitudes/cotizacion_20231215013134_657b9e6639aaa.png', 'En espera', NULL);
 
 -- --------------------------------------------------------
 
@@ -259,7 +291,8 @@ INSERT INTO `visitadores_obra` (`id`, `id_empresa`, `nombre`, `apellido`, `rut`,
 --
 ALTER TABLE `detalles_solicitud_orden_compra`
   ADD PRIMARY KEY (`id_detalle`),
-  ADD KEY `id_solicitud` (`id_solicitud`);
+  ADD KEY `id_solicitud` (`id_solicitud`),
+  ADD KEY `id_orden_compra` (`id_orden_compra`);
 
 --
 -- Indices de la tabla `empresas`
@@ -273,6 +306,15 @@ ALTER TABLE `empresas`
 ALTER TABLE `gerentes_generales`
   ADD PRIMARY KEY (`id`),
   ADD KEY `gerentes_generales_ibfk_1` (`id_empresa`);
+
+--
+-- Indices de la tabla `ordenes_de_compra`
+--
+ALTER TABLE `ordenes_de_compra`
+  ADD PRIMARY KEY (`id_orden_compra`),
+  ADD KEY `id_solicitud` (`id_solicitud`),
+  ADD KEY `id_visitador` (`id_visitador`),
+  ADD KEY `id_empresa` (`id_empresa`);
 
 --
 -- Indices de la tabla `residentes_obra`
@@ -304,7 +346,7 @@ ALTER TABLE `visitadores_obra`
 -- AUTO_INCREMENT de la tabla `detalles_solicitud_orden_compra`
 --
 ALTER TABLE `detalles_solicitud_orden_compra`
-  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=65;
+  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=66;
 
 --
 -- AUTO_INCREMENT de la tabla `empresas`
@@ -319,6 +361,12 @@ ALTER TABLE `gerentes_generales`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
+-- AUTO_INCREMENT de la tabla `ordenes_de_compra`
+--
+ALTER TABLE `ordenes_de_compra`
+  MODIFY `id_orden_compra` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT de la tabla `residentes_obra`
 --
 ALTER TABLE `residentes_obra`
@@ -328,7 +376,7 @@ ALTER TABLE `residentes_obra`
 -- AUTO_INCREMENT de la tabla `solicitudes_orden_compra`
 --
 ALTER TABLE `solicitudes_orden_compra`
-  MODIFY `id_solicitud` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
+  MODIFY `id_solicitud` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
 
 --
 -- AUTO_INCREMENT de la tabla `visitadores_obra`
@@ -344,13 +392,22 @@ ALTER TABLE `visitadores_obra`
 -- Filtros para la tabla `detalles_solicitud_orden_compra`
 --
 ALTER TABLE `detalles_solicitud_orden_compra`
-  ADD CONSTRAINT `detalles_solicitud_orden_compra_ibfk_1` FOREIGN KEY (`id_solicitud`) REFERENCES `solicitudes_orden_compra` (`id_solicitud`);
+  ADD CONSTRAINT `detalles_solicitud_orden_compra_ibfk_1` FOREIGN KEY (`id_solicitud`) REFERENCES `solicitudes_orden_compra` (`id_solicitud`),
+  ADD CONSTRAINT `detalles_solicitud_orden_compra_ibfk_2` FOREIGN KEY (`id_orden_compra`) REFERENCES `ordenes_de_compra` (`id_orden_compra`);
 
 --
 -- Filtros para la tabla `gerentes_generales`
 --
 ALTER TABLE `gerentes_generales`
   ADD CONSTRAINT `gerentes_generales_ibfk_1` FOREIGN KEY (`id_empresa`) REFERENCES `empresas` (`id`) ON DELETE CASCADE;
+
+--
+-- Filtros para la tabla `ordenes_de_compra`
+--
+ALTER TABLE `ordenes_de_compra`
+  ADD CONSTRAINT `ordenes_de_compra_ibfk_1` FOREIGN KEY (`id_solicitud`) REFERENCES `solicitudes_orden_compra` (`id_solicitud`),
+  ADD CONSTRAINT `ordenes_de_compra_ibfk_2` FOREIGN KEY (`id_visitador`) REFERENCES `visitadores_obra` (`id`),
+  ADD CONSTRAINT `ordenes_de_compra_ibfk_3` FOREIGN KEY (`id_empresa`) REFERENCES `empresas` (`id`);
 
 --
 -- Filtros para la tabla `residentes_obra`

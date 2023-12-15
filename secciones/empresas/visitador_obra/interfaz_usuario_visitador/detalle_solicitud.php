@@ -21,6 +21,14 @@ $stmtItems->bindParam(1, $id_solicitud, PDO::PARAM_INT);
 $stmtItems->execute();
 $items = $stmtItems->fetchAll(PDO::FETCH_ASSOC);
 
+function existeOrdenDeCompra($id_solicitud, $conexion) {
+    $query = "SELECT COUNT(*) FROM ordenes_de_compra WHERE id_solicitud = ?";
+    $stmt = $conexion->prepare($query);
+    $stmt->bindParam(1, $id_solicitud, PDO::PARAM_INT);
+    $stmt->execute();
+    return $stmt->fetchColumn() > 0;
+}
+
 function actualizarEstado($id_solicitud, $nuevoEstado, $conexion) {
     $query = "UPDATE solicitudes_orden_compra SET estado = ? WHERE id_solicitud = ?";
     $stmt = $conexion->prepare($query);
@@ -28,6 +36,46 @@ function actualizarEstado($id_solicitud, $nuevoEstado, $conexion) {
     $stmt->bindParam(2, $id_solicitud, PDO::PARAM_INT);
     $stmt->execute();
 }
+
+function crearOrdenDeCompra($id_solicitud, $conexion) {
+    try {
+        $conexion->beginTransaction();
+
+        // Usar el id_visitador de la sesión
+        $id_visitador = $_SESSION['id_visitador'];
+
+        $stmt = $conexion->prepare("SELECT * FROM solicitudes_orden_compra WHERE id_solicitud = :id_solicitud");
+        $stmt->execute(['id_solicitud' => $id_solicitud]);
+        $solicitud = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        $stmt = $conexion->prepare("INSERT INTO ordenes_de_compra (id_solicitud, id_visitador, id_empresa, fecha_creacion, obra, direccion, solicitado_por, total_neto, iva, total, metodo_pago, nombre_pago, rut_pago, correo_pago, banco, numero_cuenta, archivo_cotizacion, estado, fecha_pago) VALUES (:id_solicitud, :id_visitador, :id_empresa, NOW(), :obra, :direccion, :solicitado_por, :total_neto, :iva, :total, :metodo_pago, :nombre_pago, :rut_pago, :correo_pago, :banco, :numero_cuenta, :archivo_cotizacion, 'En espera', :fecha_pago)");
+        $stmt->execute([
+            'id_solicitud' => $id_solicitud,
+            'id_visitador' => $_SESSION['id_visitador'],
+            'id_empresa' => $solicitud['id_empresa'],
+            'obra' => $solicitud['obra'],
+            'direccion' => $solicitud['direccion'],
+            'solicitado_por' => $solicitud['solicitado_por'],
+            'total_neto' => $solicitud['total_neto'],
+            'iva' => $solicitud['iva'],
+            'total' => $solicitud['total'],
+            'metodo_pago' => $solicitud['metodo_pago'],
+            'nombre_pago' => $solicitud['nombre_pago'],
+            'rut_pago' => $solicitud['rut_pago'],
+            'correo_pago' => $solicitud['correo_pago'],
+            'banco' => $solicitud['banco'],
+            'numero_cuenta' => $solicitud['numero_cuenta'],
+            'archivo_cotizacion' => $solicitud['archivo_cotizacion'],
+            'fecha_pago' => $solicitud['fecha_pago']
+        ]);
+
+        $conexion->commit();
+    } catch (Exception $e) {
+        $conexion->rollBack();
+        echo "Error al crear la orden de compra: " . $e->getMessage();
+    }
+}
+
 
 function formatoChileno($numero) {
     return number_format($numero, 0, ',', '.');
@@ -41,19 +89,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($accion == 'aprobar') {
         actualizarEstado($id_solicitud, 'Aprobado', $conexion);
-    } else if ($accion == 'rechazar') {
+        if (!existeOrdenDeCompra($id_solicitud, $conexion)) {
+            crearOrdenDeCompra($id_solicitud, $conexion);
+        }
+        // Redireccionar para evitar duplicados al recargar la página
+        header("Location: " . htmlspecialchars($_SERVER["PHP_SELF"]) . "?id=" . $id_solicitud);
+        exit;
+    } elseif ($accion == 'rechazar') {
         actualizarEstado($id_solicitud, 'Rechazado', $conexion);
+        // Posible redirección aquí también si es necesario
     }
 
+    // Cargar nuevamente la solicitud actualizada
     $stmt = $conexion->prepare($querySolicitud);
     $stmt->bindParam(1, $id_solicitud, PDO::PARAM_INT);
     $stmt->execute();
     $solicitud = $stmt->fetch(PDO::FETCH_ASSOC);
-    
-    // Verificar que se obtienen datos
-    if (!$solicitud) {
-        echo "No se encontró la solicitud.";
-    }
 }
 ?>
 <div class="container mt-5">
@@ -75,17 +126,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <!-- Información General -->
             <div class="row mb-4">
                 <div class="col-md-6 mb-3">
-                    <label class="form-label">Obra:</label>
+                    <label class="form-label"><strong>Obra:</strong></label>
                     <input type="text" class="form-control" value="<?php echo $solicitud['obra']; ?>" readonly>
                 </div>
                 <div class="col-md-6 mb-3">
-                    <label class="form-label">Dirección:</label>
+                    <label class="form-label"><strong>Dirección:</strong></label>
                     <input type="text" class="form-control" value="<?php echo $solicitud['direccion']; ?>" readonly>
                 </div>
             </div>
             
             <div class="mb-3">
-                <label class="form-label">Solicitado por:</label>
+                <label class="form-label"><strong>Solicitado por:</strong></label>
                 <input type="text" class="form-control" value="<?php echo $solicitud['solicitado_por']; ?>" readonly>
             </div>
 
@@ -120,21 +171,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
              <!-- Sección Totales -->
              <div class="row mt-4">
     <div class="col-md-4">
-        <label class="form-label">Total Neto:</label>
+        <label class="form-label"><strong>Total Neto:</strong></label>
         <div class="input-group">
             <span class="input-group-text">$</span>
             <input type="text" class="form-control" value="<?php echo formatoChileno($solicitud['total_neto']); ?>" readonly>
         </div>
     </div>
     <div class="col-md-4">
-        <label class="form-label">IVA (19%):</label>
+        <label class="form-label"><strong>IVA (19%):</strong></label>
         <div class="input-group">
             <span class="input-group-text">$</span>
             <input type="text" class="form-control" value="<?php echo formatoChileno($solicitud['iva']); ?>" readonly>
         </div>
     </div>
     <div class="col-md-4">
-        <label class="form-label">Total:</label>
+        <label class="form-label"><strong>Total:</strong></label>
         <div class="input-group">
             <span class="input-group-text">$</span>
             <input type="text" class="form-control" value="<?php echo formatoChileno($solicitud['total']); ?>" readonly>
@@ -148,32 +199,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="col-md-6 mb-3">
         <div class="row">
             <div class="col-md-6">
-                <label class="form-label">Nombre:</label>
+                <label class="form-label"><strong>Nombre:</strong></label>
                 <input type="text" class="form-control" value="<?php echo $solicitud['nombre_pago']; ?>" readonly>
             </div>
             <div class="col-md-6">
-                <label class="form-label">RUT:</label>
+                <label class="form-label"><strong>RUT:</strong></label>
                 <input type="text" class="form-control" value="<?php echo $solicitud['rut_pago']; ?>" readonly>
             </div>
         </div>
         <div class="row mt-2">
             <div class="col-md-6">
-                <label class="form-label">Correo:</label>
+                <label class="form-label"><strong>Correo:</strong></label>
                 <input type="email" class="form-control" value="<?php echo $solicitud['correo_pago']; ?>" readonly>
             </div>
             <div class="col-md-6">
-                <label class="form-label">Banco:</label>
+                <label class="form-label"><strong>Banco:</strong></label>
                 <input type="text" class="form-control" value="<?php echo $solicitud['banco']; ?>" readonly>
             </div>
         </div>
         <div class="row mt-2">
             <div class="col-md-6">
-                <label class="form-label">Número de Cuenta:</label>
+                <label class="form-label"><strong>Número de Cuenta:</strong></label>
                 <input type="text" class="form-control" value="<?php echo $solicitud['numero_cuenta']; ?>" readonly>
             </div>
             <?php if ($solicitud['metodo_pago'] == 'credito'): ?>
             <div class="col-md-6">
-                <label class="form-label">Fecha de Pago:</label>
+                <label class="form-label"><strong>Fecha de Pago:</strong></label>
                 <input type="text" class="form-control" value="<?php echo $solicitud['fecha_pago']; ?>" readonly>
             </div>
             <?php endif; ?>
@@ -182,7 +233,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <!-- Columna derecha con selección de método de pago -->
     <div class="col-md-6 mb-3">
-        <label class="form-label">Método de Pago:</label>
+        <label class="form-label"><strong>Método de Pago:</strong></label>
         <select class="form-select" disabled>
             <option value="efectivo" <?php echo ($solicitud['metodo_pago'] == 'efectivo') ? 'selected' : ''; ?>>Efectivo</option>
             <option value="credito" <?php echo ($solicitud['metodo_pago'] == 'credito') ? 'selected' : ''; ?>>Crédito</option>

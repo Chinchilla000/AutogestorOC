@@ -181,23 +181,23 @@ if (isset($_FILES['cotizacion']) && $_FILES['cotizacion']['error'] === UPLOAD_ER
                 </div>
                 <div class="row mb-4">
                     <div class="col-md-6 mb-3">
-                        <label for="obra" class="form-label">Obra:</label>
+                        <label for="obra" class="form-label"><strong>Obra:</strong></label>
                         <input type="text" id="obra" name="obra" class="form-control" required>
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label for="direccion" class="form-label">Dirección:</label>
+                        <label for="direccion" class="form-label"><strong>Dirección:</strong></label>
                         <input type="text" id="direccion" name="direccion" class="form-control" required>
                     </div>
                 </div>
                 
                 <div class="mb-3">
-                    <label for="solicitado_por" class="form-label">Solicitado por:</label>
+                    <label for="solicitado_por" class="form-label"><strong>Solicitado por:</strong></label>
                     <input type="text" id="solicitado_por" name="solicitado_por" class="form-control" required>
                 </div>
 
                 <!-- Detalles de los Ítems -->
                 <div id="items_container" class="mb-3">
-            <label class="form-label">Ítems:</label>
+            <label class="form-label"><strong>Ítems:</strong></label>
             <div class="input-group mb-3">
                 <input type="text" name="item[]" class="form-control" placeholder="Ítem" required>
                 <input type="text" name="descripcion[]" class="form-control" placeholder="Descripción" required>
@@ -221,21 +221,21 @@ if (isset($_FILES['cotizacion']) && $_FILES['cotizacion']['error'] === UPLOAD_ER
                  <!-- Sección Totales, más compacta -->
                  <div class="row mt-4">
                     <div class="col-md-4">
-                        <label for="total_neto" class="form-label">Total Neto:</label>
+                        <label for="total_neto" class="form-label"><strong>Total Neto:</strong></label>
                         <input type="text" id="total_neto" name="total_neto" class="form-control" readonly>
                     </div>
                     <div class="col-md-4">
-                        <label for="iva" class="form-label">IVA (19%):</label>
+                        <label for="iva" class="form-label"><strong>IVA (19%):</strong></label>
                         <input type="text" id="iva" name="iva" class="form-control" readonly>
                     </div>
                     <div class="col-md-4">
-                        <label for="total" class="form-label">Total:</label>
+                        <label for="total" class="form-label"><strong>Total:</strong></label>
                         <input type="text" id="total" name="total" class="form-control" readonly>
                     </div>
                 </div>
         <!-- Subir Cotización -->
         <div class="mb-3">
-                    <label for="cotizacion" class="form-label">Cotización:</label>
+                    <label for="cotizacion" class="form-label"><strong>Cotización:</strong></label>
                     <input type="file" id="cotizacion" name="cotizacion" class="form-control" accept=".pdf, .jpg, .jpeg, .png" required>
                 </div>
 
@@ -246,31 +246,31 @@ if (isset($_FILES['cotizacion']) && $_FILES['cotizacion']['error'] === UPLOAD_ER
     <div id="datos_pago_credito_efectivo" class="col-md-6 mb-3" style="display:none;">
         <div class="row">
             <div class="col-md-6">
-                <label>Nombre:</label>
+                <label><strong>Nombre:</strong></label>
                 <input type="text" name="nombre_pago" class="form-control" required>
             </div>
             <div class="col-md-6">
-                <label>RUT:</label>
+                <label><strong>RUT:</strong></label>
                 <input type="text" name="rut_pago" class="form-control" required>
             </div>
         </div>
         <div class="row mt-2">
             <div class="col-md-6">
-                <label>Correo:</label>
+                <label><strong>Correo:</strong></label>
                 <input type="email" name="correo_pago" class="form-control" required>
             </div>
             <div class="col-md-6">
-                <label>Banco:</label>
+                <label><strong>Banco:</strong></label>
                 <input type="text" name="banco" class="form-control" required>
             </div>
         </div>
         <div class="row mt-2">
             <div class="col-md-6">
-                <label>Número de Cuenta:</label>
+                <label><strong>Número de Cuenta:</strong></label>
                 <input type="text" name="numero_cuenta" class="form-control" required>
             </div>
             <div id="fecha_pago_credito" class="col-md-6 mb-3" style="display:none;">
-        <label>Fecha de Pago:</label>
+        <label><strong>Fecha de Pago:</strong></label>
         <select name="fecha_pago" class="form-select" required>
             <option value="">Selecciona</option>
             <option value="15">15 días</option>
@@ -283,7 +283,7 @@ if (isset($_FILES['cotizacion']) && $_FILES['cotizacion']['error'] === UPLOAD_ER
     </div>
 
     <div class="col-md-6 mb-3">
-        <label for="metodo_pago" class="form-label">Método de Pago:</label>
+        <label for="metodo_pago" class="form-label"><strong>Método de Pago:</strong></label>
         <select id="metodo_pago" name="metodo_pago" class="form-select" onchange="mostrarCamposPago()">
             <option value="efectivo">Efectivo</option>
             <option value="credito">Crédito</option>

@@ -1,6 +1,7 @@
 <?php
 $url_base = "http://localhost/ProyectoOC/";
 $url_base2 = "http://localhost/proyectooc/secciones/empresas/residente/interfaz_usuario_residente/";
+$url_cotizacion = "http://localhost/proyectooc/secciones/empresas/residente/interfaz_usuario_residente/";
 
 session_start();
 
@@ -73,7 +74,7 @@ if ($resultado) {
                             Ordenes de Compra
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="estado_solicitudes.php">Ordenes de Compra</a></li>
+                            <li><a class="dropdown-item" href="ordenes_compra.php">Ordenes de Compra</a></li>
                             <li><a class="dropdown-item" href="historial_solicitudes.php">Historial de OC</a></li>
                         </ul>
                     </li>
