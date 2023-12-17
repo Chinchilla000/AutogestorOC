@@ -21,7 +21,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         session_start();
         $_SESSION['id_visitador'] = $visitador['id'];
         $_SESSION['nombre_visitador'] = $visitador['nombre'];
-        $_SESSION['empresa_visitador'] = $visitador['nombre_empresa'];
 
         header("Location: interfaz_usuario_visitador/index_usuario_visitador.php");
         exit();

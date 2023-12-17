@@ -31,7 +31,7 @@ echo "<tbody>";
 foreach ($ordenesCompra as $orden) {
     $idPersonalizado = generarIdPersonalizado($orden['nombre_empresa'], $orden['id_orden_compra']);
     
-    echo "<tr>";
+    echo "<tr onclick=\"window.location='detalle_ordenes_compra_v.php?id=" . $orden['id_orden_compra'] . "';\" style=\"cursor: pointer;\">";
     echo "<td>" . htmlspecialchars($idPersonalizado) . "</td>";
     echo "<td>" . htmlspecialchars($orden['fecha_creacion']) . "</td>";
     echo "<td>" . htmlspecialchars($orden['estado']) . "</td>";

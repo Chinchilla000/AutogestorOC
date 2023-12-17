@@ -1,6 +1,6 @@
 <?php
 include("../../../../bd.php");
-include("./templates_gerente/header_gerente.php");
+include("./templates_visitador/header_visitador.php");
 
 if (!isset($_GET['id'])) {
     header("Location: ordenes_compra.php");
@@ -9,7 +9,6 @@ if (!isset($_GET['id'])) {
 
 $id_orden_compra = $_GET['id'];
 
-// Función para formatear números en formato chileno
 function formatoChileno($numero) {
     return number_format($numero, 0, ',', '.');
 }
@@ -18,109 +17,36 @@ function generarIdPersonalizado($nombreEmpresa, $idNumerico) {
     return $abreviatura . "-" . str_pad($idNumerico, 3, '0', STR_PAD_LEFT);
 }
 
-
 try {
-    // Consulta para obtener los detalles de la orden de compra
     $queryOrdenCompra = "SELECT * FROM ordenes_de_compra WHERE id_orden_compra = ?";
     $stmt = $conexion->prepare($queryOrdenCompra);
     $stmt->bindParam(1, $id_orden_compra, PDO::PARAM_INT);
     $stmt->execute();
     $ordenCompra = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    
     if ($ordenCompra) {
-        // Consulta para obtener los ítems relacionados
         $queryItems = "SELECT * FROM detalles_solicitud_orden_compra WHERE id_orden_compra = ?";
         $stmtItems = $conexion->prepare($queryItems);
         $stmtItems->bindParam(1, $id_orden_compra, PDO::PARAM_INT);
         $stmtItems->execute();
         $items = $stmtItems->fetchAll(PDO::FETCH_ASSOC);
-
-       
-        if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["accion"])) {
-            // Acción de aprobación o rechazo
-            $accion = $_POST["accion"];
-            $nuevoEstado = ""; // Definir la variable aquí para que esté disponible en todo el bloque try
-            $nombreGerenteAprobador = "";
-        
-            if ($accion == "aprobar") {
-                // Verificar si la firma del Gerente General está disponible
-                $gerenteId = $_SESSION['id_gerente'];
-                $selectQuery = "SELECT firma_path FROM gerentes_generales WHERE id = :gerente_id";
-                $stmt = $conexion->prepare($selectQuery);
-                $stmt->bindParam(':gerente_id', $gerenteId);
-                $stmt->execute();
-                $gerente = $stmt->fetch(PDO::FETCH_ASSOC);
-            
-                $firmaGerente = $url_base2 . "firmas/" . $id_orden_compra . "_firma.jpg";
-            
-                if (empty($firmaGerente)) {
-                    // Mostrar un mensaje de alerta si no tiene firma
-                    echo '<div class="alert alert-warning" role="alert">';
-                    echo 'No puedes aprobar la orden de compra porque tu firma no está disponible. Sube tu firma antes de continuar.';
-                    echo '</div>';
-                } else {
-                    // Realiza la actualización del estado y la firma del gerente en la base de datos
-                    $nuevoEstado = "Aprobado";
-                    $nombreGerenteAprobador = $_SESSION['nombre_gerente']; // Cambia esto al nombre del gerente real
-                    $rutaFirma = $firmaGerente; // Variable que almacena la ruta de la firma
-            
-                    $queryActualizarFirma = "UPDATE ordenes_de_compra SET estado = ?, gerente_aprobador = ?, firma_aprobado = ? WHERE id_orden_compra = ?";
-                    $stmtActualizarFirma = $conexion->prepare($queryActualizarFirma);
-                    $stmtActualizarFirma->bindParam(1, $nuevoEstado, PDO::PARAM_STR);
-                    $stmtActualizarFirma->bindParam(2, $nombreGerenteAprobador, PDO::PARAM_STR);
-                    $stmtActualizarFirma->bindParam(3, $rutaFirma, PDO::PARAM_STR);
-                    $stmtActualizarFirma->bindParam(4, $id_orden_compra, PDO::PARAM_INT);
-                    $stmtActualizarFirma->execute();
-                        
-                    // JavaScript para mostrar el mensaje de alerta y redirigir
-                    echo '<script>';
-                    echo 'alert("Has aprobado la Orden de Compra.");';
-                    echo 'window.location.href = "detalle_orden_compra.php?id=' . $id_orden_compra . '";';
-                    echo '</script>';
-                    
-                }
-            
-                // Actualiza el estado y el nombre del gerente en la variable $ordenCompra
-                $ordenCompra['estado'] = $nuevoEstado;
-                $ordenCompra['gerente_aprobador'] = $nombreGerenteAprobador;
-            } elseif ($accion == "rechazar") {
-                // Actualiza el estado a "Rechazado" y registra el nombre del gerente que lo rechazó
-                $nuevoEstado = "Rechazado";
-                $nombreGerenteRechazo = $_SESSION['nombre_gerente']; // Cambia esto al nombre del gerente real
-            
-                $queryActualizarEstado = "UPDATE ordenes_de_compra SET estado = ?, gerente_aprobador = ? WHERE id_orden_compra = ?";
-                $stmtActualizarEstado = $conexion->prepare($queryActualizarEstado);
-                $stmtActualizarEstado->bindParam(1, $nuevoEstado, PDO::PARAM_STR);
-                $stmtActualizarEstado->bindParam(2, $nombreGerenteRechazo, PDO::PARAM_STR);
-                $stmtActualizarEstado->bindParam(3, $id_orden_compra, PDO::PARAM_INT);
-                $stmtActualizarEstado->execute();
-            
-                // Actualiza el estado y el nombre del gerente en la variable $ordenCompra
-                $ordenCompra['estado'] = $nuevoEstado;
-                $ordenCompra['gerente_aprobador'] = $nombreGerenteRechazo;
-            }
-            
-        }
-        $firma = isset($gerente['firma_path']) ? $gerente['firma_path'] : "";
 ?>
+
         <div class="container mt-5">
             <div class="card">
                 <div class="card-header text-center">
                     <h2>Orden de Compra #<?php echo generarIdPersonalizado($nombre_empresa, $id_orden_compra); ?></h2>
                 </div>
                 <div class="card-body">
-                    <!-- Encabezado con número de orden de compra y fecha -->
                     <div class="row mb-4">
                         <div class="col text-center">
-                        <strong>Número de Orden de Compra: <?php echo generarIdPersonalizado($nombre_empresa, $id_orden_compra); ?></strong>
+                            <strong>Número de Orden de Compra: <?php echo generarIdPersonalizado($nombre_empresa, $id_orden_compra); ?></strong>
                         </div>
                         <div class="col text-center">
                             <strong>Fecha de Creación: <?php echo date('d/m/Y', strtotime($ordenCompra['fecha_creacion'])); ?></strong>
                         </div>
                     </div>
 
-                    <!-- Información General -->
                     <div class="row mb-4">
                         <div class="col-md-6 mb-3">
                             <label class="form-label"><strong>Obra:</strong></label>
@@ -137,7 +63,6 @@ try {
                         <input type="text" class="form-control" value="<?php echo $ordenCompra['solicitado_por']; ?>" readonly>
                     </div>
 
-                    <!-- Detalles de los Ítems -->
                     <div class="table-responsive mt-4">
                         <table class="table table-bordered table-hover text-center">
                             <thead>
@@ -165,7 +90,6 @@ try {
                         </table>
                     </div>
 
-                    <!-- Sección Totales -->
                     <div class="row mt-4">
                         <div class="col-md-4">
                             <label class="form-label"><strong>Total Neto:</strong></label>
@@ -190,9 +114,7 @@ try {
                         </div>
                     </div>
 
-                    <!-- Método de Pago y Campos Relacionados -->
                     <div class="row mt-4">
-                        <!-- Columna izquierda con detalles del método de pago -->
                         <div class="col-md-6 mb-3">
                             <div class="row">
                                 <div class="col-md-6">
@@ -227,76 +149,47 @@ try {
                                 <?php endif; ?>
                             </div>
                         </div>
-
-                        <!-- Columna derecha con selección de método de pago -->
                         <div class="col-md-6 mb-3">
                             <label class="form-label"><strong>Método de Pago:</strong></label>
                             <input type="text" class="form-control" value="<?php echo $ordenCompra['metodo_pago']; ?>" readonly>
-                                     <!-- Botones para aprobar o rechazar la orden -->
-                                     <div class="text-center mt-4">
-                                    <?php if ($ordenCompra['estado'] == 'En espera'): ?>
-                                        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?id=' . $id_orden_compra; ?>" method="post">
-                                            <button type="submit" name="accion" value="aprobar" class="btn btn-success">Aprobar</button>
-                                            <button type="submit" name="accion" value="rechazar" class="btn btn-danger">Rechazar</button>
-                                        </form>
-                                    <?php else: ?>
-                                        <?php 
-                                        $estadoClase = '';
-                                        switch ($ordenCompra['estado']) {
-                                            case 'Aprobado':
-                                                $estadoClase = 'alert-success';
-                                                break;
-                                            case 'Rechazado':
-                                                $estadoClase = 'alert-danger';
-                                                break;
-                                        }
-                                        ?>
-                                       <?php if ($ordenCompra['estado'] == 'Aprobado' && !empty($ordenCompra['gerente_aprobador'])): ?>
-    <div class="mt-4">
-        <strong>Aprobado por el Gerente:</strong> <?php echo $ordenCompra['gerente_aprobador']; ?><br>
-        <?php if (!empty($ordenCompra['firma_aprobado'])): ?>
-            <img src="<?php echo $ordenCompra['firma_aprobado']; ?>" alt="Firma del gerente" class="mt-2" style="max-width: 150px;"><br>
-        <?php endif; ?>
-        <strong>Empresa:</strong> <?php echo $nombre_empresa; ?>
-    </div>
-    
-<?php endif; ?>
+                            <?php if ($ordenCompra['estado'] == 'Aprobado' && !empty($ordenCompra['gerente_aprobador'])): ?>
+                    <div class="text-center mt-4">
+                        <strong>Aprobado por el Gerente:</strong> <?php echo $ordenCompra['gerente_aprobador']; ?><br>
+                        <?php if (!empty($ordenCompra['firma_aprobado'])): ?>
+                            <img src="<?php echo $ordenCompra['firma_aprobado']; ?>" alt="Firma del gerente" class="mt-2" style="max-width: 150px;"><br>
+                        <?php endif; ?>
+                        <strong>Empresa:</strong> <?php echo $nombre_empresa; ?>
+                    </div>
+                    <?php endif; ?>
 
-
-
-
-                                        <?php if ($ordenCompra['estado'] == 'Rechazado'): ?>
-                                        <div class="mt-4">
-                                            <strong>Rechazado por el Gerente:</strong> <?php echo $ordenCompra['gerente_aprobador']; ?>
-                                            <br><br><strong>Estado:</strong>
-                                            <div class="alert alert-danger" style="display: inline-block; padding: 5px 10px;">
-                                                Rechazado
-                                            </div>
-                                            <br><br><strong>Empresa:</strong> <?php echo $nombre_empresa; ?>
-                                        </div>
-                                    <?php endif; ?>
-
-                                    <?php endif; ?>
-                                </div>
-
+                    <?php if ($ordenCompra['estado'] == 'Rechazado'): ?>
+                    <div class="text-center mt-4">
+                        <strong>Rechazado por el Gerente:</strong> <?php echo $ordenCompra['gerente_aprobador']; ?>
+                        <br><strong>Estado:</strong>
+                        <div class="alert alert-danger" style="display: inline-block; padding: 5px 10px;">
+                            Rechazado
+                        </div>
+                        <br><strong>Empresa:</strong> <?php echo $nombre_empresa; ?>
+                    </div>
+                    <?php endif; ?>
                         </div>
                     </div>
+
+                    
                 </div>
             </div>
         </div>
         <div class="text-center mt-3">
-                        <a href="historial_ordenes_compra.php" class="btn btn-secondary btn-lg">Volver a Historial OC</a>
-                    </div>
+            <a href="ordenes_compras.php" class="btn btn-secondary btn-lg">Volver a Historial OC</a>
+        </div>
 <?php
     } else {
-        // Manejo de caso en el que no se encontraron resultados
         echo "No se encontraron resultados para esta orden de compra.";
     }
 } catch (PDOException $e) {
-    // Manejo de errores de la base de datos
     echo "Error en la base de datos: " . $e->getMessage();
     exit();
 }
 
-include("./templates_gerente/footer_gerente.php");
+include("./templates_visitador/footer_visitador.php");
 ?>

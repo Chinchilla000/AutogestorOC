@@ -52,7 +52,6 @@ if ($resultado) {
     <header>
     <nav class="navbar navbar-expand-md navbar-light bg-light">
             <div class="container">
-            <a class="navbar-brand mx-auto mx-md-0" href="<?php echo $url_base2; ?>index_empresa.php">
             <img src="<?php echo $url_base; ?>img/logo.png" alt="Logotipo" style="max-width: 100px; height: auto;">
             </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -84,7 +83,7 @@ if ($resultado) {
                     </li>
                     <?php if (isset($_SESSION['nombre_visitador'])) : ?>
                         <li class="nav-item">
-                            <a class="nav-link" id="info-usuario" ><strong>Visitador: <?php echo $_SESSION['nombre_visitador']; ?></strong></a>
+                            <a class="nav-link" id="info-usuario" ><strong><?php echo $_SESSION['nombre_visitador']; ?></strong></a>
                         </li>
                     <?php endif; ?>
                     <?php if (isset($_SESSION['id_visitador'])) : ?>

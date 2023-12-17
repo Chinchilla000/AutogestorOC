@@ -53,7 +53,6 @@ if ($resultado) {
     <nav class="navbar navbar-expand-md navbar-light bg-light">
         <div class="container">
             <!-- Navbar Brand para el logotipo -->
-            <a class="navbar-brand mx-auto mx-md-0" href="<?php echo $url_base2; ?>index_empresa.php">
         <img src="<?php echo $url_base; ?>img/logo.png" alt="Logotipo de la Web" id="logotipo" style="max-width: 100px; height: auto;">
         </a>
 
@@ -77,12 +76,12 @@ if ($resultado) {
                     </li>
                     <?php if (isset($_SESSION['nombre_gerente'])) : ?>
                     <li class="nav-item">
-                        <a class="nav-link" id="info-usuario" ><strong>Gerente: <?php echo $_SESSION['nombre_gerente']; ?></strong></a>
+                        <a class="nav-link" id="info-usuario" ><strong><?php echo $_SESSION['nombre_gerente']; ?></strong></a>
                     </li>
                     <?php endif; ?>
                     <?php if (isset($_SESSION['id_gerente'])) : ?>
                     <li class="nav-item">
-                        <a class="nav-link" id="info-usuario" ><strong>Empresa:  <?php echo $nombre_empresa; ?></strong></a>
+                        <a class="nav-link" id="info-usuario" ><strong><?php echo $nombre_empresa; ?></strong></a>
                     </li>
                     <?php endif; ?>
                     

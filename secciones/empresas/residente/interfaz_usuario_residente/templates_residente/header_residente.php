@@ -45,7 +45,6 @@ if ($resultado) {
             
                 <div class="container">
             <!-- Navbar Brand para el logotipo -->
-            <a class="navbar-brand mx-auto mx-md-0" href="<?php echo $url_base2; ?>index_empresa.php">
             <img src="<?php echo $url_base; ?>img/logo.png" alt="Logotipo" style="max-width: 100px; height: auto;">
             </a>
 
