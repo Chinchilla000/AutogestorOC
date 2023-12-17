@@ -68,15 +68,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $fecha_pago = $_POST['fecha_pago'] ?? NULL;
     }
 
- // Calcula el total y el IVA
-$total = 0;
-
-foreach ($_POST['total_item'] as $total_item) {
-    $total += floatval(str_replace(',', '.', str_replace('.', '', $total_item)));
-}
-
-$iva = $total * 0.19;
-$total_neto = $total - $iva;
 
 
 if (isset($_FILES['cotizacion']) && $_FILES['cotizacion']['error'] === UPLOAD_ERR_OK) {
@@ -374,13 +365,7 @@ function eliminarItem(index) {
         calcularTotales(); // Actualizar los totales después de eliminar un ítem
     }
 }
-function formatearNumero(numero) {
-    var partes = numero.toLocaleString('es-CL').split('.');
-    if (partes.length > 1 && partes[1] === '00') {
-        return partes[0]; // Elimina los decimales si son '.00'
-    }
-    return numero.toLocaleString('es-CL');
-}
+
 function calcularTotalItem(input) {
     var itemDiv = input.closest('.input-group');
     var cantidad = parseFloat(itemDiv.querySelector('[name="cantidad[]"]').value.replace(/\./g, '').replace(',', '.')) || 0;
@@ -390,12 +375,10 @@ function calcularTotalItem(input) {
     var totalItem = itemDiv.querySelector('[name="total_item[]"]');
 
     if (!isNaN(total)) {
-        totalItem.value = formatearNumero(total.toFixed(2)); // Formatea el total con dos decimales
+        totalItem.value = Math.floor(total); // Muestra el total como número entero
         calcularTotales(); // Actualizar totales cada vez que se cambia un ítem
     }
 }
-
-
 
 function calcularTotales() {
     var totalNeto = 0;
@@ -409,11 +392,12 @@ function calcularTotales() {
     var iva = totalNeto * 0.19;
     var total = totalNeto + iva;
 
-    // Formatear los valores antes de mostrarlos en los campos de texto
-    document.getElementById('total_neto').value = formatearNumero(totalNeto);
-    document.getElementById('iva').value = formatearNumero(iva);
-    document.getElementById('total').value = formatearNumero(total);
+    // Asigna los valores directamente sin formatear como número entero
+    document.getElementById('total_neto').value = totalNeto.toFixed(0);
+    document.getElementById('iva').value = iva.toFixed(0);
+    document.getElementById('total').value = total.toFixed(0);
 }
+
 
 
 
