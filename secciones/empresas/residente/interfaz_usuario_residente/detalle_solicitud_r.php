@@ -32,13 +32,13 @@ $full_url = $cotizacion_url . $solicitud['archivo_cotizacion'];
 <div class="container mt-5">
     <div class="card">
         <div class="card-header text-center">
-            <h2>Solicitud de OC #<?php echo str_pad($id_solicitud, 4, '0', STR_PAD_LEFT); ?></h2>
+            <h2>Solicitud de OC Nº<?php echo str_pad($id_solicitud, 4, '0', STR_PAD_LEFT); ?></h2>
         </div>
         <div class="card-body">
             <!-- Encabezado con número de solicitud y fecha -->
             <div class="row mb-4">
                 <div class="col text-center">
-                    <strong>Número de Solicitud: #<?php echo str_pad($id_solicitud, 4, '0', STR_PAD_LEFT); ?></strong>
+                    <strong>Nº: <?php echo str_pad($id_solicitud, 4, '0', STR_PAD_LEFT); ?></strong>
                 </div>
                 <div class="col text-center">
                     <strong>Fecha: <?php echo date('d/m/Y'); ?></strong>
@@ -161,38 +161,47 @@ $full_url = $cotizacion_url . $solicitud['archivo_cotizacion'];
             <option value="efectivo" <?php echo ($solicitud['metodo_pago'] == 'efectivo') ? 'selected' : ''; ?>>Efectivo</option>
             <option value="credito" <?php echo ($solicitud['metodo_pago'] == 'credito') ? 'selected' : ''; ?>>Crédito</option>
         </select>
+      
         <div class="text-center mt-4">
-                
-                    <?php 
-                    $estadoClase = '';
-                    switch ($solicitud['estado']) {
-                        case 'Aprobado':
-                            $estadoClase = 'alert-success';
-                            break;
-                        case 'Rechazado':
-                            $estadoClase = 'alert-danger';
-                            break;
-                        default:
-                            $estadoClase = 'alert-warning';
-                            break;
-                    }
-                    ?>
-                    <div class="mx-auto w-50 alert <?php echo $estadoClase; ?>" role="alert">
-                        <strong>Estado:</strong> <?php echo $solicitud['estado']; ?>
+                        <strong>Aprobado por el Gerente:</strong> <?php echo $solicitud['gerente_aprobador']; ?><br>
+                        <img src="../../../../img/Firma.jpg" alt="Firma del gerente" class="mt-2" style="max-width: 150px;"><br>
+                        <strong>Empresa:</strong> <?php echo $nombre_empresa; ?>
                     </div>
-                    
-            </div>
+                    <?php endif; ?>
 
-            <!-- Botón para la Cotización -->
+                    <?php if ($solicitud['estado'] == 'Rechazado'): ?>
+                    <div class="text-center mt-4">
+                        <strong>Rechazado por el Gerente:</strong> <?php echo $ordenCompra['gerente_aprobador']; ?>
+                        <br><strong>Estado:</strong>
+                        <div class="alert alert-danger" style="display: inline-block; padding: 5px 10px;">
+                            Rechazado
+                        </div>
+                        <br><strong>Empresa:</strong> <?php echo $nombre_empresa; ?>
+                    </div>
+                    <?php endif; ?>
+
+                    <?php if ($solicitud['estado'] == 'En espera'): ?>
+                    <div class="text-center mt-4">
+                        <strong>Estado:</strong>
+                        <div class="alert alert-warning" style="display: inline-block; padding: 5px 10px;">
+                            En Espera
+                        </div>
+                    </div>
+                    <?php endif; ?>
+                        </div>
+                    </div>
+            
+            </div>
             <div class="col-md-12 text-center mt-3">
-                <a href="<?php echo $full_url; ?>" class="btn btn-warning btn-lg" target="_blank">Ver Cotización</a>
+                <a href="" class="btn btn-warning btn-lg" target="_blank">Imprimir</a>
             </div>
-            </div>
-            <div class="text-center mt-3">
+</div>
+        </div>
+        
+    </div>
+    
+<div class="text-center mt-3">
                 <a href="historial_solicitudes.php" class="btn btn-secondary btn-lg">Volver a Historial</a>
             </div>
-        </div>
-    </div>
-</div>
 
 <?php include("./templates_residente/footer_residente.php"); ?>

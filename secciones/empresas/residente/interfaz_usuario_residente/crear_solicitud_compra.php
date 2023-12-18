@@ -159,7 +159,7 @@ if (isset($_FILES['cotizacion']) && $_FILES['cotizacion']['error'] === UPLOAD_ER
                 <!-- Encabezado con número de solicitud y fecha/hora -->
                 <div class="row ">
                 <div class="col text-center">
-                        <strong>Número de Solicitud: <?php echo $numeroSolicitud; ?></strong>
+                        <strong>N°: <?php echo $numeroSolicitud; ?></strong>
                     </div>
                     <div class="col text-center">
                         <strong>Fecha: <?php echo $fechaActual; ?></strong>

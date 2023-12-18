@@ -30,13 +30,13 @@ body {
 }
 
 .navbar-nav a {
-  color: #007BFF;
+  color: #ffffff;
   transition: color 0.3s ease;
   font-weight: bold;
 }
 
 .navbar-nav a:hover {
-  color: #0056b3;
+  color: #ffffff;
 }
 
 .btn-outline-primary,
@@ -104,10 +104,26 @@ main {
   padding-bottom: 2rem;
 }
 
+
+/* Estilos para el menú desplegable */
 .navbar .dropdown-menu {
+  background-color: black; /* Fondo negro */
+  color: white; /* Texto blanco */
   position: relative; /* or 'absolute' depending on your layout */
   z-index: 1000; /* High value to ensure it's on top */
 }
+
+/* Estilos para los elementos dentro del menú desplegable */
+.navbar .dropdown-menu a {
+  color: white; /* Texto blanco para los enlaces */
+}
+
+/* Estilos para los elementos dentro del menú desplegable al pasar el ratón por encima */
+.navbar .dropdown-menu a:hover {
+  background-color: #333; /* Fondo más oscuro para el hover */
+  color: white; /* Mantener el texto blanco */
+}
+
 /* Estilos para el Formulario de Solicitud de Orden de Compra */
 .form-solicitud {
     max-width: 600px;
@@ -184,6 +200,7 @@ main {
     background-color: #007BFF;
     color: white;
 }
+
 
 /* Ajustes Responsive */
 @media (max-width: 768px) {

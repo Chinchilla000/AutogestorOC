@@ -107,5 +107,6 @@ if ($_POST) {
         </form>
     </div>
 </div>
+<br>
 
 <?php include("../../templates/footer.php"); ?>

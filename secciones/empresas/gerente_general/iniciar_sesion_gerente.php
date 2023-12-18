@@ -74,12 +74,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </div>
             <?php endif; ?>
 
-            <div class="form-check text-start mb-3">
-                <input class="form-check-input" type="checkbox" value="remember-me" id="flexCheckDefault">
-                <label class="form-check-label" for="flexCheckDefault">
-                    Recordar usuario
-                </label>
-            </div>
+            
 
             <button class="btn btn-primary w-100 py-2" type="submit">Iniciar Sesión</button>
 

@@ -46,17 +46,19 @@ if (isset($_FILES['firma']) && $_FILES['firma']['error'] === UPLOAD_ERR_OK) {
     }
 }
 ?>
+<br><br>
 <div class="container mt-5">
-    <h2>Bienvenido a la Plataforma de Gestión de la Gerente General</h2>
+    <h2>Bienvenido a la plataforma de Gestión de Orden de Compra.</h2>
     <br>
-    <h2><?php echo $_SESSION['nombre_gerente']; ?></h2>
+    <h2>Gerente o dueño: <?php echo $_SESSION['nombre_gerente']; ?></h2>
     <br>
-    <p>En esta página, puedes ver y administrar tus órdenes de compras de la Empresa: <?php echo $nombre_empresa; ?>.</p>
+    <h2>Empresa: <?php echo $nombre_empresa; ?></h2>
+    <br>
+    <p>Estimado usuario acá podrás aprobar o rechazar las Ordenes de Compra y hacer un seguimiento de este proceso.</p>
 
    
     </div>
 </div>
-
 <?php
 include("./templates_gerente/footer_gerente.php");
 ?>

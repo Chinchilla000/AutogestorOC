@@ -43,7 +43,17 @@ if ($id_residente) {
         echo "</div>"; // Cierre del div .table-responsive
 
     } else {
-        echo "<div class='container mt-5'><p>No hay solicitudes registradas.</p></div>";
+        echo "<div class='container mt-5'>";
+        echo "<h3>Historial de Solicitudes de Ordenes de Compras</h3>";
+
+        // Envolver la tabla en un div con la clase .table-responsive
+        echo "<div class='table-responsive'>";
+        echo "<table class='table table-hover'>";
+        echo "<thead><tr><th>N° Solicitud</th><th>Obra</th><th>Dirección</th><th>Total</th><th>Fecha de Creación</th><th>Estado</th></tr></thead>";
+        echo "<tbody>";
+        echo "</tbody></table></div>";
+        echo "</div>"; // Cierre del div .table-responsive
+
     }
 } else {
     echo "<div class='container mt-5'><p>Error: No se pudo identificar al residente.</p></div>";

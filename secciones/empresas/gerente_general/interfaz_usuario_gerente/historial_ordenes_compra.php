@@ -17,8 +17,11 @@ $stmt->execute();
 $ordenesCompra = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
+<br>
+<br>
+
 <div class="container mt-4">
-    <h2>Historial de Órdenes de Compra</h2>
+    <h2>Historial de Orden de Compra</h2>
     <table class="table table-hover">
         <thead>
             <tr>

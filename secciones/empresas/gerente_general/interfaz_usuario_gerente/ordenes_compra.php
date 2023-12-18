@@ -19,9 +19,9 @@ $stmt = $conexion->prepare($query);
 $stmt->bindParam(':idEmpresaActual', $idEmpresaActual, PDO::PARAM_INT);
 $stmt->execute();
 $ordenesCompra = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
+echo "<br><br>";
 echo "<div class='container mt-4'>";
-echo "<h2>Órdenes de Compras Generadas</h2>";
+echo "<h2>Ordenes de Compras Generadas</h2>";
 echo "<div class='table-responsive'>";
 echo "<table class='table table-hover'>";
 echo "<thead><tr><th>ID Orden</th><th>Fecha Creación</th><th>Total</th><th>Archivo Cotización</th><th>Estado</th></tr></thead>";

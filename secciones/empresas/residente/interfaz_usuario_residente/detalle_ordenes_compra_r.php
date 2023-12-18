@@ -35,12 +35,12 @@ try {
         <div class="container mt-5">
             <div class="card">
                 <div class="card-header text-center">
-                    <h2>Orden de Compra #<?php echo generarIdPersonalizado($nombre_empresa, $id_orden_compra); ?></h2>
+                    <h2> Orden de Compra Nº <?php echo generarIdPersonalizado($nombre_empresa, $id_orden_compra); ?></h2>
                 </div>
                 <div class="card-body">
                     <div class="row mb-4">
                         <div class="col text-center">
-                            <strong>Número de Orden de Compra: <?php echo generarIdPersonalizado($nombre_empresa, $id_orden_compra); ?></strong>
+                            <strong>Nº: <?php echo generarIdPersonalizado($nombre_empresa, $id_orden_compra); ?></strong>
                         </div>
                         <div class="col text-center">
                             <strong>Fecha de Creación: <?php echo date('d/m/Y', strtotime($ordenCompra['fecha_creacion'])); ?></strong>
@@ -154,7 +154,7 @@ try {
                             <input type="text" class="form-control" value="<?php echo $ordenCompra['metodo_pago']; ?>" readonly>
                             <?php if ($ordenCompra['estado'] == 'Aprobado' && !empty($ordenCompra['gerente_aprobador'])): ?>
                     <div class="text-center mt-4">
-                        <strong>Aprobado por el Gerente:</strong> <?php echo $ordenCompra['gerente_aprobador']; ?><br>
+                        <strong>Aprobado por:</strong> <?php echo $ordenCompra['gerente_aprobador']; ?><br>
                         <img src="../../../../img/Firma.jpg" alt="Firma del gerente" class="mt-2" style="max-width: 150px;"><br>
                         <strong>Empresa:</strong> <?php echo $nombre_empresa; ?>
                     </div>
@@ -172,7 +172,9 @@ try {
                     <?php endif; ?>
                         </div>
                     </div>
-
+                    <div class="col-md-12 text-center mt-3">
+                <a href="" class="btn btn-warning btn-lg" target="_blank">Imprimir</a>
+            </div>
                     
                 </div>
             </div>

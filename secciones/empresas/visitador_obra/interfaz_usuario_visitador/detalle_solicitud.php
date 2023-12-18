@@ -103,9 +103,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (!existeOrdenDeCompra($id_solicitud, $conexion)) {
             crearOrdenDeCompra($id_solicitud, $conexion);
         }
-        // Redireccionar para evitar duplicados al recargar la página
-        header("Location: " . htmlspecialchars($_SERVER["PHP_SELF"]) . "?id=" . $id_solicitud);
-        exit;
+        
     } elseif ($accion == 'rechazar') {
         actualizarEstado($id_solicitud, 'Rechazado', $conexion);
         // Posible redirección aquí también si es necesario
@@ -292,16 +290,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <?php endif; ?>
                     
                 </div>
+                <div class="col-md-12 text-center mt-3">
+                <a href="" class="btn btn-warning btn-lg" target="_blank">Imprimir</a>
             </div>
-
-            <div class="text-center mt-3">
+            </div>
+            
+            
+        </div>
+    </div>
+</div>
+<div class="text-center mt-3">
                 <a href="solicitudes_compra.php" class="btn btn-secondary btn-lg">Volver a Historial</a>
                 
             </div>
             <br>
-        </div>
-    </div>
-</div>
 <script>
      function showModal(description) {
         var modalDescription = document.getElementById('modalDescription');

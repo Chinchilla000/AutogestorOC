@@ -1,7 +1,6 @@
 
 
 <?php include("templates/header.php"); ?>
-
 <div class="container custom-modal-container">
     <div class="modal-content rounded-4 shadow p-4 text-center">
         <div class="modal-header border-bottom-0 justify-content-center">
@@ -19,6 +18,4 @@
         </div>
     </div>
 </div>
-
-
 <?php include("templates/footer.php"); ?>

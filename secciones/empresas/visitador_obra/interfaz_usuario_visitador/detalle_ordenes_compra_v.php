@@ -35,12 +35,12 @@ try {
         <div class="container mt-5">
             <div class="card">
                 <div class="card-header text-center">
-                    <h2>Orden de Compra #<?php echo generarIdPersonalizado($nombre_empresa, $id_orden_compra); ?></h2>
+                    <h2>Orden de Compra N°<?php echo generarIdPersonalizado($nombre_empresa, $id_orden_compra); ?></h2>
                 </div>
                 <div class="card-body">
                     <div class="row mb-4">
                         <div class="col text-center">
-                            <strong>Número de Orden de Compra: <?php echo generarIdPersonalizado($nombre_empresa, $id_orden_compra); ?></strong>
+                            <strong>N°: <?php echo generarIdPersonalizado($nombre_empresa, $id_orden_compra); ?></strong>
                         </div>
                         <div class="col text-center">
                             <strong>Fecha de Creación: <?php echo date('d/m/Y', strtotime($ordenCompra['fecha_creacion'])); ?></strong>
@@ -170,11 +170,23 @@ try {
                         <br><strong>Empresa:</strong> <?php echo $nombre_empresa; ?>
                     </div>
                     <?php endif; ?>
+
+                    <?php if ($ordenCompra['estado'] == 'En espera'): ?>
+                    <div class="text-center mt-4">
+                        <strong>Estado:</strong>
+                        <div class="alert alert-warning" style="display: inline-block; padding: 5px 10px;">
+                            En Espera
+                        </div>
+                    </div>
+                    <?php endif; ?>
                         </div>
                     </div>
 
-                    
+                    <div class="col-md-12 text-center mt-3">
+                <a href="" class="btn btn-warning btn-lg" target="_blank">Imprimir</a>
+            </div>
                 </div>
+                
             </div>
         </div>
         <div class="text-center mt-3">
