@@ -1,6 +1,6 @@
 <?php
-$url_base = "http://localhost/ProyectoOC/";
-$url_base2 = "http://localhost/ProyectoOC/secciones/empresas/gerente_general/interfaz_usuario_gerente/";
+$url_base = "http://localhost/proyectooc/";
+$url_base2 = "http://localhost/proyectooc/secciones/empresas/gerente_general/interfaz_usuario_gerente/";
 $url_cotizacion = "http://localhost/proyectooc/secciones/empresas/residente/interfaz_usuario_residente/";
 $url_firmas = "http://localhost/proyectooc/secciones/empresas/gerente_general/interfaz_usuario_gerente/firmas/";
 
@@ -28,6 +28,17 @@ if ($resultado) {
     $nombre_empresa = $resultado['nombre_empresa'];
 }
 
+// Obtener el apellido del gerente general de la base de datos
+$sentencia_apellido = $conexion->prepare("SELECT apellido FROM gerentes_generales WHERE id = :id_gerente");
+$sentencia_apellido->bindParam(':id_gerente', $id_gerente, PDO::PARAM_INT);
+$sentencia_apellido->execute();
+$resultado_apellido = $sentencia_apellido->fetch(PDO::FETCH_ASSOC);
+
+if ($resultado_apellido && isset($resultado_apellido['apellido'])) {
+    $apellido_gerente = $resultado_apellido['apellido'];
+} else {
+    $apellido_gerente = '';
+}
 ?>
 
 <!DOCTYPE html>
@@ -56,12 +67,8 @@ if ($resultado) {
         <img src="<?php echo $url_base; ?>img/logo.png" alt="Logotipo de la Web" id="logotipo" style="max-width: 100px; height: auto;">
         </a>
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                <ul class="nav navbar-nav">
+                <ul class="navbar-nav me-auto">
                     <li class="nav-item">
                         <a class="nav-link" href="<?php echo $url_base2; ?>index_usuario_gerente.php"><strong>Inicio</strong></a>
                     </li>
@@ -74,21 +81,18 @@ if ($resultado) {
                             <li><a class="dropdown-item" href="historial_ordenes_compra.php">Historial de OC</a></li>
                         </ul>
                     </li>
-                    <?php if (isset($_SESSION['nombre_gerente'])) : ?>
-                    <li class="nav-item">
-                        <a class="nav-link" id="info-usuario" ><strong><?php echo $_SESSION['nombre_gerente']; ?></strong></a>
-                    </li>
-                    <?php endif; ?>
-                    <?php if (isset($_SESSION['id_gerente'])) : ?>
-                    <li class="nav-item">
-                        <a class="nav-link" id="info-usuario" ><strong><?php echo $nombre_empresa; ?></strong></a>
-                    </li>
-                    <?php endif; ?>
-                    
                 </ul>
                 <div class="text-end">
-                <a href="<?php echo $url_base2; ?>cerrar_sesion.php" class="btn btn-danger"><strong>Cerrar Sesión</strong></a>
-            </div>
+    <?php if (isset($_SESSION['nombre_gerente'])) : ?>
+        <div class="btn-group" role="group">
+            <a href="" class="btn btn-outline-primary mx-2"><strong><?php echo $_SESSION['nombre_gerente']; ?> <?php echo $apellido_gerente; ?></strong></a>
+        </div>
+    <?php endif; ?>
+    <a href="<?php echo $url_base2; ?>cerrar_sesion.php" class="btn btn-danger mx-2"><strong>Cerrar Sesión</strong></a>
+</div>
+
+
+
         </div>
     </nav>
     </header>

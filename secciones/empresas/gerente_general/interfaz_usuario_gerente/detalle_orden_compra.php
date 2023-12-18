@@ -38,53 +38,34 @@ try {
 
        
         if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["accion"])) {
-            // Acción de aprobación o rechazo
             $accion = $_POST["accion"];
-            $nuevoEstado = ""; // Definir la variable aquí para que esté disponible en todo el bloque try
-            $nombreGerenteAprobador = "";
+            $gerenteId = $_SESSION['id_gerente'];
+            $selectQuery = "SELECT firma_path FROM gerentes_generales WHERE id = :gerente_id";
+            $stmt = $conexion->prepare($selectQuery);
+            $stmt->bindParam(':gerente_id', $gerenteId);
+            $stmt->execute();
+            $gerente = $stmt->fetch(PDO::FETCH_ASSOC);
+            $firmaGerente = $gerente['firma_path'] ?? '';
         
             if ($accion == "aprobar") {
-                // Verificar si la firma del Gerente General está disponible
-                $gerenteId = $_SESSION['id_gerente'];
-                $selectQuery = "SELECT firma_path FROM gerentes_generales WHERE id = :gerente_id";
-                $stmt = $conexion->prepare($selectQuery);
-                $stmt->bindParam(':gerente_id', $gerenteId);
-                $stmt->execute();
-                $gerente = $stmt->fetch(PDO::FETCH_ASSOC);
+                $nuevoEstado = "Aprobado";
+                $nombreGerenteAprobador = $_SESSION['nombre_gerente']; // Cambia esto al nombre del gerente real
+                $rutaFirma = $firmaGerente; // Variable que almacena la ruta de la firma
             
-                $firmaGerente = isset($gerente['firma_path']) ? $gerente['firma_path'] : "";
-            
-                if (empty($firmaGerente)) {
-                    // Mostrar un mensaje de alerta si no tiene firma
-                    echo '<div class="alert alert-warning" role="alert">';
-                    echo 'No puedes aprobar la orden de compra porque tu firma no está disponible. Sube tu firma antes de continuar.';
-                    echo '</div>';
-                } else {
-                    // Realiza la actualización del estado y la firma del gerente en la base de datos
-                    $nuevoEstado = "Aprobado";
-                    $nombreGerenteAprobador = $_SESSION['nombre_gerente']; // Cambia esto al nombre del gerente real
-                    $rutaFirma = $firmaGerente; // Variable que almacena la ruta de la firma
-            
-                    $queryActualizarFirma = "UPDATE ordenes_de_compra SET estado = ?, gerente_aprobador = ?, firma_aprobado = ? WHERE id_orden_compra = ?";
-                    $stmtActualizarFirma = $conexion->prepare($queryActualizarFirma);
-                    $stmtActualizarFirma->bindParam(1, $nuevoEstado, PDO::PARAM_STR);
-                    $stmtActualizarFirma->bindParam(2, $nombreGerenteAprobador, PDO::PARAM_STR);
-                    $stmtActualizarFirma->bindParam(3, $rutaFirma, PDO::PARAM_STR);
-                    $stmtActualizarFirma->bindParam(4, $id_orden_compra, PDO::PARAM_INT);
-                    $stmtActualizarFirma->execute();
+                // Actualización de la orden de compra con el nuevo estado y el gerente aprobador
+                $queryActualizarFirma = "UPDATE ordenes_de_compra SET estado = ?, gerente_aprobador = ? WHERE id_orden_compra = ?";
+                $stmtActualizarFirma = $conexion->prepare($queryActualizarFirma);
+                $stmtActualizarFirma->bindParam(1, $nuevoEstado, PDO::PARAM_STR);
+                $stmtActualizarFirma->bindParam(2, $nombreGerenteAprobador, PDO::PARAM_STR);
+                $stmtActualizarFirma->bindParam(3, $id_orden_compra, PDO::PARAM_INT);
+                $stmtActualizarFirma->execute();
                         
-                    // JavaScript para mostrar el mensaje de alerta y redirigir
-                echo '<script>';
-                echo 'alert("Has aprobado la Orden de Compra.");';
-                echo 'window.location.href = "detalle_orden_compra.php?id=' . $id_orden_compra . '";';
-                echo '</script>';
-                    
-                }
+            
             
                 // Actualiza el estado y el nombre del gerente en la variable $ordenCompra
                 $ordenCompra['estado'] = $nuevoEstado;
                 $ordenCompra['gerente_aprobador'] = $nombreGerenteAprobador;
-            } elseif ($accion == "rechazar") {
+            } elseif ($accion == "rechazar") { 
                 // Actualiza el estado a "Rechazado" y registra el nombre del gerente que lo rechazó
                 $nuevoEstado = "Rechazado";
                 $nombreGerenteRechazo = $_SESSION['nombre_gerente']; // Cambia esto al nombre del gerente real
@@ -104,6 +85,7 @@ try {
         }
         $firma = isset($gerente['firma_path']) ? $gerente['firma_path'] : "";
 ?>
+<br><br>
         <div class="container mt-5">
             <div class="card">
                 <div class="card-header text-center">
@@ -255,7 +237,7 @@ try {
     <div class="mt-4">
         <strong>Aprobado por el Gerente:</strong> <?php echo $ordenCompra['gerente_aprobador']; ?><br>
         
-            <img src="../../../../img/Firma.png" alt="Firma del gerente" class="mt-2" style="max-width: 150px;"><br>
+            <img src="../../../../img/Firma.jpg" alt="Firma del gerente" class="mt-2" style="max-width: 150px;"><br>
         
         <strong>Empresa:</strong> <?php echo $nombre_empresa; ?>
     </div>

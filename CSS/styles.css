@@ -5,6 +5,7 @@ body {
   background: linear-gradient(to bottom,#2980b9, #9db5c6 );
   /* Otras propiedades CSS */
 }
+
 .navbar {
   background-color: transparent;
   backdrop-filter: blur(10px); /* Agrega un efecto de desenfoque al fondo */
@@ -103,6 +104,10 @@ main {
   padding-bottom: 2rem;
 }
 
+.navbar .dropdown-menu {
+  position: relative; /* or 'absolute' depending on your layout */
+  z-index: 1000; /* High value to ensure it's on top */
+}
 /* Estilos para el Formulario de Solicitud de Orden de Compra */
 .form-solicitud {
     max-width: 600px;
@@ -111,6 +116,8 @@ main {
     background-color: #fff;
     border-radius: 10px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative; /* or 'absolute' based on your layout */
+    z-index: 1; /* Lower value so it's underneath the dropdown */
 }
 
 .form-solicitud .form-group {

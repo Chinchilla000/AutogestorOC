@@ -155,7 +155,7 @@ try {
                             <?php if ($ordenCompra['estado'] == 'Aprobado' && !empty($ordenCompra['gerente_aprobador'])): ?>
                     <div class="text-center mt-4">
                         <strong>Aprobado por el Gerente:</strong> <?php echo $ordenCompra['gerente_aprobador']; ?><br>
-                        <img src="../../../../img/Firma.png" alt="Firma del gerente" class="mt-2" style="max-width: 150px;"><br>
+                        <img src="../../../../img/Firma.jpg" alt="Firma del gerente" class="mt-2" style="max-width: 150px;"><br>
                         <strong>Empresa:</strong> <?php echo $nombre_empresa; ?>
                     </div>
                     <?php endif; ?>

@@ -54,12 +54,10 @@ if (!isset($_SESSION['id_empresa'])) {
         <img src="<?php echo $url_base; ?>img/logo.png" alt="Logotipo de la Web" id="logotipo" style="max-width: 100px; height: auto;">
         </a>
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+       
 
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                <ul class="navbar-nav mr-auto">
+                <ul class="navbar-nav me-auto">
                     <li class="nav-item">
                         <a class="nav-link" href="<?php echo $url_base2; ?>index_empresa.php"><strong>Inicio</strong></a>
                     </li>
@@ -72,15 +70,16 @@ if (!isset($_SESSION['id_empresa'])) {
                     <li class="nav-item">
                         <a class="nav-link" href="<?php echo $url_base2; ?>residente/index_residente.php"><strong>Residente de Obras</strong></a>
                     </li>
-                    <?php if (isset($_SESSION['nombre_usuario'])) : ?>
-                    <li class="nav-item">
-                        <a class="nav-link" id="info-usuario" ><strong>Usuario: <?php echo $_SESSION['nombre_usuario']; ?></strong></a>
-                    </li>
-                    <?php endif; ?>
-                </ul>
-                <div class="d-flex">
-                <a href="<?php echo $url_base2; ?>cerrar_sesion.php" class="btn btn-danger"><strong>Cerrar Sesión</strong></a>
-            </div>
+    </ul>  
+                
+            <div class="text-end">
+            <?php if (isset($_SESSION['nombre_usuario'])) : ?>
+        <div class="btn-group" role="group">
+            <a href="" class="btn btn-outline-primary mx-2"><strong><?php echo $_SESSION['nombre_usuario']; ?></strong></a>
+        </div>
+    <?php endif; ?>
+    <a href="<?php echo $url_base2; ?>cerrar_sesion.php" class="btn btn-danger mx-2"><strong>Cerrar Sesión</strong></a>
+</div>
         </div>
     </nav>
 <main class="container flex-grow-1">

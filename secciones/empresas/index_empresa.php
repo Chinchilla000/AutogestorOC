@@ -9,7 +9,7 @@ include("templates/header_empresa.php"); ?>
     <br>
     <h2><?php echo $_SESSION['nombre_empresa']; ?></h2>
     <br>
-    <p>En esta página, puedes very administrar tus Usuarios.</p>
+    <p>En esta página, puedes ver y administrar tus Usuarios.</p>
 </div>
 
 

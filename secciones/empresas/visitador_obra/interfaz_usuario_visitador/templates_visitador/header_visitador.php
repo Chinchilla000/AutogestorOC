@@ -106,16 +106,15 @@ if ($resultado) {
                     
                     
                 </ul>
-                <div class="col-md-3 text-end">
-                <?php if (isset($_SESSION['nombre_visitador'])) : ?>
-                    
+            <div class="text-end">
+            <?php if (isset($_SESSION['nombre_visitador'])) : ?>
+        <div class="btn-group" role="group">
+            <a href="" class="btn btn-outline-primary mx-2"><strong><?php echo $_SESSION['nombre_visitador']; ?> <?php echo $apellido_visitador; ?></strong></a>
+        </div>
+    <?php endif; ?>
+    <a href="<?php echo $url_base2; ?>cerrar_sesion.php" class="btn btn-danger mx-2"><strong>Cerrar Sesión</strong></a>
+</div>
 
-                    <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-outline-primary"><?php echo $_SESSION['nombre_visitador']; ?> <?php echo $apellido_visitador; ?></button>
-                    </div>
-                <?php endif; ?>
-                <a href="<?php echo $url_base2; ?>cerrar_sesion.php" class="btn btn-danger"><strong>Cerrar Sesión</strong></a>
-            </div>
                 
             </div>
         </nav>

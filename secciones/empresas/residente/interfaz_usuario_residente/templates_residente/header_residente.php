@@ -1,5 +1,5 @@
 <?php
-$url_base = "http://localhost/ProyectoOC/";
+$url_base = "http://localhost/proyectooc/";
 $url_base2 = "http://localhost/proyectooc/secciones/empresas/residente/interfaz_usuario_residente/";
 $url_cotizacion = "http://localhost/proyectooc/secciones/empresas/residente/interfaz_usuario_residente/";
 
@@ -27,6 +27,17 @@ if ($resultado) {
     $nombre_empresa = $resultado['nombre_empresa'];
 }
 
+// Obtener el apellido del residente de la base de datos
+$sentencia_apellido_residente = $conexion->prepare("SELECT apellido FROM residentes_obra WHERE id = :id_residente");
+$sentencia_apellido_residente->bindParam(':id_residente', $id_residente, PDO::PARAM_INT);
+$sentencia_apellido_residente->execute();
+$resultado_apellido_residente = $sentencia_apellido_residente->fetch(PDO::FETCH_ASSOC);
+
+if ($resultado_apellido_residente && isset($resultado_apellido_residente['apellido'])) {
+    $apellido_residente = $resultado_apellido_residente['apellido'];
+} else {
+    $apellido_residente = '';
+}
 ?>
 
 <!DOCTYPE html>
@@ -76,22 +87,16 @@ if ($resultado) {
                             <li><a class="dropdown-item" href="ordenes_compra.php">Ordenes de Compra</a></li>
                         </ul>
                     </li>
-                    <?php if (isset($_SESSION['nombre_residente'])) : ?>
-                    <li class="nav-item">
-                        <a class="nav-link" id="info-usuario"><strong><?php echo $_SESSION['nombre_residente']; ?></strong></a>
-                    </li>
-                    <?php endif; ?>
-                    <?php if (isset($_SESSION['id_residente'])) : ?>
-                    <li class="nav-item">
-                        <a class="nav-link" id="info-empresa"><strong><?php echo $nombre_empresa; ?></strong></a>
-                    </li>
-                    <?php endif; ?>
                     </ul>
-            
-
             <div class="text-end">
-                <a href="<?php echo $url_base2; ?>cerrar_sesion.php" class="btn btn-danger"><strong>Cerrar Sesión</strong></a>
-            </div>
+    <?php if (isset($_SESSION['nombre_residente'])) : ?>
+        <div class="btn-group" role="group">
+            <a href="" class="btn btn-outline-primary mx-2"><strong><?php echo $_SESSION['nombre_residente']; ?> <?php echo $apellido_residente; ?></strong></a>
+        </div>
+    <?php endif; ?>
+    <a href="<?php echo $url_base2; ?>cerrar_sesion.php" class="btn btn-danger mx-2"><strong>Cerrar Sesión</strong></a>
+</div>
         </div>
     </nav>
 </header>
+<br><br>
