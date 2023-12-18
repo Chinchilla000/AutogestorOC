@@ -2,7 +2,7 @@
 $url_base = "http://localhost/ProyectoOC/";
 $url_base2 = "http://localhost/ProyectoOC/secciones/empresas/gerente_general/interfaz_usuario_gerente/";
 $url_cotizacion = "http://localhost/proyectooc/secciones/empresas/residente/interfaz_usuario_residente/";
-
+$url_firmas = "http://localhost/proyectooc/secciones/empresas/gerente_general/interfaz_usuario_gerente/firmas/";
 
 session_start();
 

@@ -440,6 +440,6 @@ window.onload = mostrarCamposPago;
 });
 </script>
 
-
+<br>
 
 <?php include("./templates_residente/footer_residente.php"); ?>

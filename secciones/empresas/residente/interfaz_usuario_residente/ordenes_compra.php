@@ -1,6 +1,7 @@
 <?php
 include("../../../../bd.php");
-include("./templates_residente/header_residente.php"); ; 
+include("./templates_residente/header_residente.php");
+
 // Obtener el ID de la empresa del usuario actual
 $idEmpresaActual = $_SESSION['id_empresa'] ?? null;
 
@@ -29,8 +30,9 @@ echo "<tbody>";
 
 foreach ($ordenesCompra as $orden) {
     $idPersonalizado = generarIdPersonalizado($orden['nombre_empresa'], $orden['id_orden_compra']);
-    
-    echo "<tr>";
+
+    // Agrega la clase 'table-row-link' y el atributo 'data-href' para hacer que la fila sea un enlace
+    echo "<tr class='table-row-link' data-href='detalle_ordenes_compra_r.php?id=" . $orden['id_orden_compra'] . "'>";
     echo "<td>" . htmlspecialchars($idPersonalizado) . "</td>";
     echo "<td>" . htmlspecialchars($orden['fecha_creacion']) . "</td>";
     echo "<td>" . htmlspecialchars($orden['estado']) . "</td>";
@@ -49,5 +51,23 @@ foreach ($ordenesCompra as $orden) {
 
 echo "</tbody></table></div>";
 echo "</div>";
+?>
 
-include("./templates_residente/footer_residente.php");   ?>
+<!-- Agrega un script JavaScript para manejar los clics en las filas de la tabla -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const tableRows = document.querySelectorAll(".table-row-link");
+    tableRows.forEach(row => {
+        row.addEventListener("click", function() {
+            const href = this.getAttribute("data-href");
+            if (href) {
+                window.location.href = href;
+            }
+        });
+    });
+});
+</script>
+
+<?php
+include("./templates_residente/footer_residente.php");
+?>

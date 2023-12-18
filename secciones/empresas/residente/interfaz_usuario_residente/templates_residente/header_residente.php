@@ -74,7 +74,6 @@ if ($resultado) {
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <li><a class="dropdown-item" href="ordenes_compra.php">Ordenes de Compra</a></li>
-                            <li><a class="dropdown-item" href="historial_solicitudes.php">Historial de OC</a></li>
                         </ul>
                     </li>
                     <?php if (isset($_SESSION['nombre_residente'])) : ?>

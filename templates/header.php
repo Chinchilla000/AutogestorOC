@@ -27,14 +27,14 @@
         flex-grow: 1;
         min-height: calc(100vh - 60px - 45px); /* Ejemplo: Header = 60px, Footer = 40px */
         }
+        
 
     </style>
 </head>
 
 <body class="d-flex flex-column min-vh-100"> 
   <header>
-  <header>
-    <nav class="navbar navbar-expand-md navbar-light bg-light">
+  <nav class="navbar navbar-expand-md navbar-light custom-navbar">
         <div class="container">
             <!-- Navbar Brand para el logotipo -->
             <a class="navbar-brand mx-auto mx-md-0" href="<?php echo $url_base2; ?>index_empresa.php">

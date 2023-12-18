@@ -28,6 +28,18 @@ if ($resultado) {
     $_SESSION['id_empresa'] = $resultado['id']; // Guardar el ID de la empresa en la sesión
 }
 
+        // Obtener el apellido del visitador de la base de datos
+        $sentencia_apellido = $conexion->prepare("SELECT apellido FROM visitadores_obra WHERE id = :id_visitador");
+        $sentencia_apellido->bindParam(':id_visitador', $id_visitador, PDO::PARAM_INT);
+        $sentencia_apellido->execute();
+        $resultado_apellido = $sentencia_apellido->fetch(PDO::FETCH_ASSOC);
+
+        if ($resultado_apellido && isset($resultado_apellido['apellido'])) {
+            $apellido_visitador = $resultado_apellido['apellido'];
+        } else {
+            $apellido_visitador = '';
+        }
+        
 ?>
 
 <!DOCTYPE html>
@@ -46,6 +58,13 @@ if ($resultado) {
     <!-- Tu hoja de estilo personalizada -->
     <link rel="stylesheet" type="text/css" href="<?php echo $url_base; ?>CSS/styles.css">
     
+    <style>
+     .btn-group button {
+    margin-right: 5px; /* Ajusta el valor según desees */
+}
+
+
+    </style>
 
 </head>
 <body class="d-flex flex-column min-vh-100">
@@ -78,24 +97,26 @@ if ($resultado) {
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <li><a class="dropdown-item" href="ordenes_compras.php">Ordenes de Compra</a></li>
-                            <li><a class="dropdown-item" href="estado_solicitudes.php">Historial de OC</a></li>
                         </ul>
                     </li>
-                    <?php if (isset($_SESSION['nombre_visitador'])) : ?>
+                   
                         <li class="nav-item">
-                            <a class="nav-link" id="info-usuario" ><strong><?php echo $_SESSION['nombre_visitador']; ?></strong></a>
+                            <a class="nav-link" id="info-usuario" ><strong></strong></a>
                         </li>
-                    <?php endif; ?>
-                    <?php if (isset($_SESSION['id_visitador'])) : ?>
-                        <li class="nav-item">
-                            <a class="nav-link" id="info-empresa" ><strong>Empresa: <?php echo $nombre_empresa; ?></strong></a>
-                        </li>
-                    <?php endif; ?>
+                    
+                    
                 </ul>
-                <div class="d-flex">
-                        <a href="<?php echo $url_base2; ?>cerrar_sesion.php" class="btn btn-danger"><strong>Cerrar Sesión</strong></a>
+                <div class="col-md-3 text-end">
+                <?php if (isset($_SESSION['nombre_visitador'])) : ?>
+                    
+
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-outline-primary"><?php echo $_SESSION['nombre_visitador']; ?> <?php echo $apellido_visitador; ?></button>
                     </div>
-                </div>
+                <?php endif; ?>
+                <a href="<?php echo $url_base2; ?>cerrar_sesion.php" class="btn btn-danger"><strong>Cerrar Sesión</strong></a>
+            </div>
+                
             </div>
         </nav>
     </header>

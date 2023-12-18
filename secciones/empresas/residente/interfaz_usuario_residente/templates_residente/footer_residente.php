@@ -1,4 +1,5 @@
 <br>
+</body>
 <footer class="footer mt-auto  bg-light">
     <div class="container text-center">
         <p class="text-muted">© <?php echo date("Y"); ?> Autogestor. Todos los derechos reservados.</p>
@@ -14,6 +15,6 @@
 <script>
     // Tu código JavaScript personalizado va aquí
 </script>
-</body>
+
 
 </html>

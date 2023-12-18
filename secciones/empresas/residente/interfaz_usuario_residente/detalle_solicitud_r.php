@@ -32,13 +32,13 @@ $full_url = $cotizacion_url . $solicitud['archivo_cotizacion'];
 <div class="container mt-5">
     <div class="card">
         <div class="card-header text-center">
-            <h2>Solicitud de OC #<?php echo str_pad($id_solicitud, 4, '0', STR_PAD_LEFT) . "-" . date('Y'); ?></h2>
+            <h2>Solicitud de OC #<?php echo str_pad($id_solicitud, 4, '0', STR_PAD_LEFT); ?></h2>
         </div>
         <div class="card-body">
             <!-- Encabezado con número de solicitud y fecha -->
             <div class="row mb-4">
                 <div class="col text-center">
-                    <strong>Número de Solicitud: <?php echo str_pad($id_solicitud, 4, '0', STR_PAD_LEFT) . "-" . date('Y'); ?></strong>
+                    <strong>Número de Solicitud: #<?php echo str_pad($id_solicitud, 4, '0', STR_PAD_LEFT); ?></strong>
                 </div>
                 <div class="col text-center">
                     <strong>Fecha: <?php echo date('d/m/Y'); ?></strong>

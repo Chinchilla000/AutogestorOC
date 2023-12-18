@@ -90,7 +90,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             <div class="text-center">
                 <button type="submit" class="btn btn-primary me-2">Crear Visitador de Obras</button>
-                <button type="reset" class="btn btn-danger">Cancelar</button>
+                <button type="reset" class="btn btn-danger" onclick="window.location.href='./index_visitador.php'">Cancelar</button>
             </div>
         </form>
     </div>

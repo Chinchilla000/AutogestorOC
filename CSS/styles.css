@@ -1,5 +1,18 @@
-/* Agrega estilos personalizados aquí */
 
+/* Agrega estilos personalizados aquí */
+body {
+  /* Fondo degradado */
+  background: linear-gradient(to bottom,#2980b9, #9db5c6 );
+  /* Otras propiedades CSS */
+}
+.navbar {
+  background-color: transparent;
+  backdrop-filter: blur(10px); /* Agrega un efecto de desenfoque al fondo */
+  transition: background-color 0.3s ease;
+}
+.custom-navbar {
+  background: linear-gradient(to bottom,#ffffff, #ffffffde );
+}
 .navbar-brand img {
   max-width: 180px; /* Ajusta este valor según sea necesario */
   height: auto; /* Esto mantendrá la proporción del logotipo */

@@ -11,7 +11,7 @@ function generarIdPersonalizado($nombreEmpresa, $idNumerico) {
     return $abreviatura . "-" . str_pad($idNumerico, 3, '0', STR_PAD_LEFT);
 }
 
-// Consulta para obtener todas las órdenes de compra de la empresa actual
+// Consulta para obtener todas las órdenes de compra de la empresa actual, ordenadas por fecha en orden descendente
 $query = "SELECT oc.id_orden_compra, oc.fecha_creacion, oc.estado, oc.total, oc.archivo_cotizacion, e.nombre_empresa FROM ordenes_de_compra oc 
           JOIN empresas e ON oc.id_empresa = e.id 
           WHERE e.id = :idEmpresaActual
